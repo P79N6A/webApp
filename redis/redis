@@ -4,21 +4,37 @@ redis的使用
 1 redis 数据库没有数据表概念
 2 redis 与 memcache
 value 值
-Redis 支持的值比较多
-支持： 字符串、列表、集合、散列、有序集合
+    Redis 支持的值比较多
+    支持： 字符串、列表、集合、散列、有序集合(有序且不重复的key-value)
 
 网络IO模型
-Redis 是单线程
-Memcached是多线程，非阻塞
+    Redis 是单线程
+    Memcached是多线程，非阻塞
 
 内存管理方面
-   Redis使用现场申请内存的方式来存储数据
-   Memcached使用预分配的内存池的方式
+    Redis使用现场申请内存的方式来存储数据
+    Memcached使用预分配的内存池的方式
 
 磁盘管理
-memcached 不支持写入磁盘
+    redis支持: 快照 和 aof两种方式写入磁盘
+    memcached 不支持写入磁盘
 
 聚合函数
-redis的聚合数据可以是整数或浮点
-memcached 只能是整数
+    redis的聚合数据可以是整数或浮点
+    memcached 只能是整数
+
+二 redis几种使用场景
+1 使用redis管理用户登陆会话
+
+
+
+四 redis数据安全
+
+1 redis 持久化:
+快照持久化 redis可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本.
+zof(只追加文件持久化) 将执行的写命令写到aof文件的末尾,以此来记录数据发生的变化
+
+4 redis 事务 : 客户端是将事务内整体命令一起提供给redis服务器
+
+redis的事务以特殊命令multi为开始,之后跟着用户传入的多个命令,最后以exec为结束.
 
