@@ -1,1 +1,24 @@
 redis的使用
+
+一 redis与其他数据库对比
+1 redis 数据库没有数据表概念
+2 redis 与 memcache
+value 值
+Redis 支持的值比较多
+支持： 字符串、列表、集合、散列、有序集合
+
+网络IO模型
+Redis 是单线程
+Memcached是多线程，非阻塞
+
+内存管理方面
+   Redis使用现场申请内存的方式来存储数据
+   Memcached使用预分配的内存池的方式
+
+磁盘管理
+memcached 不支持写入磁盘
+
+聚合函数
+redis的聚合数据可以是整数或浮点
+memcached 只能是整数
+
