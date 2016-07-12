@@ -1,0 +1,24 @@
+一:HTTP概述
+
+1: web客户端向服务器发送http请求,服务器会在http响应中返回所请求的数据 (响应中包括: 对象,对象类型,对像长度以及其他一些信息)
+
+2: web资源: web资源是在服务器存储,比较简单的资源就是web服务器文件系统中的静态文件. 资源还可以是根据需要生成内容的软件程序(动态资源).
+
+3: mime类型: web服务器会为所有http对象数据附加一个mime类型.web浏览器从服务器中取回一个对象时,会去查看相关的mime类型.根据mime类型进行处理
+包括: text/html, text/plain,image/jpeg,image/gif,video/quicktime,application/vnd.ms-powerpoint
+
+4: URI:统一资源标示符
+
+5: URL:统一资源定位符,是URI最常见得形式
+
+6: http方法: 每个http请求报文都包含一个方法. get,put,delete,post,head
+
+7: 状态吗: 每条http响应报文返回时都会携带一个状态吗.
+
+8:  应用程序完成一项任务时通常会发布多个http事务.一个事务可以从不同的服务器获取想要的资源.
+
+
+
+
+
+
