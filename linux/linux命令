@@ -14,11 +14,22 @@ grep 过滤文件内容，并显示
 sed  替换或删除文件内容
 sed -i 's/name/name1/g' test.txt 替换name为name1\
 sed -i 's/name//g' test.txt 删除name
+awk 按分隔符输出
+less test.txt | awk -F ':' '{print $1}' 输出分段的第一个分段的内容
+
 tail -f 输出文件后面的内容
 sort 排序
 diff 比较两个文件的不同
 
 三、用户身份
+useradd: 创建用户
+userdel: 删除用户
+passwd: 修改用户密码
+
+groupadd 创建用户组
+groupdel 删除用户组
+whoami、logname 当前登录用户名
+
 su [-] :
 后面可以跟”-”也可以不跟，普通用户su不加username时就是切换到root用户，当然root用户同样可以su到普通用户
 加”-“后会连同用户的环境变量一起切换过来
@@ -29,8 +40,16 @@ sudo
 1、tar
 tar -zcvf etc.tar.gz /etc 将/etc目录压缩
 tar -zxvf etc.tar.gz 将tar压缩文件进行解压
-
 2、zip
 zip root.zip /root/ 将目录压缩zip文件
 unzip  unzip -v root.zip 将zip文件进行解压
 
+五、进程和网络
+ps -aux 显示所有进程状态 、和grep、egrep 一起来使用
+ifconfig 查看网络配置
+hostname 显示主机名
+ping 网络联通测试
+netstat 查看网络状态
+scp 远程拷贝
+ssh-keygen
+ssh-keygen -t rsa -C "your_email@youremail.com"
