@@ -1,0 +1,30 @@
+一、linux文件与目录管理
+ls、cd、cp、mv、pwd、rm
+chgrp、chmod、chown
+find、ln、mkdir
+which 查看命令的地址
+file 查看文件类型
+touch 修改文件的时间，或新建一个空文件
+basename 只显示文件名
+dirname 显示文件的目录
+
+二、文件过滤和处理
+cat、more、less 查看文件内容
+grep 过滤文件内容，并显示
+sed  替换或删除文件内容
+sed -i 's/name/name1/g' test.txt 替换name为name1\
+sed -i 's/name//g' test.txt 删除name
+tail -f 输出文件后面的内容
+sort 排序
+diff 比较两个文件的不同
+
+
+
+
+三、用户身份
+su [-] :
+后面可以跟”-”也可以不跟，普通用户su不加username时就是切换到root用户，当然root用户同样可以su到普通用户
+加”-“后会连同用户的环境变量一起切换过来
+sudo
+以root的身份
+
