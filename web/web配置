@@ -1,0 +1,68 @@
+webApp从web.xml开始，WEB容器会去读取它的配置文件web.xml
+
+1、web.xml加载顺序 ServletContext（context-param）-> listener -> filter ->servlet
+<context-param> 它用于向ServletContext提供键值对，即应用上下文信息
+<listener>、<filter>在初始化时会用到这些上下文信息
+<filter-mapping>必须出现在<filter>后，<servlet-mapping>也在<servlet>之后
+
+
+2、web.xml文件详解
+<web-app>
+    <display-name></display-name> //web名称
+    //配置ServletContext，可以在servlet中getServletContext().getInitParamter("param-name")来获得
+    <context-param>
+        <param-name></param-name>
+        <param-value></param-value>
+    <context-param>
+
+      //配置Listener接口
+     <listener>
+        <listener-class></listener-class>
+     </listener>
+    //字符集过滤器
+    <filter>
+            <filter-name>setCharacterEncoding</filter-name>
+            <filter-class>com.myTest.setCharacterEncodingFilter</filter-class>
+            <init-param>
+                <param-name>encoding</param-name>
+                <param-value>UTF-8</param-value>
+            </init-param>
+    </filter>
+
+    //对应filter的URL
+    <filter-mapping>
+            <filter-name>setCharacterEncoding</filter-name>
+            <url-pattern>/*</url-pattern>
+
+    </filter-mapping>
+    //servlet
+    <servlet>
+            <servlet-name>ShoppingServlet</servlet-name>
+            <servlet-class>com.myTest.ShoppingServlet</servlet-class>
+            <load-on-startup>1</load-on-startup>//servlet的加载顺序
+    </servlet>
+    <servlet-mapping>
+            <servlet-name>ShoppingServlet</servlet-name>
+            <url-pattern>/shop/ShoppingServlet</url-pattern>//指定servlet所对应的URL
+    </servlet-mapping>
+
+    //会话超时时间
+    <session-config>
+         <session-timeout></session-timeout>//所有session的有效时间
+    </session-config>
+    //首页
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcom-file-list>
+    //错误页
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error404.jsp</location>
+    </error-page>
+</web-app>
+
+
+
+
+
