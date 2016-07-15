@@ -18,13 +18,19 @@ tail -f 输出文件后面的内容
 sort 排序
 diff 比较两个文件的不同
 
-
-
-
 三、用户身份
 su [-] :
 后面可以跟”-”也可以不跟，普通用户su不加username时就是切换到root用户，当然root用户同样可以su到普通用户
 加”-“后会连同用户的环境变量一起切换过来
 sudo
 以root的身份
+
+四、备份压缩
+1、tar
+tar -zcvf etc.tar.gz /etc 将/etc目录压缩
+tar -zxvf etc.tar.gz 将tar压缩文件进行解压
+
+2、zip
+zip root.zip /root/ 将目录压缩zip文件
+unzip  unzip -v root.zip 将zip文件进行解压
 
