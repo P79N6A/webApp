@@ -34,7 +34,7 @@ passwd: 修改用户密码
 groupadd 创建用户组
 groupdel 删除用户组
 whoami、logname 当前登录用户名
-linux系统的重要文件： /etc/passwd 和 /etc/shadow
+linux系统的重要文件： /etc/passwd 和 /etc/shadow 维护用户相关信息
 
 su [-] :
 后面可以跟”-”也可以不跟，普通用户su不加username时就是切换到root用户，当然root用户同样可以su到普通用户
