@@ -8,9 +8,10 @@ file 查看文件类型
 touch 修改文件的时间，或新建一个空文件
 basename 只显示文件名
 dirname 显示文件的目录
-
 查看环境变量
 echo $PATH
+linux文件类型
+- ：普通文件　d ：目录 l ： 链接
 
 
 二、文件过滤和处理
