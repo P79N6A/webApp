@@ -1,12 +1,16 @@
 一、linux文件与目录管理
 ls、cd、cp、mv、pwd、rm
-chgrp、chmod、chown
+groupadd、chgrp、useradd、chown、chmod （增加组、切换组、增加用户、切换用户、修改文件和目录权限）
 find、ln、mkdir
 which 查看命令的地址
 file 查看文件类型
 touch 修改文件的时间，或新建一个空文件
 basename 只显示文件名
 dirname 显示文件的目录
+
+查看环境变量
+echo $PATH
+
 
 二、文件过滤和处理
 cat、more、less 查看文件内容
