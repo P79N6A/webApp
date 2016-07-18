@@ -31,16 +31,17 @@ diff 比较两个文件的不同
 useradd: 创建用户
 userdel: 删除用户
 passwd: 修改用户密码
-
 groupadd 创建用户组
 groupdel 删除用户组
 whoami、logname 当前登录用户名
+linux系统的重要文件： /etc/passwd 和 /etc/shadow
 
 su [-] :
 后面可以跟”-”也可以不跟，普通用户su不加username时就是切换到root用户，当然root用户同样可以su到普通用户
 加”-“后会连同用户的环境变量一起切换过来
-sudo
-以root的身份
+如root原来切换用户test时，如果不加 - ，则切换后还是root目录
+加上 - 后，切换到test目录
+sudo 以root的身份执行命令
 
 四、备份压缩
 1、tar
