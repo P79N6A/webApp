@@ -135,6 +135,21 @@ cookie HTTP状态管理机制,由名值对组成.
 2 https事务
 建立与服务器TCP连接,SSL握手,客户端在安全层上发送http请求/在tcp上发送已加密的请求,服务器发送http响应/在tcp上发送已加密的响应,关闭SSL,关闭tcp连接.
 
+十一 HTTP实体 分为实体首部和实体主体
+1 content-Length 用来检测截尾(可以得知什么时候结束)和持久化连接,但分块编码就不要content-Length
+2 content-MD5 发送对实体运行MD5算法的结果
+3 content-type text/html text/plain image/gif 等 ; charset=iso-8859-4字符编码
+4 content-Encoding 对象数据所做的任意转换 gzip,compress,deflate,identity
+
+十二 字符集
+1 字符集是把字符转换为二进制的编码
+先将二进制转换成字符代码,再通过字符代码从字符集中选择特定的元素 (转换的过程取决于使用的charset标示)
+2 使用字符集不对就会存生乱码
+
+
+
+
+
 
 
 
