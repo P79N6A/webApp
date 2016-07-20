@@ -38,7 +38,7 @@
 六、ActiveMQ特性
 
 1、Queue中的消息是按照顺序被分发到Consumers,当有多个Consumer同时从相同queue中提取消息时，失去这个保证。
-Exclusive Consumer 实现 ： Broker会选择一个consumer处理queue所有消息。当一个consumer失效，broker切换到consumer
+Broker会选择一个consumer处理queue所有消息。当一个consumer失效，broker切换到consumer
 
 2、Message Groups
 将相关的message分组，发给一个consumer来消费，分为多组Message后，可以发给多个consumer，实现并发
