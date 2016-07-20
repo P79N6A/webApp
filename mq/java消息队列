@@ -20,6 +20,19 @@
 3、FailOver Transport是一种重新连接的机制,是基于其他Transport的上层,可以配置多个URL，并自动选择其中的一个URL来尝试建立连接。
 
 四、持久化:
+1、AMQ Message Store是ActiveMQ默认的持久化方式,Messages保存在data logs,如果data log文件中所有的消息被消费了，data log文件会被标记，然后被清楚
+2、JDBC Persistence 将Messages持久化到数据库中
 
+五、集群支持
+1、 Consumer clusters(消费者集群)
+一个队列有多个消费者
+如果一个consumer失效，那么所有末被确认的消息都会被发送到这个queue上的其他Consumer
+
+2、Broker clusters
+有多个JMS broker
+如果一个客户端连接到其中一个broker，如果这个broker失败，那么会自动连接到其他broker。
+
+3、Master Slave
+将消息复制到slave broker，当master broker遇到故障，可以立即切换slave broker而不丢失任何消息
 
 
