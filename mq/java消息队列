@@ -35,4 +35,41 @@
 3、Master Slave
 将消息复制到slave broker，当master broker遇到故障，可以立即切换slave broker而不丢失任何消息
 
+六、ActiveMQ特性
+
+1、Queue中的消息是按照顺序被分发到Consumers,当有多个Consumer同时从相同queue中提取消息时，失去这个保证。
+Exclusive Consumer 实现 ： Broker会选择一个consumer处理queue所有消息。当一个consumer失效，broker切换到consumer
+
+2、Message Groups
+将相关的message分组，发给一个consumer来消费，分为多组Message后，可以发给多个consumer，实现并发
+
+3、JMS Selectors
+用于订阅，基于消息属性对消息进行过滤
+
+4、虚拟Destination
+可以将多个Queue、topic结合在一起使用
+
+5、Mirrored Queues
+Broker会把发送到某个queue的所有消息转发到一个名称topic，可以订阅这个topic
+
+6、同步和异步
+ActiveMQ支持同步或者异步向broker发送信息。默认异步传输，但当在事务外发送持久化消息时，会使用同步方式.
+
+7、message分发策略
+平均分发消息
+以相同的顺序接受消息
+
+8、Message Cursors
+在内存中保存消息的引用
+采用临时文件保存消息的引用
+
+9、批量确认
+
+
+
+
+
+
+
+
 
