@@ -3,6 +3,9 @@ ls、cd、cp、mv、pwd、rm
 groupadd、chgrp、useradd、chown、chmod （增加组、切换组、增加用户、切换用户、修改文件和目录权限）
 chattr 修改文件的特殊属性
 find、ln、mkdir
+ln (s) 没有参数(s)硬连接，否则是软连接
+硬连接: 不能对目录建硬连接，必须管理员才能建硬连接
+软连接: 删除软连接不会影响源文件
 which 查看命令的地址
 file 查看文件类型
 touch 修改文件的时间，或新建一个空文件
@@ -88,6 +91,9 @@ wc -l(统计行数)，wc -c(统计字节数)，wc -w(统计字数)
 /home:用户的主目录
 /root:超级管理员目录
 /usr:应用程序目录
+
+linux关机时应该先将内存数据同步到磁盘： sync -> shutdown
+
 
 
 
