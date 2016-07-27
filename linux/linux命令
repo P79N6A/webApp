@@ -57,7 +57,7 @@ kill 杀死进程
 ifconfig 查看网络配置
 hostname 显示主机名
 ping 网络联通测试
-netstat 查看网络状态
+netstat -a 查看网络状态
 scp 远程拷贝
 ssh-keygen
 ssh-keygen -t rsa -C "your_email@youremail.com"
@@ -80,6 +80,16 @@ wc -l(统计行数)，wc -c(统计字节数)，wc -w(统计字数)
 2、.bash_logout
 3、.bashrc
 需要执行source .bash_profile使用户环境生效
+
+九、linux操作系统各个目录
+/bin: 存放常用命令
+/boot: 启动linux
+/etc:系统管理配置文件和目录
+/home:用户的主目录
+/root:超级管理员目录
+/usr:应用程序目录
+
+
 
 
 
