@@ -48,8 +48,11 @@ sudo 以root的身份执行命令
 
 四、备份压缩
 1、tar
-tar -zcvf etc.tar.gz /etc 将/etc目录压缩
-tar -zxvf etc.tar.gz 将tar压缩文件进行解压
+tar -zcvf /etc 将/etc目录压缩 etc.tar.gz
+tar -zxvf  将etc.tar.gz解压 /etc目录
+
+tar -jcvf /etc 将/etc目录压缩 etc.tar.bz2
+tar -jxvf  将etc.tar.bz2压缩 /etc目录
 2、zip
 zip root.zip /root/ 将目录压缩zip文件
 unzip  unzip -v root.zip 将zip文件进行解压
