@@ -19,6 +19,8 @@ linux文件类型
 
 二、文件过滤和处理
 cat、more、less 查看文件内容
+cut 截取某一个字段
+cut -d ":" -f  1 (按照":"字符分隔，并截取第一部分)
 grep 过滤文件内容，并显示
 sed  替换或删除文件内容
 sed -i 's/name/name1/g' test.txt 替换name为name1\
@@ -63,7 +65,6 @@ gzip -d text.txt.gz(解压)
 4、bzip
 bzip -z 压缩
 bzip -d 解压
-
 
 五、进程和网络
 ps -aux/-ef 显示所有进程状态 、和grep、egrep 一起来使用
