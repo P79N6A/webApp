@@ -22,6 +22,8 @@ cat、more、less 查看文件内容
 cut 截取某一个字段
 cut -d ":" -f  1 (按照":"字符分隔，并截取第一部分)
 grep 过滤文件内容，并显示
+语法
+
 sed  替换或删除文件内容
 sed -i 's/name/name1/g' test.txt 替换name为name1\
 sed -i 's/name//g' test.txt 删除name
