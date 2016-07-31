@@ -1,0 +1,16 @@
+hibernate接口
+一 核心接口
+1、Configuration
+2、SessionFactory:线程安全，可以为SessionFactory配置缓存插件，作为Hibernate的二级缓存
+3、Session:线程不安全,Session缓存，存在当前工作单元加载过的对象 ，一级缓存 (提供save,update,delete,load)
+4、Transaction: 事务接口
+5、Query和Criteria:Hibernate的查询接口
+Query使用hql查询语句:使用？绑定时要使用参数的位置,使用 （:参数名），绑定时要使用参数名
+
+二 事件处理接口
+当程序通过Hibernate更新对象时，会触发Hibernate的拦截器和事件监听器做出相应的处理
+
+三 Hibernate映射类型接口
+Type接口表示Hibernate映射类型，把对象映射为数据库的关系数据
+
+四
