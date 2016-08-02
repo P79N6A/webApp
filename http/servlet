@@ -7,3 +7,4 @@ servletConfig对象,每个servlet有一个servletConfig对象,用于访问web应
 
 servletRequest 和 serletResponse 接口 : 对应(HttpServletRequest和HttpServletResponse)
 
+HttpServlet(应用自己的servlet需要基层这个基类)
