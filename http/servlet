@@ -1,0 +1,10 @@
+Servlet
+servlet是受控于java应用,这个java应用成为容器
+
+servlet每个请求,都在一个单独的线程中运行
+
+servletConfig对象,每个servlet有一个servletConfig对象,用于访问web应用参数
+
+servletRequest 和 serletResponse 接口 : 对应(HttpServletRequest和HttpServletResponse)
+
+HttpServlet(应用自己的servlet需要基层这个基类)
