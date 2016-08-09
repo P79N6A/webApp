@@ -15,7 +15,7 @@ Type接口表示Hibernate映射类型，把对象映射为数据库的关系数�
 
 四 Hibernate 关联映射 (将对象的关联关联，映射为表的关联关系)
 单向关联 : 其中一方关联到另一方，而另一方不知道自己已被关联
-双向关联 :
+双向关联 : 双方都关联着对方
 
 (一)、1对1单向外键关联
 (1) 表结构设计
@@ -97,3 +97,41 @@ public class Husband implements Serializable,Cloneable{
         this.wife = wife;
     }
 }
+(二) 1对1双向外键关联
+(1)表结构与单向一样
+(2)实体类Husband与原来一致，只是Wife多了一个Husband引用
+@Entity
+@Table(name = "wife")
+public class Wife {
+    private int id;
+    private String name;
+    private Husband husband;
+
+   @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @OneToOne(mappedBy = "wife")
+    public Husband getHusband() {
+        return husband;
+    }
+
+    public void setHusband(Husband husband) {
+        this.husband = husband;
+    }
+}
+
