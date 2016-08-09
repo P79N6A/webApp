@@ -135,7 +135,7 @@ public class Wife {
     }
 }
 
-(三)一对一主键映射
+(三)一对一主键映射(使用相同的主键)
 (1)表结构
 CREATE TABLE `wife_pk` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
