@@ -13,24 +13,87 @@ Query使用hql查询语句:使用？绑定时要使用参数的位置,使用 （
 三 Hibernate映射类型接口
 Type接口表示Hibernate映射类型，把对象映射为数据库的关系数据
 
-四 Hibernate 关联映射
-单向关联
-双向关联
+四 Hibernate 关联映射 (将对象的关联关联，映射为表的关联关系)
+单向关联 : 其中一方关联到另一方，而另一方不知道自己已被关联
+双向关联 :
+
 (一)、1对1单向外键关联
 (1) 表结构设计
 CREATE TABLE `husband` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
-  `wife_id` BIGINT(20),
+  `wife_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-	KEY `wife_id` (`wife_id`),
-  CONSTRAINT `wife_id` FOREIGN KEY (`wife_id`) REFERENCES `wife` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=163458 DEFAULT CHARSET=utf8
+  UNIQUE KEY `UK` (`wife_id`),
+  CONSTRAINT `FK` FOREIGN KEY (`wife_id`) REFERENCES `wife` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163466 DEFAULT CHARSET=utf8
 
 CREATE TABLE `wife` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=163458 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=163463 DEFAULT CHARSET=utf8
 
-(2)
+(2) 对象的设计
+Wife 实体
+@Entity
+@Table(name = "wife")
+public class Wife {
+    private int id;
+    private String name;
+
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}
+Husband 实体(主控方)
+@Entity
+@Table(name = "husband",uniqueConstraints = {
+        @UniqueConstraint(columnNames = "wife_id")})
+public class Husband implements Serializable,Cloneable{
+    private int id;
+    private String name;
+    private Wife wife;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @OneToOne
+    @JoinColumn(name = "wife_id")
+    public Wife getWife() {
+        return wife;
+    }
+
+    public void setWife(Wife wife) {
+        this.wife = wife;
+    }
+}
