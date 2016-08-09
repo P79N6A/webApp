@@ -135,3 +135,77 @@ public class Wife {
     }
 }
 
+(三)一对一主键映射
+(1)表结构
+CREATE TABLE `wife_pk` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163463 DEFAULT CHARSET=utf8
+
+
+CREATE TABLE `husband_pk` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163466 DEFAULT CHARSET=utf8
+
+(2)
+@Entity
+@Table(name = "husband_pk")
+public class Husband_Pk {
+    private int id;
+    private String name;
+    private Wife_Pk wife_pk;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    public Wife_Pk getWife_pk() {
+        return wife_pk;
+    }
+
+    public void setWife_pk(Wife_Pk wife_pk) {
+        this.wife_pk = wife_pk;
+    }
+}
+@Entity
+@Table(name = "wife_pk")
+public class Wife_Pk {
+    private int id;
+    private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+@Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+
