@@ -237,4 +237,156 @@ public class Husband implements Serializable,Cloneable{
     }
 }
 
+(五)多对多单向: 需要一个中间表，保存两个表的id
+（1）表结果设计
+CREATE TABLE `student_t` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163471 DEFAULT CHARSET=utf8
+
+CREATE TABLE `teacher_t` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163471 DEFAULT CHARSET=utf8
+
+
+CREATE TABLE `teacher_student` (
+  `teacher_id` bigint(20) NOT NULL ,
+  `student_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`teacher_id`,`student_id`),
+  CONSTRAINT `FK1` FOREIGN KEY (`teacher_id`) REFERENCES `teacher_t` (`id`),
+  CONSTRAINT `FK2` FOREIGN KEY (`student_id`) REFERENCES `student_t` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163471 DEFAULT CHARSET=utf8
+
+（2）类设计
+@Entity
+@Table(name = "teacher_t")
+public class Teacher_T {
+    private int id;
+    private String name;
+    private Set<Student_T> students = new HashSet<Student_T>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @ManyToMany
+    @JoinTable(name = "teacher_student",joinColumns = {@JoinColumn(name ="teacher_id",referencedColumnName = "id")})
+    public Set<Student_T> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student_T> students) {
+        this.students = students;
+    }
+}
+
+@Entity
+@Table(name = "student_t")
+public class Student_T {
+    private int id;
+    private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+(六)多对多双向
+（1）表结构不变
+（2）实体类
+@Entity
+@Table(name = "teacher_t")
+public class Teacher_T {
+    private int id;
+    private String name;
+    private Set<Student_T> students = new HashSet<Student_T>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @ManyToMany
+    @JoinTable(name = "teacher_student",joinColumns = {@JoinColumn(name ="teacher_id",referencedColumnName = "id")})
+    public Set<Student_T> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student_T> students) {
+        this.students = students;
+    }
+}
+
+@Entity
+@Table(name = "student_t")
+public class Student_T {
+    private int id;
+    private String name;
+    private Set<Teacher_T> teachers = new HashSet<Teacher_T>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @ManyToMany(mappedBy="students")
+    public Set<Teacher_T> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(Set<Teacher_T> teachers) {
+        this.teachers = teachers;
+    }
+}
+
 
