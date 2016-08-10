@@ -94,6 +94,8 @@ ssh-keygen -t rsa -C "your_email@youremail.com"
 df 查看磁盘使用情况
 du 用来查看目录所占空间大小
 free 查看内存使用
+history 查看历史执行的命令
+!num 可以执行历史执行的命令
 
 七、文本操作
 sort 文件 | uniq 排序后去重
