@@ -13,4 +13,380 @@ Query使用hql查询语句:使用？绑定时要使用参数的位置,使用 （
 三 Hibernate映射类型接口
 Type接口表示Hibernate映射类型，把对象映射为数据库的关系数据
 
-四
+四 Hibernate 关联映射 (将对象的关联关联，映射为表的关联关系)
+单向关联 : 其中一方关联到另一方，而另一方不知道自己已被关联
+双向关联 : 双方都关联着对方
+
+(一)、1对1单向外键关联
+(1) 表结构设计
+CREATE TABLE `husband` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  `wife_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK` (`wife_id`),
+  CONSTRAINT `FK` FOREIGN KEY (`wife_id`) REFERENCES `wife` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163466 DEFAULT CHARSET=utf8
+
+CREATE TABLE `wife` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163463 DEFAULT CHARSET=utf8
+
+(2) 对象的设计
+Wife 实体
+@Entity
+@Table(name = "wife")
+public class Wife {
+    private int id;
+    private String name;
+
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}
+Husband 实体(主控方)
+@Entity
+@Table(name = "husband",uniqueConstraints = {
+        @UniqueConstraint(columnNames = "wife_id")})
+public class Husband implements Serializable,Cloneable{
+    private int id;
+    private String name;
+    private Wife wife;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @OneToOne
+    @JoinColumn(name = "wife_id")
+    public Wife getWife() {
+        return wife;
+    }
+
+    public void setWife(Wife wife) {
+        this.wife = wife;
+    }
+}
+(二) 1对1双向外键关联
+(1)表结构与单向一样
+(2)实体类Husband与原来一致，只是Wife多了一个Husband引用
+@Entity
+@Table(name = "wife")
+public class Wife {
+    private int id;
+    private String name;
+    private Husband husband;
+
+   @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @OneToOne(mappedBy = "wife")
+    public Husband getHusband() {
+        return husband;
+    }
+
+    public void setHusband(Husband husband) {
+        this.husband = husband;
+    }
+}
+
+(三)一对一主键映射(使用相同的主键)
+
+(四)多对一
+(1)表结构设计
+CREATE TABLE `student` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `class_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `class_id` (`class_id`),
+  CONSTRAINT `class_id` FOREIGN KEY (`class_id`) REFERENCES `classroom` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8
+
+CREATE TABLE `classroom` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163458 DEFAULT CHARSET=utf8
+
+(2)类设计
+@Entity
+@Table(name = "classroom")
+public class ClassRoom implements Serializable,Cloneable{
+    private int id;
+    private String name;
+    private Set<Student> students;
+
+    public ClassRoom(){
+        students = new HashSet<Student>();
+    }
+
+    public void addStudent(Student student){
+        students.add(student);
+    }
+
+    @Id
+    @GeneratedValue
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String Name) {
+        this.name = Name;
+    }
+
+    @OneToMany(mappedBy="classRoom")
+    public Set<Student> getStudents()
+    {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students)
+    {
+        this.students = students;
+    }
+}
+
+@Entity
+@Table(name = "husband",uniqueConstraints = {
+        @UniqueConstraint(columnNames = "wife_id")})
+public class Husband implements Serializable,Cloneable{
+    private int id;
+    private String name;
+    private Wife wife;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @OneToOne
+    @JoinColumn(name = "wife_id")
+    public Wife getWife() {
+        return wife;
+    }
+
+    public void setWife(Wife wife) {
+        this.wife = wife;
+    }
+}
+
+(五)多对多单向: 需要一个中间表，保存两个表的id
+（1）表结果设计
+CREATE TABLE `student_t` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163471 DEFAULT CHARSET=utf8
+
+CREATE TABLE `teacher_t` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163471 DEFAULT CHARSET=utf8
+
+
+CREATE TABLE `teacher_student` (
+  `teacher_id` bigint(20) NOT NULL ,
+  `student_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`teacher_id`,`student_id`),
+  CONSTRAINT `FK1` FOREIGN KEY (`teacher_id`) REFERENCES `teacher_t` (`id`),
+  CONSTRAINT `FK2` FOREIGN KEY (`student_id`) REFERENCES `student_t` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=163471 DEFAULT CHARSET=utf8
+
+（2）类设计
+@Entity
+@Table(name = "teacher_t")
+public class Teacher_T {
+    private int id;
+    private String name;
+    private Set<Student_T> students = new HashSet<Student_T>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @ManyToMany
+    @JoinTable(name = "teacher_student",joinColumns = {@JoinColumn(name ="teacher_id",referencedColumnName = "id")})
+    public Set<Student_T> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student_T> students) {
+        this.students = students;
+    }
+}
+
+@Entity
+@Table(name = "student_t")
+public class Student_T {
+    private int id;
+    private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+(六)多对多双向
+（1）表结构不变
+（2）实体类
+@Entity
+@Table(name = "teacher_t")
+public class Teacher_T {
+    private int id;
+    private String name;
+    private Set<Student_T> students = new HashSet<Student_T>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @ManyToMany
+    @JoinTable(name = "teacher_student",joinColumns = {@JoinColumn(name ="teacher_id",referencedColumnName = "id")})
+    public Set<Student_T> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student_T> students) {
+        this.students = students;
+    }
+}
+
+@Entity
+@Table(name = "student_t")
+public class Student_T {
+    private int id;
+    private String name;
+    private Set<Teacher_T> teachers = new HashSet<Teacher_T>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @ManyToMany(mappedBy="students")
+    public Set<Teacher_T> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(Set<Teacher_T> teachers) {
+        this.teachers = teachers;
+    }
+}
+
+
