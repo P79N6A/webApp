@@ -1,0 +1,126 @@
+一 流
+1 字节流
+输出流:OutputStream
+TelnetOutputStream :    将数据写入网络连接
+ByteArrayOutputStream : 将数据写入可扩展的字节数组
+FileOutputStream:       将数据写入文件
+
+输入流:InputStream
+FileInputStream : 从文件中读数据
+ByteArrayInputStream : 从字节数组读取数据
+TelnetInputStream : 从网络连接中读取数据
+
+对于流可以作为另一个流的构造方法参数
+FileInputStream in = new FileInputStream("data.txt")
+in = new BufferedInputStream(in);
+大多数情况下,应当只使用链中最后一个流进行实际的读/写操作.
+
+缓冲流:BufferedOutputStream类将写入的数据存储在缓冲区中,然后它将数据一次全部写入底层输出流
+
+数据流:DataInputStream和DataOutputStream,可以用二进制格式读/写java的基本数据类型和字符串
+
+2 字符流
+Reader
+Writer
+
+二 Internet地址
+IPv4 : 四个无符号字节(152.19.134.132)
+IPv6 : 冒号分隔8块,每块是4个16进制数字(2400:cb00:2048:0001:0000:0000:6ca2:c665)
+
+三 InetAddress类: 是java对ip地址一种表示
+InetAddress localHost = InetAddress.getLocalHost();
+
+1 可以通过getHostName(),getCanonicalHostName(),getAddress(),getHostAddress(),将主机名作为字符串返回
+2 缓存,InetAddress会缓存查找结果
+3 InetAddress对象是否符合某个标准
+isAnyLocalAddress,是否是通配地址
+isLoopbackAddress,是否是回送地址
+isLinkLocalAddress,是否是一个Ipv6本地链接地址
+isSiteLocalAddress,是否是一个IPv6本地网站地址
+isMulticastAddress,是否是一个组播地址
+isMCGlobal,是否全球组播地址
+isMCOrgLocal,是否是组织范围地址
+isMCSiteLocal,是否是网站范围组播地址
+isMCLinkLocal,是一个子网范围组播地址
+isMCNodeLocal,是否本地接口组播地址
+
+4 测试可达性(能否建立一个网络链接)
+isReachable 方法
+
+5 覆盖Object方法: equals,hashcode,toString
+equals 比较的是InetAddress的ip地址
+
+四 URL
+1  相对路径 再浏览 http://www.ibiblio.org/javafaq/javatutorial.html时,单击超链接<a href="javafaq.html">
+会跳转http://www.ibiblio.org/javafaq/javafaq.html
+2  绝对路径 还是浏览上面的页面,单击<a href="/projects/ipv6">
+会跳转http://www.ibiblio.org/projects/ipv6
+3  支持的协议包括
+http,https,ftp,mailto,file,jar
+4  openStream方法(从URL获取数据)
+URL url = new URL("http://www.lolcats.com");
+    try {
+            System.out.write(c);
+              InputStream inputStream = url.openStream();
+        int c;
+        while ((c = inputStream.read())!=-1)
+        inputStream.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+5 openConnecion方法:为指定的URL打开一个socket,并返回一个URLConnection
+
+6 getContent: 可以下载内容
+
+7 URL具体的信息
+URL url = new URL("https://www.jd.com");
+        System.out.println("File =" + url.getFile());
+        System.out.println("Host =" + url.getHost());
+        System.out.println("Port =" + url.getPort());
+        System.out.println("Protocol =" + url.getProtocol());
+        System.out.println("Ref =" + url.getRef());
+        System.out.println("Query =" + url.getQuery());
+        System.out.println("Path =" + url.getPath());
+        System.out.println("UserInfo =" + url.getUserInfo());
+        System.out.println("Authority =" + url.getAuthority());
+
+8 URI是对URL的抽象,实际使用的URI大多是URL,但大多数规范和标准都是用URI定义的
+
+9 URLEncoder.encode("字符串",UTF-8);//对字符串进行编码
+
+10 URLDecoder.decode("字符串",UTF-8);//对字符串进行解码
+
+五 URLConnection 表示指向URL指定资源的活动连接
+URL中openConnection(); 方法可以获得
+1 getInputStream 读取服务器的方法
+2 读取首部信息
+3 缓存 在首部中会有cache-control 包括下面内容
+max-age 从现在开始直到缓存项过期之前的秒数
+s-maxage 从现在器,直到缓存项在共享缓存中过期之前的秒数,私有缓存可以将缓存保存更久
+public
+private
+no-cache : 需要用一个Etag或Last-modified首部
+no-store : 不缓存
+
+六 客户端Socket : 可以将网络连接看作是另一个可以读/写字节的流
+可以连接远程机器,发送数据,接收数据,关闭连接,绑定端口,监听入站数据,绑定端口上接收来自远程机器的连接
+1 通过InputStream 从服务器读
+2 通过OutStream 往服务器写
+3 close方法关闭输入和输出,shutdownInput和shutdownOutput只关闭一半
+4 Socket是java完成客户端TCP操作的基础类
+5 Socket地址(SocketAddress 这些信息可以重用来创建新的Socket)
+6 可以指定本地的用那个端口创建Socket连接
+7 Socket异常
+BindException: 没有足够的权限使用这个端口
+ConnectException: 连接被远程拒绝
+NoRouteToHostException: 连接超时
+
+
+
+
+
+
+
+
+
+
