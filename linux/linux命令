@@ -3,6 +3,7 @@ ls、cd、cp、mv、pwd、rm
 groupadd、chgrp、useradd、chown、chmod （增加组、切换组、增加用户、切换用户、修改文件和目录权限）
 chattr 修改文件的特殊属性
 find、ln、mkdir
+find / -name 'jenkins' -type d 查找目录
 ln (s) 没有参数(s)硬连接，否则是软连接
 硬连接: 不能对目录建硬连接，必须管理员才能建硬连接
 软连接: 删除软连接不会影响源文件
