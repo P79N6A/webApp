@@ -1,5 +1,6 @@
 一、linux文件与目录管理
 ls、cd、cp、mv、pwd、rm
+cd- 回到一个访问的目录
 groupadd、chgrp、useradd、chown、chmod （增加组、切换组、增加用户、切换用户、修改文件和目录权限）
 chattr 修改文件的特殊属性
 find、ln、mkdir
