@@ -35,3 +35,50 @@ tol.*toy: 在一行的任意位居中，含有 tol 这三个字母，加上任�
 
 五、格式化
 fmt -w n 将输出的行宽改为 n 个字符
+
+六、if 语句
+//判断目录是否存在
+if [-d $BakDir];then
+        echo "$BakDir alerdy exist"
+else
+        echo "$BakDir is not exist,will make it"
+        mkdir $BakDir
+fi
+
+七、case语句
+echo 'input your a number 1 to4'
+echo 'your number is : \n'
+read aNum
+case $aNum in
+        1)echo 'number 1'
+        ;;
+        2)echo 'number 2'
+        ;;
+        3)echo 'number 3'
+        ;;
+        4)echo 'number 4'
+        ;;
+        *)echo 'number default'
+        ;;
+esac
+
+八、循环
+for k in $(seq 1 10)
+do
+        mkdir /tmp/hahaha/aaa${k}
+        cd /tmp/hahaha/aaa${k}
+        for j in $(seq 1 10)
+        do
+                mkdir bbb${j}
+                cd /tmp/hahaha/aaa${k}
+        done
+        cd ..
+done
+
+九、break 和 continue
+
+十、函数
+hello () {
+        echo "hahahah"
+}
+hello

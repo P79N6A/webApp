@@ -44,6 +44,7 @@ awk 按分隔符输出
 less test.txt | awk -F ':' '{print $1}' 输出分段的第一个分段的内容
 
 tail -f 输出文件后面的内容
+head -n 5 /etc/passwd | tail -n 3 (从第5行开始，到倒数3行)
 sort 排序
 sort -u 排序并删除
 diff 比较两个文件的不同
