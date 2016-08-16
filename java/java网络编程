@@ -115,6 +115,27 @@ BindException: 没有足够的权限使用这个端口
 ConnectException: 连接被远程拒绝
 NoRouteToHostException: 连接超时
 
+七 服务器Socket:ServetSocket类表示服务器Socket
+服务器Socket等待连接,而客户端Socket发起连接
+
+1: ServetSocket构造函数创建一个新的ServerSocket
+2: ServetSocket使用accept()方法监听(是阻塞方法)
+3: 调用getInputStream方法和getOutStream方法,与客户端通信
+4: 关闭连接
+5: 服务器继续监听 , 在循环里accept
+6: 多线程服务器,每个请求连接,对应一个线程
+
+八
+1:创建安全客户端Socket
+SocketFactory factory = SSLSocketFactory.getDefault();
+Socket socket = factory.createSocket("login.ibiblio.org",7000)
+
+2:创建安全服务器Socket
+SSLServerSocketFactrory.getDefault();
+createServetSocket()
+
+
+
 
 
 
