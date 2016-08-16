@@ -28,6 +28,64 @@ curl -XGET 'http://10.15.226.153:9200/_all/chapter/_search?q=qipuId:750767441'
 2、每个分片，都是有副本的
 3、增加和删除新的节点是，分片会重新分片
 
+(2)集群
+一、主节点: 管理集群级变更
+二、集群状态
+{
+    cluster_name: lego_search_backup
+    status: green
+    timed_out: false
+    number_of_nodes: 6
+    number_of_data_nodes: 6
+    active_primary_shards: 121
+    active_shards: 242
+    relocating_shards: 0
+    initializing_shards: 0
+    unassigned_shards: 0
+}
+
+三、添加索引
+1、索引是一个用来指向一个或多个分片的逻辑命名空间,应用程序不会直接与他们通信，直接与索引通信
+
+(3) 数据
+一个json对象
+{
+    "name":         "John Smith",
+    "age":          42,
+    "confirmed":    true,
+    "join_date":    "2014-06-01",
+    "home": {
+        "lat":      51.5,
+        "lon":      0.1
+    },
+    "accounts": [
+        {
+            "type": "facebook",
+            "id":   "johnsmith"
+        },
+        {
+            "type": "twitter",
+            "id":   "johnsmith"
+        }
+    ]
+}
+1、文档的元数据 : 最基本的三个要素
+_index 文档存储的地方
+_type 文档代表的对象的类
+_id 文档的唯一标识
+
+2、创建索引，自增id
+POST /website/blog/
+{
+  "title": "My second blog entry",
+  "text":  "Still trying this out...",
+  "date":  "2014/01/01"
+}
+
+
+
+
+
 
 
 
