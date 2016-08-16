@@ -94,6 +94,9 @@ netstat -a 查看网络状态
 scp 远程拷贝
 ssh-keygen
 ssh-keygen -t rsa -C "your_email@youremail.com"
+wget
+curl
+
 
 六、磁盘管理
 df 查看磁盘使用情况
