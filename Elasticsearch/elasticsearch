@@ -73,7 +73,6 @@ curl -XGET 'http://10.15.226.153:9200/_all/chapter/_search?q=qipuId:750767441'
 _index 文档存储的地方
 _type 文档代表的对象的类
 _id 文档的唯一标识
-
 2、创建索引，自增id
 POST /website/blog/
 {
@@ -81,6 +80,14 @@ POST /website/blog/
   "text":  "Still trying this out...",
   "date":  "2014/01/01"
 }
+3、检索文档
+curl -i -XGET http://localhost:9200/website/blog/124?pretty
+4、检索文档的一部分
+GET /website/blog/123?_source=title,text
+
+
+
+
 
 
 
