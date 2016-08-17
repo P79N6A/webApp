@@ -82,6 +82,10 @@ POST /website/blog/
 }
 3、检索文档
 curl -i -XGET http://localhost:9200/website/blog/124?pretty
+
+//带查询匹配条件
+curl -XGET  'http://localhost:9200/website/blog/_search' -d '{ "query" : {"match" : {"last_name" : "Smith"}}}'
+
 4、检索文档的一部分
 GET /website/blog/123?_source=title,text
 
