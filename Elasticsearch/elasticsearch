@@ -70,9 +70,9 @@ curl -XGET 'http://10.15.226.153:9200/_all/chapter/_search?q=qipuId:750767441'
     ]
 }
 1、文档的元数据 : 最基本的三个要素
-_index 文档存储的地方
-_type 文档代表的对象的类
-_id 文档的唯一标识
+           _index 文档存储的地方
+           _type 文档代表的对象的类
+           _id 文档的唯一标识
 2、创建索引，自增id
 POST /website/blog/
 {
@@ -85,10 +85,88 @@ curl -i -XGET http://localhost:9200/website/blog/124?pretty
 4、检索文档的一部分
 GET /website/blog/123?_source=title,text
 
+5、检查文档是否存在
+curl -i -XHEAD http://localhost:9200/website/blog/123
+如果文档存在，返回200状态码,不存在返回404
 
+6、更新整个文档
+方式一、更新整个文档时，会新增一个文档把_version增加，并标记旧文档
+方式二、update API修改文档的局部时，步骤如下
+1、从旧文档中检索JSON 2、修改它 3、删除旧文档 4、索引新文档
 
+7、创建一个新文档
+如果想使用自定义的_id，我们必须告诉Elasticsearch应该在_index、_type、_id三者都不同时才接受请求
+可以通过下面的方式
+PUT /website/blog/123/_create { ... }
+Elasticsearch将返回正常的元数据且响应状态码是201 Created
+如果包含相同的_index、_type和_id的文档已经存在，Elasticsearch将返回409 Conflict响应状态码
 
+8、删除文档
+DELETE /website/blog/123
+如果文档被找到: 返回响应体
+{
+  "found" :    true,
+  "_index" :   "website",
+  "_type" :    "blog",
+  "_id" :      "123",
+  "_version" : 3
+}
+如果文档未找到: 返回响应体
+{
+  "found" :    false,
+  "_index" :   "website",
+  "_type" :    "blog",
+  "_id" :      "123",
+  "_version" : 4
+}
 
+9 版本控制
+当使用index API更新文档的时候，我们读取原始文档，做修改，然后将整个文档一次性重新索引
+Elasticsearch中只存储最后被索引的任何文档
+
+(1)、悲观并发控制
+读一行数据前锁定这行，然后确保只有加锁的那个线程可以修改这行数据
+
+(2)、乐观并发控制
+更新的时候使用版本号，做参数
+PUT /website/blog/1?version=1 <1>
+如果另一个web，通过也使用PUT /website/blog/1?version=1 <1>更新，会错误。
+
+10 局部更新:update请求表单接受一个局部文档参数doc，存在的字段被覆盖，新字段被添加
+POST /website/blog/1/_update
+{
+   "doc" : {
+      "tags" : [ "testing" ],
+      "views": 0
+   }
+}
+
+11 检索多个文档
+POST /_mget
+{
+   "docs" : [
+      {
+         "_index" : "website",
+         "_type" :  "blog",
+         "_id" :    2
+      },
+      {
+         "_index" : "website",
+         "_type" :  "pageviews",
+         "_id" :    1,
+         "_source": "views"
+      }
+   ]
+}
+可以查看:
+同一个索引，同一类型下，_id(1,2)的文档
+POST /website/blog/_mget
+{
+   "ids" : [ "2", "1" ]
+}
+
+12 批量操作
+1、bulk API:允许我们使用单一请求来实现多个文档的create、index、update或delete
 
 
 
