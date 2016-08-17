@@ -1,0 +1,47 @@
+一 配置tomcat
+1 tomcat多个实例,让每个实例在不同的tcp端口上提供不同网页内容的服务,且想让webapp都在自己的jvm上,从而可以对他们执行相互独立的操作
+修改端口号 和 webapps (修改server.xml,tomcat的主配置文件)
+
+2 Java VM配置: 修改catalina.sh文件
+Tomcat的运行方式部分取决于所运行的java虚拟机的配置信息
+设置虚拟机内存
+JAVA_OPTS='-Xms1024 -Xmx2048'
+可以运程调试部署在tomcat服务的webapp应用
+JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"
+可以通过JMX远程客户端连接到tomcat以实现本地管理和监控
+JAVA_OPTS="-Dcom.sun.management.jmxremote.port=9999"
+JAVA_OPTS="-Dcom.sun.management.jmxremote.ssl=false"
+JAVA_OPTS="-Dcom.sun.management.jmxremote.authenticate=false"
+
+3 变换jsp编译器: 修改为ant编译器
+
+4 管理领域,角色和用户
+1: 使用tomcat的容器管理的安全防护机制,必须设定领域(用户,密码,角色的集合)
+web.xml中设定那些用户组可以访问那些资源,而Tomcat的管理员则可以使用一个或多个领域实现来获取用户,密码及角色信息
+配置<Realm>元素
+tomcat 自身包含了: UserDatabaseRealm(tomcat-user.xml),JDBCRealm,JNDIRealm,JAASRealm(web.xml中<security-constraint>)
+
+5 tomcat支持四种容器的安全防护
+在登录配置:<login-config></login-config>
+
+配置web.xml的<security-constraint>
+http验证,需要提供base64编码文本的用户口令 <auth-method>BASIC</auth-method>
+http验证,需要提供摘要编码字符串的用户口令 <auth-method>DIGEST</auth-method>,还需要在server.xml中的<Realm>元素中,配置MD5属性
+在网页的表单上要求提供用户密码 <auth-method>FORM</auth-method>
+以客户端数字证书来确认用户的身份 <>
+
+6 控制会话
+1 会话的持续性 :
+StandardManager,不会使用Store,只有正常停止时,将会话信息存放在SESSIONS.ser的文件中
+PersistentManager,使用Store(Filetore和JDBCStore),可以将会话信息保持到文件和数据库中
+
+2 访问JNDI与JDBC的资源
+JNDI用来寻找资源的
+
+
+
+
+
+
+
+
