@@ -1,0 +1,125 @@
+一 结构化查询
+
+(1)、请求体查询:大多数查询参数都以JSON格式
+1: 空查询:将会返回索引中所有的文档
+GET /_search
+{
+}
+2: match匹配条件
+GET /_search
+{
+    "query": {
+        "match": {
+            "tweet": "elasticsearch"
+        }
+    }
+}
+
+3、合并多子句
+叶子子句 : match 用以在将查询字符串与一个字段(或多字段)进行比较
+复合子句 : bool子句允许你合并其他的合法子句，must，must_not或者should，
+如果可能的话：
+   {
+       "bool": {
+           "must":     { "match": { "tweet": "elasticsearch" }},
+           "must_not": { "match": { "name":  "mary" }},
+           "should":   { "match": { "tweet": "full text" }}
+       }
+   }
+
+(2)过滤
+1: term 主要用于精确匹配那些值
+    { "term": { "age":  26}}
+    { "term": { "date": "2014-09-01" }}
+    { "term": { "public": true}}
+    { "term": { "tag": "full_text"}}
+
+2: terms 过滤 (可以匹配多个值)
+{
+    "terms": {
+        "tag": [ "search", "full_text", "nosql" ]
+    }
+}
+
+3: range 按照指定范围查找一批数据
+{
+    "range": {
+        "age": {
+            "gte":  20,
+            "lt":   30
+        }
+    }
+}
+
+4: exists和missing (类似于SQL中的isnull)
+
+5: bool过滤 : 用来合并多个过滤条件查询结果
+must :: 多个查询条件的完全匹配,相当于 and。
+must_not :: 多个查询条件的相反匹配，相当于 not。
+should :: 至少有一个查询条件匹配, 相当于 or。
+
+6:match_all 可以查询到所有文档
+{
+    "match_all": {}
+}
+
+7: match查询
+全文本字段
+{
+    "match": {
+        "tweet": "About Search" //全文本
+    }
+}
+确切值
+{ "match": { "age":    26           }}
+{ "match": { "date":   "2014-09-01" }}
+{ "match": { "public": true         }}
+{ "match": { "tag":    "full_text"  }}
+
+8 multi_match 查询
+{
+    "multi_match": {
+        "query":    "full text search",
+        "fields":   [ "title", "body" ]
+    }
+}
+
+9 过滤查询
+GET /_search
+{
+    "query": {
+        "filtered": {
+            "query":  { "match": { "email": "business opportunity" }},
+            "filter": { "term": { "folder": "inbox" }}
+        }
+    }
+}
+
+二 排序
+GET /_search
+{
+    "query" : {
+        "filtered" : {
+            "filter" : { "term" : { "user_id" : 1 }}
+        }
+    },
+    "sort": { "date": { "order": "desc" }}//按照时间降序
+}
+
+1、多级排序
+GET /_search
+{
+    "query" : {
+        "filtered" : {
+            "query":   { "match": { "tweet": "manage text search" }},
+            "filter" : { "term" : { "user_id" : 2 }}
+        }
+    },
+    "sort": [
+        { "date":   { "order": "desc" }},
+        { "_score": { "order": "desc" }}
+    ]
+}
+
+九、分布式搜索
+

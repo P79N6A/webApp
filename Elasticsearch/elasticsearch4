@@ -1,0 +1,37 @@
+一、索引管理
+1、创建索引(手动创建索引):需要确保索引被创建在适当数量的分片上，在索引数据之前设置好分析器和类型映射
+
+创建方式
+PUT /my_index
+{
+    "settings": { ... any settings ... },
+    "mappings": {
+        "type_one": { ... any mappings ... },
+        "type_two": { ... any mappings ... },
+        ...
+    }
+}
+避免创建索引:config/elasticsearch.yml
+action.auto_create_index: false
+
+2、删除索引
+DELETE /my_index (删除一个索引)
+DELETE /_all (删除所有索引)
+
+3、索引设置
+PUT /my_temp_index
+{
+    "settings": {
+        "number_of_shards" :   5, //创建5个分片
+        "number_of_replicas" : 1  //副本数量
+    }
+}
+
+4、配置分析器
+
+5、元数据
+1、_source : Elasticsearch 用 JSON 字符串来表示"文档主体"保存在 _source 字段中
+2、_all :
+3、_id :
+
+
