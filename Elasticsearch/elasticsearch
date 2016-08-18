@@ -147,6 +147,7 @@ POST /website/blog/1/_update
 
 11 检索多个文档
 POST /_mget
+结果
 {
    "docs" : [
       {
