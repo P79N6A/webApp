@@ -1,0 +1,23 @@
+1: 排除依赖
+   <dependency>
+                <groupId>com.iqiyi.kiwi</groupId>
+                <artifactId>kiwi-thrift-new</artifactId>
+                <version>${kiwi.thrift.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>protobuf-java</artifactId>
+                        <groupId>com.google.protobuf</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.hadoop</groupId>
+                        <artifactId>zookeeper</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+2:
+<dependencyManagement> 使用这个时，必须在别的模块中，使用到这里的<dependency>时，才生效
