@@ -33,6 +33,7 @@ grep 过滤文件内容，并显示
 4、过滤非空行，grep -v '^$' test.sh
 5、'*' 配置零个或多个字符
 6、egrep '111|aaa' test.txt 查看包含111或aaa的行
+7、grep 'text' －c 查看匹配字符的计数。
 
 sed  替换或删除文件内容
 1、sed -i 's/name/name1/g' test.txt 替换name为name1\
@@ -41,6 +42,7 @@ sed  替换或删除文件内容
 4、sed -n 'root'p test.txt 打印test.txt包含root的行
 5、sed -i '/bash/'d test.txt 删除test包含bash的行
 6、sed -i '1,5'd test.txt删除1到5行
+
 
 awk 按分隔符输出
 less test.txt | awk -F ':' '{print $1}' 输出分段的第一个分段的内容
