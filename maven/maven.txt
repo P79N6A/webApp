@@ -1,4 +1,4 @@
-1: 排除依赖
+一: 排除依赖
    <dependency>
                 <groupId>com.iqiyi.kiwi</groupId>
                 <artifactId>kiwi-thrift-new</artifactId>
@@ -19,5 +19,8 @@
                 </exclusions>
             </dependency>
 
-2:
-<dependencyManagement> 使用这个时，必须在别的项目中，使用到这里的<dependency>时，才生效
+二:<dependencyManagement> 使用这个时，必须在别的项目中，使用到这里的<dependency>时，才生效
+
+三:plugins
+1、配置maven-complier-plugins插件：支持java编译
+2、maven-shade-plugin，打出的jar，可以在命令行中运行
