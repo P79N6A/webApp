@@ -20,4 +20,4 @@
             </dependency>
 
 2:
-<dependencyManagement> 使用这个时，必须在别的模块中，使用到这里的<dependency>时，才生效
+<dependencyManagement> 使用这个时，必须在别的项目中，使用到这里的<dependency>时，才生效
