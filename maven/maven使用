@@ -1,0 +1,89 @@
+一: 坐标元素
+1:groupId
+2:artifactId
+3:version
+4:packaging: maven项目的打包方式
+5:classifier:构建附属构建
+
+二: 依赖配置
+<dependencies>
+    <dependency>
+        <groupId></groupId> //1: groupId,artifactId和version
+        <artifactId></artifactId>
+        <version></version>
+        <type></type> //2: type 默认jar
+        <scope></scope> // 3: scope 依赖范围
+        <optional></optional> // 4: optional 标记依赖是否可选
+        <exclusions> // 5: exclusions 用来排除传递性依赖
+            <exclusion>
+            </exclusion>
+        </exclusions>
+    </dependency>
+</dependencies>
+
+三:依赖范围
+compile:  编译、测试、运行3种classPath都有效，例子spring-core
+test:     测试依赖范围,例子JUnit
+provided: 编译和测试有效,运行无效,例子servlet-api
+runtime:  运行时有效，jdbc
+system : maven仓库之外的类库文件
+import : 导入依赖范围。编译、测试、运行3种classPath都没有影响
+
+四:传递性依赖
+1、A依赖B项目，B依赖C项目，A依赖C项目
+2、依赖调解
+当存在这两种依赖传递时，路径不一样时，路径短的为先
+A->B->C-X(1.0)
+A->D->X(2.0)
+当存在这两种依赖传递时，路径一样时，根据pom依赖顺序
+A->B->Y(1.0)
+A->B->Y(2.0)
+
+3、可选依赖<optional>
+A->B,B->X(可选),B->Y(可选)
+因为X,Y是可选依赖，依赖将不会得以传递
+
+4、Maven依赖常见的技巧
+1、排除传递性依赖:
+当传递依赖中的版本与根项目依赖的项目版本冲突时，排除传递依赖的版本
+
+2、归类依赖:同一项目的不同模块，版本都是相同的
+可以使用相同的版本号统一管理
+
+3、优化依赖:去除多余的依赖，显示地声明某些必须的依赖
+mvn dependency:list 列出所有依赖
+mvn dependency:tree 列出所有依赖（以tree的形式）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -24,3 +24,4 @@
 三:plugins
 1、配置maven-complier-plugins插件：支持java编译
 2、maven-shade-plugin，打出的jar，可以在命令行中运行
+
