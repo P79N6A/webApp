@@ -60,6 +60,80 @@ mvn dependency:tree 列出所有依赖（以tree的形式）
 
 2: 本地仓库；远程仓库（中央仓库，私服，其他公共库）
 
+3: 远程仓库的配置(JBoss Maven)
+<repositories>
+    <repository>
+        <id>jboss</id>
+        <name>JBOSS</name>
+        <url>http://repository.jboss.com/maven2</url>
+        <release>
+            <enabled>true</enabled>//支持发布版本下载
+        </release>
+        <snapshots>
+            <enabled>false</enabled>//不支持快照下载
+        </snapshots>
+        <layout>default</layout>
+    </repository>
+</repositories>
+
+4: 将项目生的构建部署至远程仓库,需要下面配置
+<distributionManagement>
+    <repository>
+        <id>proj-releases</id>
+        <name>Proj Releases Repository</name>
+        <url>http://192.168.1.100/content/repositories/proj-releases</url>
+    </repository>
+    <snapshotRepository>
+        <id>proj-snapshots</id>
+        <name>Proj Snapshot Repository</name>
+        <url>http://192.168.1.100/content/repositories/proj-snapshots</url>
+    </snapshotRepository>
+</distributionManagement>
+
+通过mvn clean deploy命令，Maven就会将项目构建输出的构件部署到配置对应的远程仓库
+
+5: 镜像: 能提供更快的服务
+在setting.xml配置
+<settings>
+    <mirrors>
+        <id>maven.net.cn</id>
+        <name>one of the central mirrows in china</name>
+        <url>http://maven.net.cn/content/group/public</url>
+        <mirrorOf>central</mirrorOf>//中央仓库的镜像
+    </mirros>
+</setting>
+
+六、生命周期和插件
+一、生命周期
+1:clean 清理上一次构建生成的文件
+2:compile 编译项目的主代码。
+src/main/java目录下java文件输出至主classPath目录中
+3:test-comile 编译项目的测试代码
+src/test/java目录下java文件输出至测试classPath目录中
+4:test 使用单元测试框架运行测试，测试代码不会被打包或部署
+5:package 接受编译好的代码，打包成可发布的格式，如jar
+6:install 将包安装到maven本地仓库
+7:deploy 将最终的包复制到远程仓库
+8:site生命周期建立项目站点
+
+二、与插件的关系
+以及具体的任务是有插件完成: 插件以独立的构件形式存在,maven的生命周期与插件相互绑定
+1、mvn complier生命周期对应着 maven-compiler-plugin
+2、当实际项目中: 可能插件不满足实际的要求，需要在pom文件定义插件
+
+三、插件配置
+1、命令行插件配置
+mvn install -Dmaven.test.skip = true 跳过单元测试
+2、POM中插件全局配置
+
+
+
+
+
+
+
+
+
 
 
 
