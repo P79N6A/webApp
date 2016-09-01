@@ -125,6 +125,27 @@ src/test/java目录下java文件输出至测试classPath目录中
 1、命令行插件配置
 mvn install -Dmaven.test.skip = true 跳过单元测试
 2、POM中插件全局配置
+<plugin>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>2.0.2</version>
+    <configuration>
+        <source>1.6</source>
+        <target>1.6</target>
+        <encoding>UTF8</encoding>
+    </configuration>
+</plugin>
+
+3: Maven调用Ant任务:配置maven-antrun-plugin插件
+4: 插件仓库
+<pluginRepositories>
+    <pluginRepository>
+        <id></id>
+        <name>Maven Plugin Repository</name>
+        <url>http://repol.maven.org/maven2</url>
+        <layout>default</layout>
+    </pluginRepository>
+</pluginRepositories>
+
 
 
 
