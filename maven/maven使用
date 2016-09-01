@@ -125,6 +125,7 @@ src/test/java目录下java文件输出至测试classPath目录中
 1、命令行插件配置
 mvn install -Dmaven.test.skip = true 跳过单元测试
 2、POM中插件全局配置
+compiler时使用的插件
 <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
     <version>2.0.2</version>
@@ -133,6 +134,14 @@ mvn install -Dmaven.test.skip = true 跳过单元测试
         <target>1.6</target>
         <encoding>UTF8</encoding>
     </configuration>
+</plugin>
+处理资源文件时，使用的插件
+<plugin>
+      <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.2</version>
+      <configuration>
+                    <encoding>UTF-8</encoding>
+      </configuration>
 </plugin>
 
 3: Maven调用Ant任务:配置maven-antrun-plugin插件
@@ -145,6 +154,48 @@ mvn install -Dmaven.test.skip = true 跳过单元测试
         <layout>default</layout>
     </pluginRepository>
 </pluginRepositories>
+
+五:聚合与继承
+1: 聚合
+现有两个模块：account-email 和 account-persist，使用一条命令来构建这两个模块，创建一个模块account-aggregator
+在account-aggregator的pom文件中,
+<modules>
+    <module>account-email</module>
+    <module>account-persist</module>
+</modules>
+
+2: 继承 : 创建POM的父子结构，然后在父POM中声明一些配置供子POM继承
+<parent>
+    <artifactId></artifactId>
+    <groupId></groupId>
+    <version></version>
+    <relativePath></relativePath>
+</parent>
+
+3:依赖管理
+dependencies元素:说明依赖是会被继承的,应该与dependencyManagement元素一起使用，
+即能让子模块继承到父模块的依赖配置，又能保证子模块依赖使用的灵活性,可以做到统一管理依赖
+
+使用dependencyManagement，声明的依赖既不会给当前模块引入依赖，也不会给它的子模块引入依赖
+子模块引入依赖的配置，会简化很多
+注意　依赖范围import只能在dependencyManagement使用，作用将另一个模块的dependencyManagement完全引入进来
+
+4:插件管理<pluginManagement>
+
+5:构建顺序: 模块有依赖，先构建依赖
+mvn clean install -pl module1,module2 查看module1,module2的信息，其他的模块信息忽略
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
