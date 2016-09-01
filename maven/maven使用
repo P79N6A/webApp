@@ -186,6 +186,40 @@ dependencies元素:说明依赖是会被继承的,应该与dependencyManagement�
 mvn clean install -pl module1,module2 查看module1,module2的信息，其他的模块信息忽略
 
 
+六:灵活构建
+1、maven 属性:
+通过<properties>元素可以自定义一个或多个Maven属性
+
+2、maven针对不同的环境生成不同的构件:
+数据库配置文件properties:如下
+database.jdbc.driverClass = ${db.driver}
+database.jdbc.connectionURL = ${db.url}
+database.jdbc.username = ${db.username}
+database.jdbc.password = ${db.password}
+
+在pom文件中
+<profiles>
+    <profile>
+        <id>dev</id>
+        <properties>
+            <db.driver>com.mysql.jdbc.Driver</db.driver>
+            <db.url>jdbc:mysql://192.168.1.100:3306/test</db.url>
+            <db.username>dev</db.username>
+            <db.password>dev-pwd</db.password>
+        </properties>
+    </profile>
+</profiles>
+
+通过配置插件可以件pom定义的属性设置到propreties文件
+<plugin>
+    <artifactId>maven-resources-plugin</artifactId>
+    <version>2.4.2</version>
+    <configuration>
+        <encoding>UTF-8</encoding>
+    </configuration>
+</plugin>
+
+最后通过mvn clean install -Pdev 激活配置,可以激活多个profile(手动激活)
 
 
 
