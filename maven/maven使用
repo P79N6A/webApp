@@ -219,7 +219,55 @@ database.jdbc.password = ${db.password}
     </configuration>
 </plugin>
 
-最后通过mvn clean install -Pdev 激活配置,可以激活多个profile(手动激活)
+(1)mvn clean install -Pdev 激活配置,可以激活多个profile(手动激活)
+(2)settings文件显示激活
+<settings>
+    <activeProfiles>
+        <activeProfile>dev</activeProfile>
+    </activeProfiles>
+</settings>
+(3) 操作系统环境激活
+<profile>
+    <id>win</id>
+    <activation>
+    <os>
+        <family>Windows</family>
+    </os>
+    </activation>
+    <properties>
+    <deploy.env.name>test</deploy.env.name>
+    <deploy.env.host.name>win</deploy.env.host.name>
+    <knowledge.sdk.java.version>1.3.160719-SNAPSHOT</knowledge.sdk.java.version>
+    <knowledge.sdk.service.version>1.4.160809</knowledge.sdk.service.version>
+    </properties>
+</profile>
+<profile>
+    <id>mac</id>
+    <activation>
+        <os>
+            <family>Mac</family>
+        </os>
+    </activation>
+    <properties>
+        <deploy.env.name>test</deploy.env.name>
+        <deploy.env.host.name>win</deploy.env.host.name>
+        <knowledge.sdk.java.version>1.3.160719-SNAPSHOT</knowledge.sdk.java.version><!-- 测试环境下奇谱的SDK镜像版本 -->
+        <knowledge.sdk.service.version>1.4.160809</knowledge.sdk.service.version>
+    </properties>
+</profile>
+
+(4)pom文件中默认激活
+<profiles>
+    <profile>
+        <id>dev</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+    </profile>
+</profiles>
+
+(5)可以使用mvn help:active-profiles。查看当前激活的profile都有哪些
+
 
 
 
