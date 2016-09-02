@@ -1,0 +1,31 @@
+OSWorkFlow 入门指南
+1、样板文件
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE workflow PUBLIC "-//OpenSymphony Group//DTD OSWorkflow 2.6//EN"  "http://www.opensymphony.com/osworkflow/workflow_2_8.dtd">
+<workflow>
+    <initial-actions>
+    </initial-actions>
+    <steps>
+    </steps>
+</workflow>
+
+2、步骤和动作
+1: 一个步骤是工作流所处的位置
+例如：一个文档管理系统的流程 步骤可能包括First Draft（草案初稿）、Edit Stage（编辑阶段）、At publisher（出版商）
+
+2: 动作导致步骤的变更。
+
+3: 启动工作流
+在一个工作流开始前，它是没有状态的，不处在任务一个步骤，用户必须采取某些动作才能开始这个流程
+这些特殊步骤被定义在<initial-actions>
+<initial-actions>
+    <action id = "1" name="Start Workflow">
+        <results>
+            <unconditional-result old-status="Finished" status="Queued" step="1"/> 指明了下一个步骤和状态
+        </results>
+    </action>
+</initial-actions>
+
+
+
+
