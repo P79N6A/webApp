@@ -1,3 +1,0 @@
-一、nginx的master-worker模式
-
-nginx在启动后，会有一个master进程和多个worker进程。master进程主要用来管理worker进程

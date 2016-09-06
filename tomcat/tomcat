@@ -38,10 +38,60 @@ PersistentManager,使用Store(Filetore和JDBCStore),可以将会话信息保持�
 2 访问JNDI与JDBC的资源
 JNDI用来寻找资源的
 
+二 部署web应用
+1 部署web应用程序目录
+在server.xml配置<Context docBase="my-webapp" path="/my-webapp"></Context>
+
+2 部署war文件
+<Context docBase="my-webapp.war" path="/my-webapp"></Context>
+
+3 热部署
+<Host>配置,autoDeploy="true" deployOnStartup="false"
+再配置下面3步
+server.xml创建一个<Context>元素,嵌套到可以进行热部署的Host中;将war文件复制host的appbase目录中;创建一个指向web解压目录和war文件的文件
 
 
+三 Tomcat的性能调优
+主要包括: web服务器的性能,tomcat请求线程池,jvm的性能,dns查询的配置以及jsp预编译的性能
+
+1 tomcat连接器和Apache httpd连接器模块
+tomcat 提供了三种不同的服务器设计实现方法,以服务于http
+
+四 Tomcat与Apache Web服务器整合(Apache httpd)
+
+1: 整合方式
+http://blog.csdn.net/smilevt/article/details/8493398
+
+2: Apache与Tomcat的整合
 
 
+五 Tomcat安全防护
+1 系统安全防护
+2 配置网络 : tomcat主机的防火墙配置
+ws-host是apache httpd的前端web服务器
+允许apache httpd访问tomcat
+iptables -A input -p tcp --dport 8080 --source ws-host -d 10.0.0.2 -j accept (http连接,非ssl)
+iptables -A input -p tcp --dport 8009 --source ws-host -d 10.0.0.2 -j accept (http连接,ssl)
+iptables -A input -p tcp --dport 8443 --source ws-host -d 10.0.0.2 -j accept (ajp连接)
+不允许其他服务器访问tomcat
+iptables -A input -p tcp --dport 8080 -d 10.0.0.2 -j drop
+iptables -A input -p tcp --dport 8009 -d 10.0.0.2 -j drop
+iptables -A input -p tcp --dport 8443 -d 10,0.0.2 -j drop
 
+3 SecurityManager
+
+4 安全漏洞:
+XSS攻击: 获取用户进程的cookie值,成功后便以用户的身份登录
+Html注入: 编写html程序,并把html内容插入到网站的网页中
+sql注入: 请求中给服务器提交恶意sql查询字符串
+
+5 使用ssl加强tomcat安全防护性能
+
+六 配置
+1 server.xml : Tomcat主配置文件
+2 web.xml : servlet与其他适用于整个web应用程序设置的配置文件
+3 tomcat-users.xml : Tomcat的UserDatabaseRealm用于认证的默认角色,用户以及密码清单
+4 catalina.policy : Tomcat的java安全防护策略文件
+5 context.xml : 默认安装tomcat的所有主机的所有部署内容.
 
 
