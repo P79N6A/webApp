@@ -1,0 +1,2 @@
+1、hibernate随机查1000本书： 不支持limit
+Query query = bookDao.createQuery("SELECT qipuId from Book ORDER BY RAND()").setFirstResult(0).setMaxResults(1000);
