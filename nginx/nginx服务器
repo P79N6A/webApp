@@ -16,5 +16,8 @@
 ./nginx -g HUP
 
 3 主配置文件nginx.conf
+nginx.conf分为三个部分: 全局块,events块,http块,server块,location块
+
+
 
 
