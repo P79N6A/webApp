@@ -1,0 +1,20 @@
+一  Nginx的功能特性
+1 : http代理和反向代理
+2 : 负载均衡,主要是对大量前端访问和流量进行分流,来保证前端用户访问效率
+3 : web缓存: 支持Squid类似的缓存功能
+
+
+二 nginx的安装部署
+1 安装window和linux
+
+2 启动,重启,停止nginx服务
+(1)nginx服务在运行时,会保持一个主进程和一个或多个worker process工作进程,通过给nginx服务的主进程发送信号就可以控制服务的启停
+(2)/sbin目录下,运行下面命令
+./nginx -t 检查nginx服务器配置文件是否有语法错误
+./nginx 启动nginx
+./nginx -g TERM|INT|QUIT
+./nginx -g HUP
+
+3 主配置文件nginx.conf
+
+
