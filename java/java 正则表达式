@@ -1,27 +1,22 @@
 package test.com.iqiyi.mams.reading.core.service.statistics;
 
+import com.iqiyi.kiwi.utils.StringUitl;
+import com.iqiyi.mams.reading.core.dao.book.BookChapterDao;
 import com.iqiyi.mams.reading.core.dao.book.BookDao;
 import com.iqiyi.mams.reading.core.model.book.Book;
 import com.iqiyi.mams.reading.core.model.book.BookChapter;
-import com.iqiyi.mams.reading.core.model.book.BookVolume;
 import com.iqiyi.mams.reading.core.service.book.BookChapterService;
 import com.iqiyi.mams.reading.core.service.book.BookService;
-import com.iqiyi.mams.reading.core.service.book.BookVolumeService;
-import com.iqiyi.mams.reading.core.utils.StringUtil;
-import com.iqiyi.mams.reading.core.utils.similar.HammingDistanceSimilarity;
+import com.sun.tools.javac.util.StringUtils;
+import javafx.scene.shape.LineTo;
 import org.hibernate.Query;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.jruby.ast.types.INameNode;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import test.com.iqiyi.mams.reading.core.service.audit.impl.CommonTest;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,72 +35,140 @@ public class StatisticsTest extends CommonTest {
 
     @Autowired
     private BookDao bookDao;
+
+    @Autowired
+    private BookChapterDao bookChapterDao;
     @Test
     public void StatisticsTest() {
         //随机查1000本书
-//        Query query = bookDao.createQuery("SELECT qipuId from Book ORDER BY RAND()").setFirstResult(0).setMaxResults(1000);
-//
-//        List<Long> list = query.list();
-//        for(Long qiPuId:list){// 多条分组记录
-//            statistics(qiPuId);
-//        }
-        statistics(205847339L);
-
+        Query query = bookDao.createQuery("SELECT qipuId from Book ORDER BY RAND()").setFirstResult(0).setMaxResults(20);
+        List<Long> list = query.list();
+        StringBuffer buffer = new StringBuffer();
+        for(Long qiPuId:list){// 多条分组记录
+            int statistics = statistics(qiPuId);
+            if (statistics==1){
+                buffer.append("有问题书:"+qiPuId).append("\r\n");
+            }else if(statistics==2){
+                buffer.append("无问题书:"+qiPuId).append("\r\n");
+            }
+        }
+        outFile("D:/file/book",false,buffer.toString());
     }
 
     /**
      * 统计方法
      * @param qiPuId
      */
-    private void statistics(Long qiPuId) {
-
+    private int statistics(Long qiPuId) {
         Book book = bookService.getBookByQipuId(qiPuId);
-
-        List<BookChapter> bookChapterListByBookId = bookChapterService.findBookChapterListByBookId(book.getId());
-
+        Query query = bookChapterDao.createQuery("SELECT volumeId,title,chapterNumber from BookChapter where bookId = ? and status =1 GROUP BY volumeId,title,chapterNumber ORDER BY volume_id,chapter_number").setParameter(0, book.getId());
+        List<Object[]> bookChapterListByBookId = query.list();
         double bookTotal = bookChapterListByBookId.size();
         double format = 0;
-        for (BookChapter bookChapter : bookChapterListByBookId) {
-            if (format(bookChapter.getTitle()))
-                format++;
+        for (Object[] bookChapter : bookChapterListByBookId) {
+            String title = (String) bookChapter[1];
+            if (title!=null && title.length()!=0) {
+                if (format(title))
+                    format++;
+            }
         }
+
+        Map<Long,ArrayList<Integer>> mapList = new HashMap<Long, ArrayList<Integer>>();//按照每本书，卷章区分
         //正确格式化的章： 80%以上的书，才做统计处理
         if ((format / bookTotal * 100) > 80) {
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("================book id============="+qiPuId).append("\r\n");
             for (int j = 0 ; j<bookChapterListByBookId.size() ;j++){
                 //规则1： 不能格式化的章title，标示-1
                 //规则2： 能格式化的章title，如第1章***，标示为1；如第2章***，标示为2
-                BookChapter bookChapter = bookChapterListByBookId.get(j);
-                Matcher seqMatcher = rule(bookChapter.getTitle());
+                Object[]  bookChapter= bookChapterListByBookId.get(j);
+                Matcher seqMatcher = rule((String)bookChapter[1]);
                 if (seqMatcher.find()) {
-                    if (j > 0) {
-                        BookChapter beforeBookChapter = bookChapterListByBookId.get(j - 1);
-                        Matcher beforeSeqMatcher = rule(beforeBookChapter.getTitle());
-                        if (beforeSeqMatcher.find()) {
-                            //判断是否乱序
-                            if (Integer.valueOf(beforeSeqMatcher.group(1)) > Integer.valueOf(seqMatcher.group(1))) {
-                                logger.info("书信息: " + bookChapter.getBookId() +
-                                        " 卷信息: " + bookChapter.getVolumeId() + " 章信息: " + bookChapter.getId() + " 章标题: " + bookChapter.getTitle() + ": 章乱序 " + seqMatcher.group(1));
-                            }else {
-                                logger.info("书信息: " + bookChapter.getBookId() + " 卷信息: " + bookChapter.getVolumeId() + " 章信息: " + bookChapter.getId() +
-                                        " 章标题: " + bookChapter.getTitle() + ": 章序号 " + seqMatcher.group(1));
-                            }
-                        }else {
-                            logger.info("书信息: " + bookChapter.getBookId() + " 卷信息: " + bookChapter.getVolumeId() + " 章信息: " + bookChapter.getId() +
-                                    " 章标题: " + bookChapter.getTitle() + ": 章序号 " + seqMatcher.group(1));
-                        }
-                    } else {
-                        logger.info("书信息: " + bookChapter.getBookId() + " 卷信息: " + bookChapter.getVolumeId() + " 章信息: " + bookChapter.getId() +
-                                " 章标题: " + bookChapter.getTitle() + ": 章序号 " + seqMatcher.group(1));
+                    if (mapList.get((Long)bookChapter[0])==null){
+                        buffer.append("================Volume============="+(Long)bookChapter[0]).append("\r\n");
+                        ArrayList<Integer> chapter = new ArrayList<Integer>();
+                        chapter.add(Integer.valueOf(seqMatcher.group(1).trim()));
+                        mapList.put((Long)bookChapter[0],chapter);
+                        buffer.append("chapter Title "+ (String)bookChapter[1]+"    chapter info ====" + Integer.valueOf(seqMatcher.group(1).trim())).append("\r\n");
+
+                    }else {
+                        mapList.get((Long)bookChapter[0]).add(Integer.valueOf(seqMatcher.group(1).trim()));
+                        buffer.append("chapter Title "+ (String)bookChapter[1]+"    chapter info ==== " + Integer.valueOf(seqMatcher.group(1).trim())).append("\r\n");
+
                     }
-                }else {
-                   logger.info("书信息: "+bookChapter.getBookId() +" 卷信息: " +bookChapter.getVolumeId() + " 章信息: " + bookChapter.getId() +
-                           " 章标题: "+bookChapter.getTitle()+": 章不能格式化 "+-1);
                 }
             }
+            buffer.append("==================end=====================").append("\r\n");
+
+            //乱序查找
+            String disorderChapter = findDisorderChapter(mapList);
+            buffer.append(disorderChapter).append("\r\n");
+            //缺章查找
+            String findLossChapter = findLossChapter(mapList);
+            buffer.append(findLossChapter).append("\r\n");
+            String filename = String.valueOf(qiPuId);
+            outFile("D:/file/"+filename,false,buffer.toString());
+
+            if (disorderChapter.length()!=0 || findLossChapter.length()!=0){
+                //有问题书
+                return 1;
+            }
+            else {
+                return 2;
+            }
+
         } else {
             //书不满足统计的需求
             logger.info("书不满足统计的需求qiPuId: " + qiPuId);
+            return -1;
         }
+    }
+
+    /**
+     *遍历卷下的章，如果章序号<前面章节号为乱序
+     * @param mapList
+     */
+    private String findDisorderChapter(Map<Long, ArrayList<Integer>> mapList) {
+        StringBuffer buffer = new StringBuffer();
+        for (Map.Entry<Long,ArrayList<Integer>> entry : mapList.entrySet()) {
+            ArrayList<Integer> list = entry.getValue();
+            for (int j = 0 ; j<list.size() ;j++){
+                if (j>0 && Integer.valueOf(list.get(j)) < Integer.valueOf(list.get(j-1))){
+                    buffer.append("卷:" +entry.getKey() + " 章:"+ list.get(j) + "乱序").append("\r\n");
+                }
+            }
+        }
+        return buffer.toString();
+    }
+
+    /**
+     *
+     * @param mapList
+     * 缺章
+     */
+    private String findLossChapter(Map<Long, ArrayList<Integer>> mapList) {
+        StringBuffer buffer = new StringBuffer();
+        for (Map.Entry<Long,ArrayList<Integer>> entry : mapList.entrySet()) {
+            ArrayList<Integer> list = entry.getValue();
+            Collections.sort(list);//排序
+
+            int start = Integer.valueOf(list.get(0));
+            for (int j = 1 ; j<list.size() ;j++){
+
+                if (Integer.valueOf(list.get(j))== start){
+                    buffer.append("卷:" +entry.getKey() +  "章重复 " + Integer.valueOf(list.get(j))).append("\r\n");
+                }else {
+                    if (Integer.valueOf(list.get(j))!= start+1){
+                        int integer = list.get(j)-1;
+                        buffer.append("卷:" +entry.getKey() +  "缺章 " + integer).append("\r\n");
+                        start++;
+                    }
+                    start++;
+                }
+
+            }
+        }
+        return buffer.toString();
     }
 
     /**
@@ -114,6 +177,7 @@ public class StatisticsTest extends CommonTest {
      * @return
      */
     private Matcher rule(String title) {
+        logger.info("title======="+title);
         return Pattern.compile("第(\\s*[0-9]+\\s*)小?章").matcher(title);
     }
 
