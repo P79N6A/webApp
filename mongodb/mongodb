@@ -1,20 +1,35 @@
 一、mongodb
 1 命令行
+保存数据
+db.user.save({name:"jikexueyuan2",age:20})
+db.user.save({name:"jikexueyuan1",age:10})
+查看数据
+db.user.find()
+查看数据,条件
+db.user.find(age:20)
+更新通过id
+db.user.save({"_id":id ,name:"sssss"})//会将不想更新的数据，清除掉
+更新，只更新指定的字段
+db.user.update({"_id":id},{$set:{name:"aaa"}})//只会更新name，不会影响age
+删除记录
+db.user.remove({name:"jikexueyuan2"})
+删除集合（表）
+db.user.drop();
+show collections 查看所有集合
+show dbs 查看库
+删除库
+use mydb;切换库
+db.dropDatabase()//删除库
 
 二、使用python操作mongodb
 1 下载pip
-
 2 安装pymongo ： pig install pymongo
-
 3 使用python开发
 print("hello python");
 from pymongo import MongoClient
 mc =MongoClient("yl-mongodb-mams-online001-bjdxt.qiyi.virtual",27017);
-
 db.author.save({"name":"test"});
 c =db.author.find()
-
 for o in c:
     print(o)
-
 mc.close()
