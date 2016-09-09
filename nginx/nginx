@@ -35,6 +35,14 @@ nignx能建立的最大连接数，应该是worker_connections * worker_processe
 1、nginx中指的是http请求，数据结构是ngx_http_request_t。ngx_http_request_t是对一个http请求的封装。
 一个http请求，包含请求行，请求头，请求体，响应行，响应头，响应体
 
+nginx处理请求:一个请求从ngx_http_process_request开始的，在这个函数中，会设置读事件ngx_http_process_request_line,这是用来处理请求行的，
+然后由ngx_http_parse_request_line解析请求，通过ngx_http_read_request_header 来读取请求数据，调用ngx_http_process_request来处理请求,最后调用
+ngx_http_handler处理http请求
+
+2、keepalive
+长连接： http请求是基于TCP协议之上的，客户端在发起请求前，需要先与服务端建立tcp连接，而每次tcp连接是需要三次握手，比较耗时
+如果知道每个请求头与响应体的长度，那么我们是可以在一个连接上面执行多个请求，所谓长连接
+
 
 
 
