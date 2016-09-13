@@ -25,3 +25,8 @@ String start = dd.format(startDate);
 String end = dd.format(endDate);
 
 Query query = bookDao.createQuery("SELECT id from Book where status = 1 and createTime >= '" + start +"' and createTime <= '"+end+"'");
+
+
+4、hql多表查询
+ Query query = bookChapterDao.createQuery("SELECT a.volumeId,a.title,a.chapterNumber,b.title from BookChapter as a , BookVolume as b" +
+                "  where a.volumeId = b.id  and a.bookId = ? and a.status = 1").setParameter(0, book.getId());
