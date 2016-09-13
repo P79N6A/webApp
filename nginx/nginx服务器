@@ -84,7 +84,7 @@ server
     }
 }
 
-3: 反向代理服务配置
+3: 反向代理服务配置 : Nginx的反向代理服务也比较高效
 upstream proxy_svrs
 {
     server host1;
