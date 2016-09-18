@@ -1,0 +1,7 @@
+1：匹配Jj开头,后续ava,(ness),[0-9]后续3个数字位的字符串
+Matcher m = Pattern.compile("[Jj]ava(ness)[0-9]{3}").matcher("javaness111");
+
+2: 匹配符.*
+表示匹配任何多个字符
+
+3:X* 表示X出现0次或多次，X? 表示X出现0次或1次
