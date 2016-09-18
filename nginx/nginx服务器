@@ -96,9 +96,32 @@ server
 listen 80;
 server_name www.myweb.name;
 location /{
-    proxy_pass proxy_svrs; //反向代理
+    proxy_pass proxy_svrs;
+ }
 }
-}
+
+4: 使用该指令的过程中还要注意,URL中是否包含有URI,Nignx服务器的处理方式是不同的,如果URL中不包含URI,Nginx服务器不会改变原来地址的URI
+但是如果包含了URI,Nginx服务器将会使用新的URI代替URI.
+
+5: Proxy Buffer(缓冲): 每个请求都会根据相应的指令配置各自的Buffer
+Proxy Buffer启动后, 会异步地将后端服务器的响应数据传递给客户端,解决传输效率不同步或者优先级别不相同的设备之间传递数据
+
+6: Proxy Cache(缓存): 将硬盘数据在内存中建立缓存数据,提高数据的访问效率,对于过期不用的缓存可以销毁,但不会销毁硬盘的数据
+
+7: Nginx服务器的负载均衡
+nginx服务器反向代理服务的一个用途是实现负载均衡
+(1) 对所有请求实现一般轮询规则的负载均衡
+
+(2) 对所有请求实现加权轮询规则的负载均衡
+
+(3) 对特定资源实现负载均衡
+
+(4) 对不同域名实现负载均衡
+
+(5) 带有URL重写(Rewrite)的负载均衡
+
+
+
 
 
 
