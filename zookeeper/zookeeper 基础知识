@@ -1,7 +1,8 @@
 一、ZooKeeper 基础知识
 
 1 、zookeeper 环境搭建
-有5台Server搭建一个zookeeper集群，这5台机器根据选举算法，选出一个leader节点，这个leader节点与其他4台Server相互通信，是长连接，当这4台Server有改动时，先将改动同步到leader节点，然后再由leader将改动同步到每一个Server。搭建好zookeeper后，就可以与Client连接，除了leader节点，其余的Server都可以与Client保持长连接。但leader挂掉时，zookeeper会重新选出一个leader。
+有5台Server搭建一个zookeeper集群，这5台机器根据选举算法，选出一个leader节点，这个leader节点与其他4台Server相互通信，是长连接，当这4台Server有改动时，先将改动同步到leader节点，
+然后再由leader将改动同步到每一个Server。搭建好zookeeper后，就可以与Client连接，除了leader节点，其余的Server都可以与Client保持长连接。但leader挂掉时，zookeeper会重新选出一个leader。
 
 2、zookeeper 协同
 zookeeper 维护一个类似文件系统的数据结构，每一个目录称为znode，可以像文件系统一样，增加、删除znode，znode是可以存储数据的。
