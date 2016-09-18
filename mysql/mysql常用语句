@@ -1,0 +1,23 @@
+查看见表语句：
+show create table dim_dept_saler
+
+创建表
+CREATE table dim_time_v3 as SELECT 。。
+
+csv文件 导入数据库
+LOAD DATA local INFILE 'D://dev_code//mail.csv' into table fact_repertory_alarm_mail FIELDS TERMINATED by '\t'
+
+存储过程
+DELIMITER //
+create procedure insert_test1(in loops int)
+begin
+declare v1 int;
+set v1 = loops;
+while v1 > 0 do
+insert into test1 values('99');
+set v1 = v1 - 1;
+end while;
+end;
+//
+
+Call insert_test1(1);
