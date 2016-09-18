@@ -1,0 +1,29 @@
+Redis与Memcached
+1:  value 值
+Redis 支持的值比较多
+支持： 字符串、列表、集合、散列、有序集合
+
+
+2: 网络IO模型
+Redis 是单线程
+Memcached是多线程，非阻塞
+
+3:内存管理方面
+   Redis使用现场申请内存的方式来存储数据
+   Memcached使用预分配的内存池的方式
+
+4： 磁盘管理
+memcached 不支持写入磁盘
+redis 可以写入磁盘
+
+5:  聚合函数
+redis的聚合数据可以是整数或浮点
+memcached 只能是整数
+
+使用场景
+1.Redis使用最佳方式是全部数据in-memory。
+　　2.Redis更多场景是作为Memcached的替代者来使用。
+　　3.当需要除key/value之外的更多数据类型支持时，使用Redis更合适。
+　　4.当存储的数据不能被剔除时，使用Redis更合适。
+
+当实现一个 基于redis的list可以实现消息队列时，就可以使用redis
