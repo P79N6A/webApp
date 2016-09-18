@@ -1,0 +1,39 @@
+hibernate对集合属性的操作 : 对于实体中，集合属性是延时加载的，也是是说查出实体时，不去查询集合元素，只有在获取集合元素的时候，在进行查询
+
+一、set 集合属性操作
+1、set集合映射配置、set集合属性的使用
+在Student实例类中,添加 Set<String>  hobby , 在映射文件中使用
+<set> 元素 : 单独创建一个表
+<set name="hobby" table = "hobby_set">
+<key column = "student_id"></key>
+<element type = "string" column = "hobby"/>
+</set>
+
+2、list集合映射配置、list集合属性的使用
+<list name="hobby" table = "hobby_list">
+<key column = "student_id"></key>
+<list-index column="position"></list-index>
+<element type = "string" column = "hobby"/>
+</list >
+
+3、collection集合
+<bag name="hobby" table="hobby_tab_c">
+<key column = "student_id"></key>
+<element type = "string" column = "hobby"/>
+</bag>
+
+<idbag> 不会想<bag>先删记录，再插入记录，所以性能比<bag>好
+<idbag name="hobby" table="hobby_tab_c">
+<key column = "student_id"></key>
+<element type = "string" column = "hobby"/>
+<collection-id type="string" column="hobby_id">
+<generator class = "uuid"></generator>
+</collection-id>
+</idbag>
+
+4、map集合属性操作
+<map name="hobby" table = "stu_map_hobby">
+<key column = "student_id"></key>
+<map-key column = "map-key" type = "string">
+<element type= "string" column = "hobby">
+</map>
