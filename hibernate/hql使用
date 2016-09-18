@@ -2,8 +2,11 @@
 Query query = bookDao.createQuery("SELECT qipuId from Book ORDER BY RAND()").setFirstResult(0).setMaxResults(1000);
 
 2、hql传参数
+通过?来绑定,按位置
 Query query = bookChapterDao.createQuery("SELECT volumeId,title,chapterNumber from BookChapter where bookId = ?
 GROUP BY volumeId,title,chapterNumber ORDER BY volume_id,chapter_number").setParameter(0, book.getId());
+通过:来绑定，按名称
+
 
 3、hql查询近一个月和一周
 //创建Date对象
