@@ -1,0 +1,104 @@
+泛型的主要目的之一就是用来指定容器要持有什么类型的对象，而且有编译器来保证类型的正确性（不在运行时才检查出来）
+
+可以暂时不指定类型，而是稍后再决定具体使用什么类型，可以使用类型参数，用尖括号括住，放在类名后面。然后在使用这个类的时候，再用实际的类型替代此类型参数。T就是类型参数。
+
+一、泛型类<T>
+在定义一个类时，后面使用<T>
+
+在构造方法中，使用泛型
+class Con<T>{
+     private T value;
+     public Con(T value){
+           this.value = value;
+     }
+}
+
+指定多个泛型
+Class Gen<K,V>{
+      private K key;
+      private V value;
+
+      public T getKey(){
+           return key;
+      }
+
+      public void setKey(K key){
+           this.key = key;
+      }
+
+      public T getValue(){
+           return value;
+      }
+
+      public void setValue(V value){
+           this.value= value;
+      }
+}
+
+
+
+二、泛型接口
+接口使用泛型，与类使用泛型一样
+interface GenInter<T>{
+       public void say();
+}
+
+class Gin<T> implements GenInter<T>{
+       private T info;
+
+       @Override
+       public void say(){
+
+       }
+}
+
+public class GrenericDemo05{
+        public static void main(String[] args){
+                  Gin<String> g = new   Gin<String>();
+         }
+}
+
+三、泛型方法：使得该方法能够独立于类而产生变化。
+使用原则：尽量使用泛型方法，如果泛型方法可以取代将整个类泛型化，那么就应该只使用泛型方法。
+对于static的方法，无法访问泛型类的类型参数，如果static方法需要使用泛型能力，就必须使其成为泛型方法。
+定义泛型方法：只需将泛型参数列表置于返回值
+例如：
+class Gener{
+           public <T> T tell(T t){
+                return t;
+           }
+}
+
+public class GenericDemo{
+         public static void main(String[] args){
+                  Gener g = new Gener();
+                  String str = g.tell("abc");
+         }
+}
+
+四、匿名内部类：泛型可以应用于内部类以及匿名内部类
+
+五、通配符
+public class GenericDemo{
+         public static void main(String[] args){
+                Info<String> i = new Info<String>();
+
+                Info<Integer> i = new Info<Integer>();
+         }
+
+         public static void tell(Info<?> i){
+                  System.out.println(i)
+         }
+}
+
+六、泛型数组
+pubilc class GenericDemo{
+          public static void main(String[] args){
+                     Integer arr [] = {1,2,3,4}
+                     tell(arr);
+           }
+
+          public static <T> void tell(T arr[]){
+
+          }
+}
