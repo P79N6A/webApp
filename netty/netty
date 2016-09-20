@@ -41,7 +41,24 @@ LineBasedFrameDecoder和StringDecoder
 
 四、分隔符合定长解码器
 DelimiterBaseFrameDecoder : 自动完成以分隔符做结束标志的消息的解码
+对于DelimiterBaseFrameDecoder，可以设置单条消息的最大长度，如果达到最大长度时，没有查到分隔符，会抛出异常
 FixedLengthFrameDecoder : 自动完成对定长消息的解码
+
+五、编解码技术
+1: java 序列化　序列化ID很重要，因为如果不指定序列化ID，序列化的类如果修改了内容的话，原来序列化的结果，将无法再反序列化
+java序列化缺点，无法跨语言，序列化后的码流大
+
+六、Java序列化
+Netty使用了ObjectEncoder编码器和ObjectDecoder解码器实现对普通POJO对象的序列化。
+
+七、Google Protobuf 编辑码
+1: Protobuf数据序列化框架
+
+
+
+
+
+
 
 
 
