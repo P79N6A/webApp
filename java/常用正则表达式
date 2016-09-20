@@ -1,3 +1,6 @@
+包括了两个类，Pattern(模式类)和Matcher(匹配器类)。
+Pattern类是用来表达和陈述所要搜索模式的对象，Matcher类是真正影响搜索的对象
+
 1:匹配Jj开头,后续ava,(ness),[0-9]后续3个数字位的字符串
 Matcher m = Pattern.compile("[Jj]ava(ness)[0-9]{3}").matcher("javaness111");
 

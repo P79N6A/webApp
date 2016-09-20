@@ -25,6 +25,27 @@ Selector轮询注册在其上的Channel，如果Channel上有新的TCP连接接�
 3、AIO编程
 对应UNIX网络编程中的事件驱动I/0，它不需要通过多路复用器（Selector）对注册的通道进行轮询操作即可实现异步读写
 
+二、Netty入门应用
+相对于传统的NIO程序，Netty的代码更加简洁，开发难度更低，扩展性也更好，作为基础网络通信框架。
+
+三、Netty解决（TCP粘包/拆包问题的解决）
+TCP包划分：一个完整的包可能会被TCP拆分成多个包进行发送，也有可能把多个小的包封装成一个大的数据包发送
+1、TCP粘包/拆包:
+粘包/拆包产生的原因： write写入的字节大小大于套接口发送缓冲区大小
+
+2、解决策略: 只能通过上层的应用协议栈设计来解决,可以消息定长
+
+3、Netty的半包解码器来解决TCP粘包/拆包
+解决TCP粘包/拆包导致的半包读写问题
+LineBasedFrameDecoder和StringDecoder
+
+四、分隔符合定长解码器
+DelimiterBaseFrameDecoder : 自动完成以分隔符做结束标志的消息的解码
+FixedLengthFrameDecoder : 自动完成对定长消息的解码
+
+
+
+
 
 
 
