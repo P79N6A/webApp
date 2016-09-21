@@ -39,4 +39,25 @@ Java api中 流就是使用这种模式
 注意多线程时的单列
 1: 双重锁定(懒汉)
 在加锁前，先判定是否已经存在实例
+public class Singleton {
+    private volatile static Singleton singleton;
+    private Singleton (){}
+    public static Singleton getSingleton() {
+    if (singleton == null) {
+        synchronized (Singleton.class) {
+        if (singleton == null) {
+            singleton = new Singleton();
+        }
+        }
+    }
+    return singleton;
+    }
+} 
 2: 直接在static变量上初始化(饿汉)
+public class Singleton {
+    private static Singleton instance = new Singleton();
+    private Singleton (){}
+    public static Singleton getInstance() {
+    return instance;
+    }
+}
