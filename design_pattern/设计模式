@@ -97,6 +97,12 @@ Target 目标接口
 Adapter—>Adaptee(被适配类)
 适配器
 
+9、桥接模式:
+当系统可能有多角度分类，每一种分类都有可能变化，那么就把这种多角度分离出来让他们独立变化，减少他们之间的耦合
+Abstraction -> Implementor
+|                |       |
+具体Abstraction  impl1   impl2
+
 
 
 
