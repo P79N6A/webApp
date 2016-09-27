@@ -1,0 +1,20 @@
+一、JMS消息
+1、一个Message对象有3个部分：消息头，消息属性，消息体
+消息头包括
+自动设置
+JMSDestination、JMSDeliveryMode、JMSMessageID、JMSTimestamp、JMSExpiration、JMSRedelivered
+JMSPriority
+开发者分配的消息头
+JMSReplyTo : 要求消费者对一条消息做出应答
+JMSCorrelationID : 提供了一个消息头，用于将当前的消息和先前的某个消息或应用程序特定的ID关联起来
+JMSType: 用于标识消息结构和有效负载的类型
+
+消息属性
+String、boolean、byte、double、int、long、float
+
+消息类型
+1、Message 以及它的子接口
+TextMessage、StreamMessage、MapMessage、OjectMessage和ByteMessage
+
+2、
+
