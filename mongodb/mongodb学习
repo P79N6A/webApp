@@ -7,7 +7,7 @@
 集合就是一组文档
 一个集合里面的文档可以是各式各样的
 
-3:客户端
+3、客户端
 show dbs:显示数据库列表
 show collections：显示当前数据库中的集合（类似关系数据库中的表）
 show users：显示用户
@@ -20,4 +20,9 @@ MongoDB没有创建数据库的命令，但有类似的命令。
 先运行use myTest命令
 再做一些操作（如：db.createCollection('user')）
 这样就可以创建一个名叫“myTest”的数据库。
+
+4、MongoDB数据类型
+MongoDB中存储的文档必须有一个"_id"键,一个集合中，文档的唯一标识。
+
+
 
