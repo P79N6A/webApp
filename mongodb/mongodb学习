@@ -37,6 +37,13 @@ db.people.ensureIndex({"username":1},{"unique":ture,"dropDups":ture})
 db.people.dropIndex({"username":1})
 6、地理空间索引
 
+聚合
+1、db.people.count()
+
+分片: 将数据拆分，将其分散存在不同的机器上
+自动分片:将集合切分成，每个数据库分散到若干分片中
+
+
 
 
 
