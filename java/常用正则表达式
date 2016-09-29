@@ -6,7 +6,7 @@ Pattern类是用来表达和陈述所要搜索模式的对象，Matcher类是真
 Matcher m = Pattern.compile("[Jj]ava(ness)[0-9]{3}").matcher("javaness111");
 
 2:量词
-X?      可选的X（即X可能出现，也可能不出现）
+X?      X，可以重复0次或1次
 X*      X，可以重复0次或多次
 X+      X，可以重复1次或多次
 

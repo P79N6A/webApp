@@ -23,7 +23,7 @@ db.dropDatabase()//删除库
 
 二、使用python操作mongodb
 1 下载pip
-2 安装pymongo ： pig install pymongo
+2 安装pymongo ： pip install pymongo
 3 使用python开发
 print("hello python");
 from pymongo import MongoClient
