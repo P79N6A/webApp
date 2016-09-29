@@ -7,7 +7,7 @@
 集合就是一组文档
 一个集合里面的文档可以是各式各样的
 
-3、客户端
+二、客户端
 show dbs:显示数据库列表
 show collections：显示当前数据库中的集合（类似关系数据库中的表）
 show users：显示用户
@@ -21,8 +21,24 @@ MongoDB没有创建数据库的命令，但有类似的命令。
 再做一些操作（如：db.createCollection('user')）
 这样就可以创建一个名叫“myTest”的数据库。
 
-4、MongoDB数据类型
+三、MongoDB数据类型
 MongoDB中存储的文档必须有一个"_id"键,一个集合中，文档的唯一标识。
+
+http://www.cnblogs.com/stephen-liu74/archive/2012/08/01/2561557.html
+四、索引 : 使用规则和传统数据库类似
+1、创建索引
+db.people.ensureIndex({"username":1},{"backgroud":ture})
+2、索引的使用时，顺序要和mysql一样
+3、唯一索引：可以确保集合的每个文档的指定键都有唯一值
+db.people.ensureIndex({"username":1},{"unique":ture})
+4、消除重复: 有重复时，会保留第一个，删除其余
+db.people.ensureIndex({"username":1},{"unique":ture,"dropDups":ture})
+5、删除索引
+db.people.dropIndex({"username":1})
+6、地理空间索引
+
+
+
 
 
 
