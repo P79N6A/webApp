@@ -1,0 +1,2 @@
+1、问题 org.hibernate.HibernateException: No Hibernate Session bound to thread, and configuration does not allow creation of non-transactional one here
+hibernate的操作，必须在事务里面提交
