@@ -7,17 +7,27 @@ db.user.save({name:"jikexueyuan1",age:10})
 db.user.find()
 查看数据,条件
 db.user.find(age:20)
+db.集合名.find(query,fields,limit,skip) 包括4个参数
+1、query 指明查询条件，相等于sql中的where语句
+db.student.find({name:"joe","age":{$lt:22}) 查找名字joe，年龄小于22岁
+2、字段映射
+db.student.find({"age":{$lt:22},{"_id":0,"name":1}}) 返回的结果中包括name字段，不包括_id字段
+3、限制结果集
+db.student.find({name:"joe",{"name":1,"age":1},5})
+4、skip 偏移量 用于分页
+db.student.find({name:"joe"},{"name":1,"age":1},5,10) 返回第11-15 记录
+
+
 更新通过id
 db.user.save({"_id":id ,name:"sssss"})//会将不想更新的数据，清除掉
 更新，只更新指定的字段
 db.user.update({"_id":id},{$set:{name:"aaa"}})//只会更新name，不会影响age
-注意: mongodb文档修改
+注意: mongodb的update函数
 db.集合名.update(query,obj,upsert,multi)
 query 查询条件
 obj 更改内容
 upsert 当查询条件query指明的文档不存在时，是否需要插入一条新文档
 multi　当查询条件query返回多个文档时，是否一次更新所有满足条件的文档,默认只更新一个文档
-
 MongoDB提供原子性的更新操作符
 $inc 为文档中某个字段增加一定的值，$set 修改文档中的字段值
 $mul 为文档中字段的值，$unset 删除文档中的字段
