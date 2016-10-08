@@ -69,7 +69,17 @@ db.people.dropIndex({"username":1})
 分片: 将数据拆分，将其分散存在不同的机器上
 自动分片:将集合切分成，每个数据库分散到若干分片中
 
-五、mongodb的游标
+五、mongodb 查询操作符的使用
+
+查询年龄在19或21，并且 name是joe或jack
+db.student.find({
+    $and:[
+        { $or:[{age:19},{age:21}]}
+        { $or:[{name:"joe"},{name:"jack"}]}
+    ]
+})
+
+mongodb的游标
 
 
 
