@@ -1,6 +1,6 @@
 一、mongodb
 1 命令行
-保存数据
+保存数据: 如果mongodb文档和数据库不存在的话，会自动创建
 db.user.save({name:"jikexueyuan2",age:20})
 db.user.save({name:"jikexueyuan1",age:10})
 查看数据
@@ -11,6 +11,21 @@ db.user.find(age:20)
 db.user.save({"_id":id ,name:"sssss"})//会将不想更新的数据，清除掉
 更新，只更新指定的字段
 db.user.update({"_id":id},{$set:{name:"aaa"}})//只会更新name，不会影响age
+注意: mongodb文档修改
+db.集合名.update(query,obj,upsert,multi)
+query 查询条件
+obj 更改内容
+upsert 当查询条件query指明的文档不存在时，是否需要插入一条新文档
+multi　当查询条件query返回多个文档时，是否一次更新所有满足条件的文档,默认只更新一个文档
+
+MongoDB提供原子性的更新操作符
+$inc 为文档中某个字段增加一定的值，$set 修改文档中的字段值
+$mul 为文档中字段的值，$unset 删除文档中的字段
+$rename 为文档中的字段重命名 ， $min 当前更新值小于文档中的值，就将其替换
+$currentDate 更新文档中的日期类型为当前时间
+$max 当前更新值大于文档中的值，就将其替换
+
+
 删除记录
 db.user.remove({name:"jikexueyuan2"})
 删除集合（表）
