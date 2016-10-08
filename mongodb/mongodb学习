@@ -79,7 +79,21 @@ db.student.find({
     ]
 })
 
-mongodb的游标
+mongodb的游标:类似关系型数据的游标cursor对象，使用它来遍历结果集中的数据
+
+因为使用find函数进行查询是，mongodb并不是一次返回结果集中的所有文档，
+而是以多条文档的形式分批来返回查询结果，返回的文档会缓存到内存中。当取到结果集最后时，cursor会给mongodb服务器发请求，再次读取数据
+
+mongodb的生命周期
+
+mongodb游标快照: db.collection.find().snapshot()
+使用快照后，查询就会在_id索引上来遍历执行，这样就可以保证每个文档只会被返回一次，从而保证一致性
+
+
+
+
+
+
 
 
 
