@@ -37,7 +37,7 @@ PERSISTENT持久保存信息，NON_PERSISTENT非持久保存信息
 
 2、Broker clusters
 有多个JMS broker
-如果一个客户端连接到其中一个broker，如果这个broker失败，那么会自动连接到其他broker。
+如果一个客户端连接到其中一个broker，如果这个broker失败，那么会自动连接到其他broker。在ActiveMQ中使用failover:// 协议来实现这个功能。
 
 3、Master Slave
 将消息复制到slave broker，当master broker遇到故障，可以立即切换slave broker而不丢失任何消息

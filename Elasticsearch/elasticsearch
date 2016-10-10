@@ -16,7 +16,7 @@
 2、ES与关系型数据库对比
 Relational DB -> Databases -> Tables -> Rows -> Columns
 Elasticsearch -> Indices   -> Types  -> Documents -> Fields
-3、ES使用倒排索引
+3、ES使用倒排索
 4、检索文档:
 curl -XGET 'http://localhost:9200/megacorp/employee/1'
 5、简单搜索: 注意_all表示所有的索引,q=qipuId:750767441'是查询条件
