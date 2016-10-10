@@ -94,7 +94,7 @@ mongodb游标快照: db.collection.find().snapshot()
 db.student.createIndex({'address':1}) 使用子文档索引查询时，查询条件需要和子文档的字段个数，字段顺序一致
 db.student.createIndex({'address.city':1})
 
-2 复合索引 ：在多个字段上建立索引
+2 复合索引 ：在多个字段上建立索引,前缀匹配
 db.student.createIndex({name:1,age:-1})
 索引字段的排序方向： 索引数据会首先按照name升序，对name相同的文档按照age降序
 索引字段的排序顺序
@@ -102,7 +102,7 @@ db.student.find().sort({name:1,age:-1})
 db.student.find().sort({name:-1,age:1})
 db.student.find().sort({name:1,age:1}) 不支持
 
-3 多键索引 ： 对数组建立的索引
+3 多键索引 ： 对数组建立的索引, 只能一个数组字段
 实际上是对数组的每个元素建立索引，而不是对数组本身建立索引
 obj1 = { name : 'bob',scores:[95,98]}
 obj2 = { name : 'bob',scores:[95,99]}
@@ -112,9 +112,28 @@ db.student.creatIndex({scores:1})
 98 -> [obj1]
 99 -> [obj2]
 
+当数组元素是文档类型时,可以为文档的某个字段建立多键索引
+{
+    "_id" : ObjectId(),
+    "title":"abc"
+    "comments":[
+        {
+        text : "text1"
+        },
+        {
+        text : "text1"
+        }
+    ]
+}
+db.student.createIndex({"comments.text":1})
+
 4 地理空间索引：　对地理位置数据建立索引
 5 全文索引：对每个词建立索引，支持全文搜索
-6 哈希索引 ：索引中存储的是哈希值
+6 哈希索引 ：索引中存储的是哈希值 , 只支持等值查询，不支持范围查找
+db.student.createIndex({name:"hashed"}) 在name字段上创建hash索引
+
+
+
 
 
 
