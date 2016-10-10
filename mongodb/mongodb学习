@@ -79,7 +79,7 @@ db.student.find({
     ]
 })
 
-mongodb的游标:类似关系型数据的游标cursor对象，使用它来遍历结果集中的数据
+六、mongodb的游标:类似关系型数据的游标cursor对象，使用它来遍历结果集中的数据
 
 因为使用find函数进行查询是，mongodb并不是一次返回结果集中的所有文档，
 而是以多条文档的形式分批来返回查询结果，返回的文档会缓存到内存中。当取到结果集最后时，cursor会给mongodb服务器发请求，再次读取数据
@@ -88,6 +88,36 @@ mongodb的生命周期
 
 mongodb游标快照: db.collection.find().snapshot()
 使用快照后，查询就会在_id索引上来遍历执行，这样就可以保证每个文档只会被返回一次，从而保证一致性
+
+七、mongodb索引
+1 单字段索引 ：在普通字段，子文档以及子文档的某个字段上建立的索引
+db.student.createIndex({'address':1}) 使用子文档索引查询时，查询条件需要和子文档的字段个数，字段顺序一致
+db.student.createIndex({'address.city':1})
+
+2 复合索引 ：在多个字段上建立索引
+db.student.createIndex({name:1,age:-1})
+索引字段的排序方向： 索引数据会首先按照name升序，对name相同的文档按照age降序
+索引字段的排序顺序
+db.student.find().sort({name:1,age:-1})
+db.student.find().sort({name:-1,age:1})
+db.student.find().sort({name:1,age:1}) 不支持
+
+3 多键索引 ： 对数组建立的索引
+实际上是对数组的每个元素建立索引，而不是对数组本身建立索引
+obj1 = { name : 'bob',scores:[95,98]}
+obj2 = { name : 'bob',scores:[95,99]}
+db.student.creatIndex({scores:1})
+创建后的索引大致
+95 -> [obj1,obj2]
+98 -> [obj1]
+99 -> [obj2]
+
+4 地理空间索引：　对地理位置数据建立索引
+5 全文索引：对每个词建立索引，支持全文搜索
+6 哈希索引 ：索引中存储的是哈希值
+
+
+
 
 
 
