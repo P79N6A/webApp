@@ -1,4 +1,4 @@
-第一部分 线程安全性
+第一部分
 基本概念
 对象的状态是指存储在状态变量中的数据,对象的状态可能包括其他依赖对象的域。
 例如HashMap的状态不仅存储在HashMap对象本身，还存储在Map.Entry对象中
@@ -10,6 +10,8 @@ java中的主要同步机制是关键字synchronized，他提供了一种独占�
 1:不在线程之间共享该状态变量 (无状态对象是线程安全的)
 2:将状态变量修改为不可变的变量
 3:在访问状态变量时使用同步
+
+第2章 (线程安全性)
 
 一、什么是线程安全性
 当多个线程访问某个类时，这个类始终表现出正确的行为，这个类是线程安全的，在线程安全类中，封装了必要的同步机制
@@ -35,7 +37,7 @@ incrementAndGet() 方法 : 首先会根据get()获取AtomicLong对应的long值�
 如果没有不可重入
 public class Widget{
     public synchronized void doSomething(){
-    
+
     }
 }
 public class LoggingWidget extends Widget{
@@ -43,6 +45,46 @@ public class LoggingWidget extends Widget{
         super.doSomething();
     }
 }
+
+4、用锁来保护状态
+
+5、性能
+通过缩小同步代码块的作用范围，可以提高一些并发的性能
+
+第3章（对象的共享）
+
+1、可见性 : 无法保证执行读操作的线程能适时地看到其他线程写入的值，所以必须使用同步机制
+(1)下面代码：不可见的例子
+public class NoVisibility {
+    private static boolean ready;
+    private static int number;
+
+    private static class ReaderThread extends Thread{
+        public void run(){
+            while (!ready)
+                Thread.yield();
+            System.out.println(number);
+        }
+    }
+    public static void main(String[] args){
+        new ReaderThread().start();
+        number = 42;
+        ready = true;
+    }
+}
+重排序 ： 当主线程首先写入number，在没有同步的情况下写入ready，那么读线程看到的顺序可能与写入的顺序相反
+
+(2)非原子的64位操作
+1 当线程在没有同步的情况下读取变量时，可能会得到一个失效值
+2 非volatile类型的64位数值，long和double变量，jvm允许将64位的读操作和写操作分解为两个32位的操作，当读取一个
+非volatile类型的long变量时，如果对该变量的读操作和写操作再不同的线程中执行。
+所以多线程中使用long和double时，要使用volatile来声明
+
+
+
+
+
+
 
 
 
