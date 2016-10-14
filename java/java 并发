@@ -138,6 +138,94 @@ b: 事实不可变对象必须通过安全方式来发布
 c: 可变对象 必须是线程安全或者有某个锁保存起来
 
 
+第四章 对象的组合
+1、设计线程安全的类,找出构成对象状态的所有变量
+如果对象中所有的域都是基本类型的变量，那么这些域将构成对象的全部状态
+如果对象的域中引用了其他对象，那么该对象的状态将包含被引用对象的域
+
+同步策略:将不可变性，线程封闭，加锁机制等结合起来
+
+基本的容器类并非线程安全的，例如ArrayList和HashMap,但类库提供了Collections.synchronized**工厂方法，使得这些非线程安全的类可以在多线程安全使用
+原理是对底层容器都实现同步方法,使得每次只有一个线程能访问容器的状态
+
+2、通过私有锁方式
+public class privateLock {
+    private final Object myLock = new Object();
+
+    void someMethod(){
+        synchronized(myLock){
+        }
+    }
+}
+
+第五章 基础构建模块
+
+1、同步容器类 Vector和Hashtable，以及由Collection.synchronized
+
+2、并发容器 : 用于改进同步容器的性能。同步容器将所有对容器状态的访问串行化，代价是严重降低并发性，
+当多个线程竞争容器的锁时，吞吐量减低。
+(1) ConcurrentHashMap    用于代替同步且基于散列的Map
+(2) CopyOnWriteArrayList 用于替代同步List
+队列 Queue和BlockingQueue
+Queue(非阻塞): ConcurrentLinkedQueue(并发) 和 PriorityQueue(非并发)
+BlockingQueue(阻塞)
+使用ConcurrentSkipListMap 和 ConcurrentSkipListSet 分别用SortedMap 和 SortedSet
+
+3、ConcurrentHashMap 增加了同步容器类，
+1 提供的迭代器不会抛出ConcurrentModificationException
+ConcurrentHashMap返回的迭代器具有弱一致性，而非"及时失败"。弱一致性的迭代器可以容忍并发的修改
+2 ConcurrentHashMap没有实现对Map加锁以提供独占访问。
+在Hashtable和synchronizedMap中，获得Map的锁能防止其他线程访问这个Map
+3 额外的原子Map操作,已经支持
+
+4、CopyOnWriteArrayList
+Copy-On-Write 容器的线程安全性
+每次修改是，都会创建并重新发布一个新的容器副本，从而实现可变性。
+迭代器不会抛出ConcurrentModificationException
+
+5、阻塞队列 (生产者-消费者模式）
+(1)阻塞队列提供了可阻塞的put和take方法，以及支持定时的offer和poll方法
+如果队列已经满了，那么put方法将阻塞直到有空间可用;如果队列为空，那么take方法将会阻塞直到有元素可用
+BlockingQueue 实现LinkedBlockingQueue和ArrayBlockingQueue是FIFO队列,比同步List拥有更好的并发性能
+SynchronusQueue 不会为队列中元素维护存储空间，它维护一组线程，这些线程在等待着把元素加入或移出
+只有当有足够多的消费者，并且总是有一个消费者准备好获取交付的工作时，才适合使用同步队列
+
+(2)串行线程封闭 : 生产者-消费者这种设计与阻塞队列一起，促使了串行线程封闭
+(3)双端队列
+Deque和Blocking
+工作密取模式:
+传统的生产者-消费者模式：所有消费者有一个共享队列
+而工作密取，每个消费者都有自己的各自的双端队列，如果一个消费者完成了自己双端队列中的工作，那么他可以从其他消费者双端队列中获取工作
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
