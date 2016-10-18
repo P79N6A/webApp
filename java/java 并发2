@@ -1,0 +1,42 @@
+第二部分
+第6章 任务执行
+
+(2) Executor框架
+1、线程池 可以通过重用现有的线程而不是创建新线程，减少创建大量线程的开销，也不会等待创建线程的时间
+
+2、Executor的生命周期
+Executor的实现通常会创建线程来执行任务,但JVM只有在所有线程全部终止后才会退出，
+如果无法正确地关闭Executor，那么JVM将无法结束
+ExecutorService 在初始创建时处于运行状态。
+shutdown方法将执行平缓的关闭过程
+shutdownNow方法将执行粗暴的关闭过程
+
+3、延迟任务与周期任务
+Timer在执行所有定时任务时只会创建一个线程。如果某个任务的执行时间过长，那么将破坏其他TimerTask的定时精确性。
+TimerTask没有对异常的很好的处理
+
+4、Executor结合:任务Callable与Future
+
+Callable可以带返回值
+future.get()是阻塞到executor.submit返回结果
+使用例子
+ExecutorService executor = Executors.newCachedThreadPool();
+Future<HashMap<Long, List<JSONObject>>> future = null;
+final HashMap<Long, List<JSONObject>> cp_book_map = new HashMap<Long, List<JSONObject>>();
+String path = System.getProperty("user.home") + "/file1/";
+
+future = executor.submit(new Callable<HashMap<Long, List<JSONObject>>>() {
+            @Override
+            public HashMap<Long, List<JSONObject>> call() throws Exception {
+                HashMap<Long, List<JSONObject>> cp_book_map = new HashMap<Long, List<JSONObject>>();
+                for (Object[] book : list){
+                    final Long cpId = (Long) book[0];
+                    final Long bookqpId = (Long) book[1];
+                    Service service = (Service) ApplicationContextUtil.getBean(Service.class);
+                    service.StatisticsTest(bookqpId, cpId, cp_book_map);
+                }
+                return cp_book_map;
+            }
+        });
+HashMap<Long, List<JSONObject>> map = future.get();
+
