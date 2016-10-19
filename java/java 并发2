@@ -40,9 +40,17 @@ future = executor.submit(new Callable<HashMap<Long, List<JSONObject>>>() {
         });
 HashMap<Long, List<JSONObject>> map = future.get();
 
-5、CompletionService:
-将Executor和BlockingQueue的功能融合在一起,你可以将Callable任务提交给它来执行，然后使用类似于队列操作的take和poll方法
-来获得已完成的结果,而这些结果会在完成时将被封装为Future
+5、CompletionService: 通过阻塞队列维护Future
+当向Executor提交批处理任务时，并且希望在它们完成后获得结果，如果用FutureTask，你可以循环获取task，并用future.get()去获取结果，但是如果这个task没有完成，你就得阻塞在这里，这个实效性不高
+CompletionService的实现是维护一个保存Future对象的BlockingQueue。只有当这个Future对象状态是结束的时候，才会加入到这个Queue中，
+take()方法其实就是Producer-Consumer中的Consumer。它会从Queue中取出Future对象，
+如果Queue是空的，就会阻塞在那里，直到有完成的Future对象加入到Queue中。
+对于所有的Future的结果没有依赖的主线程，非常适合使用这个场景
+
+
+
+
+
 
 
 
