@@ -40,3 +40,12 @@ future = executor.submit(new Callable<HashMap<Long, List<JSONObject>>>() {
         });
 HashMap<Long, List<JSONObject>> map = future.get();
 
+5、CompletionService:
+将Executor和BlockingQueue的功能融合在一起,你可以将Callable任务提交给它来执行，然后使用类似于队列操作的take和poll方法
+来获得已完成的结果,而这些结果会在完成时将被封装为Future
+
+
+
+
+
+
