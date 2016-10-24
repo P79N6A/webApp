@@ -148,6 +148,57 @@ JVM即可以正常关闭，也可以强行关闭
 改善执行时间较长任务造成的影响，即限定任务等待资源的时间，而不要无限制地等待
 比如：Thread.join,BlockingQueue.put,CountDownLatch.await以及Selector.select等
 
+2、设置线程池的大小（有公式计算）
+线程池的理想大小取决于被提交任务的类型以及所部署系统的特性，一般不会固定线程池大小，应该通过某种配置机制来提供，或根据Runtime.availableProcessors来动态计算
+
+3、配置ThreadPoolExecutor
+(1)ThreadPoolExecutor为一些Executor提供了基本的实现，这些Executor是有Executors中的newCacheThreadPool,newFixedThreadPool和newScheduledThreadExecutor
+ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,
+    long keepAliveTime,
+    TimeUnit unit,
+    BlockingQueue<Runnable> workQueue,ThreadFactory threadFactory,
+RejectedExecutionHandler handler)
+
+参数的含义
+corePoolSize	核心线程池大小（初始大小）
+maximumPoolSize	最大线程池大小
+keepAliveTime	线程池中超过corePoolSize数目的空闲线程最大存活时间；可以allowCoreThreadTimeOut(true)使得核心线程有效时间
+TimeUnit	    keepAliveTime时间单位
+workQueue	    阻塞任务队列
+threadFactory	新建线程工厂
+RejectedExecutionHandler	当提交任务数超过maxmumPoolSize+workQueue之和时，任务会交给RejectedExecutionHandler来处理
+
+(2) 管理队列任务
+ThreadPoolExecutor允许提供一个BlockingQueue来保存等待执行的任务
+newFixedThreadPool和newSingleThreadExecutor在默认情况下将使用一个无界的LinkedBlockingQueue。可能任务持续快速地到达，并且超过了线程处理他们的速度
+这时队列将无限制增加。
+一种稳定的资源管理策略是使用有界队列
+newCachedThreadPool无界线程池: 对于非常大的线程池，可以使用SynchronousQueue来避免任务排队，以及直接将任务交给工作者线程
+当任务之间有相互依赖关系时，使用newCachedThreadPool
+
+(3) 饱和策略
+当有界队列被填满后，饱和策略开始发挥作用
+ThreadPoolExecutor的饱和策略可以通过调用setRejectedExecutionHandler来修改。
+AbortPolicy : 将抛出未检查的RejectedExecution
+CallerRunsPolicy ：它不会在线程池的某个线程中执行，而是在一个调用了execute的主线程中执行该任务。这时主线程不能再提交任何任务。
+DiscardPolicy ：会抛弃该任务
+DiscardOldestPolicy ： 会抛弃下一个将被执行的任务，然后尝试重新提交新的任务
+可以使用信号量Semaphore来控制任务的提交速度
+
+final Semaphore semp = new Semaphore(5);
+public void submitTask(final Runnable command) throws InterruptedException{
+    semaphore.acquire();
+    try{
+        //执行任务
+    }catch(RejectedExecutionException e){
+        semaphore.release();
+    }
+}
+
+(4)线程工厂: 线程池需要创建一个线程时，都是通过线程工厂方法来完成的
+
+四、扩展ThreadPoolExecutor
+
 
 
 
