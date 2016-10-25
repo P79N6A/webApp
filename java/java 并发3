@@ -78,6 +78,36 @@ HashMap的put和get方法会更新一个计数器
 ReadWriteLock
 多个读取操作不会修改共享资源，那么这些读取操作可以同时访问该共享资源，但在执行写入操作时必须以独占方式来获取锁
 
+第13章 显示锁
+1、Lock与ReentranLock:
+在获取ReentrantLock时，有着与进入同步代码块相同的内存语义
+释放ReentrantLock时，有着与退出同步代码块相同的语义
+
+内置锁不足：
+无法中断一个正在等待获取锁的线程
+无法实现非阻塞结构的加锁规则
+
+使用ReentrantLock来保护对象的状态,必须自已手动释放锁
+Lock lock = new ReentrantLock()
+lock.lock();
+try{
+
+}finally{
+    lock.unlock();
+}
+而synchronized 获取的锁，在方法抛出异常的时候会自动解锁
+
+2、轮询锁与定时锁
+内置锁中，死锁时一个严重的问题，恢复程序的唯一方法是重新启动，而防止死锁的唯一方法就是在构造程序时避免出现不一致的锁顺序。
+可定时和可轮询的锁提供另一种方式，避免死锁的发生,它会释放已经获得的锁，然后重新尝试获取所有锁
+
+定时锁: 能在带有时间限制的操作中使用独占锁
+
+3、可中断的锁获取操作
+public boolean sendOnSharedLine(String message) throws InterruptedException{
+
+}
+
 
 
 
