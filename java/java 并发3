@@ -82,6 +82,7 @@ ReadWriteLock
 内置锁不足：
 无法中断一个正在等待获取锁的线程
 无法实现非阻塞结构的加锁规则
+Java 1.5内置锁性能远低于ReentrantLock
 一、显示锁使用
 1、Lock与ReentranLock:
 使用ReentrantLock来保护对象的状态,必须自已手动释放锁
