@@ -79,21 +79,18 @@ ReadWriteLock
 多个读取操作不会修改共享资源，那么这些读取操作可以同时访问该共享资源，但在执行写入操作时必须以独占方式来获取锁
 
 第13章 显示锁
-1、Lock与ReentranLock:
-在获取ReentrantLock时，有着与进入同步代码块相同的内存语义
-释放ReentrantLock时，有着与退出同步代码块相同的语义
-
 内置锁不足：
 无法中断一个正在等待获取锁的线程
 无法实现非阻塞结构的加锁规则
-
+一、显示锁使用
+1、Lock与ReentranLock:
 使用ReentrantLock来保护对象的状态,必须自已手动释放锁
 Lock lock = new ReentrantLock()
-lock.lock();
+lock.lock();//加锁
 try{
 
 }finally{
-    lock.unlock();
+    lock.unlock();//释放锁
 }
 而synchronized 获取的锁，在方法抛出异常的时候会自动解锁
 
@@ -105,8 +102,31 @@ try{
 
 3、可中断的锁获取操作
 public boolean sendOnSharedLine(String message) throws InterruptedException{
+    lock.lockInterruptibly();//可中断锁
+    try{
 
+    }finally{
+        lock.unlock();
+    }
 }
+
+二、公平性
+在ReentrantLock的构造函数中提供了两种公平性的选择 ：
+非公平锁 ： 当一个线程请求非公平的锁时，如果在发出请求的同时该锁的状态变为可用
+那么这个线程将"插队"获得锁
+公平锁 : 线程将按照它们发出请求的顺序来获得锁
+一般非公平锁，性能高与公平锁
+原因：
+公平锁由于在挂起线程和恢复线程时存在的开销而极大地降低性能
+例如 非公平锁的这样挂起和恢复
+A线程持有锁，B请求这个锁时会被挂起，当A释放锁时，B唤醒，再次尝试获取锁，这时C也请求这个锁
+那么C可能在B被完全唤醒前，就执行完，B获得锁再执行
+如果是公平锁，那么C的请求锁顺序再B后，就不能交替执行。吞吐量小
+
+
+
+
+
 
 
 
