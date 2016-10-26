@@ -125,9 +125,26 @@ AÏß³Ì³ÖÓÐËø£¬BÇëÇóÕâ¸öËøÊ±»á±»¹ÒÆð£¬µ±AÊÍ·ÅËøÊ±£¬B»½ÐÑ£¬ÔÙ´Î³¢ÊÔ»ñÈ¡Ëø£¬ÕâÊ±CÒ²Ç
 Èç¹ûÊÇ¹«Æ½Ëø£¬ÄÇÃ´CµÄÇëÇóËøË³ÐòÔÙBºó£¬¾Í²»ÄÜ½»ÌæÖ´ÐÐ¡£ÍÌÍÂÁ¿Ð¡
 
 
+Èý¡¢¶Á-Ð´Ëø
+ReentrantLockÊÇÒ»ÖÖ±ê×¼µÄ»¥³âËø£¬Ã¿´Î×î¶àÖ»ÓÐÒ»¸öÏß³ÌÄÜ³ÖÓÐReentrantLock
+»¥³â¿ÉÒÔ±ÜÃâÐ´/Ð´³åÍ»£¬Ð´/¶Á³åÍ»£¬¶Á/¶Á³åÍ»
+¶ÔÓÚ¶Á/¶Á: ¶ÔÓÚÒ»¸ö×ÊÔ´¿ÉÒÔ±»¶à¸ö¶Á²Ù×÷·ÃÎÊ
+
+ReadWriteLock : ÓÐÁ½¸öLock¶ÔÏó£¬Ò»¸öÓÃÓÚ¶Á£¬Ò»¸öÓÃÓÚÐ´
+¿ÉÒÔÊ¹ÓÃ¶ÁÐ´ËøÀ´·â×°Map
 
 
+µÚ15ÕÂ Ô­×Ó±äÁ¿Óë·Ç×èÈûÍ¬²½»úÖÆ
+Ô­×Ó±äÁ¿Ìá¹©ÁËÓëvolatileÀàÐÍ±äÁ¿ÏàÍ¬µÄÄÚ´æÓïÒå
 
+1¡¢ËøµÄÈ±µã
+Ïß³Ì¹ÒÆðºÍ»Ö¸´¹ý³Ì¿ªÏú±È½Ï´ó
+ÓëËøÏà±È£¬volatile±äÁ¿ÊÇÒ»ÖÖ¸üÇáÁ¿¼¶µÄÍ¬²½»úÖÆ£¬ÒòÎªÊ¹ÓÃÕâÐ©±äÁ¿Ê±²»»á·¢ÉúÉÏÏÂÎÄÇÐ»»»òÏß³Ìµ÷¶È
+volatile²»ÄÜÓÃÓÚ¹¹½¨Ô­×ÓµÄ¸´ºÏ²Ù×÷
+
+2¡¢
+¶ÀÕ¼ËøÊ±Ò»Ïî±¯¹Û·½Ê½
+ÀÖ¹ÛµÄ·½Ê½£ºÍ¨¹ýÕâÖÖ·½·¨¿ÉÒÔÔÚ²»·¢Éú¸ÉÈÅµÄÇé¿öÏÂÍê³É¸üÐÂ£¬ÐèÒªÅÐ¶ÏÊÇ·ñ´æÔÚÀ´×ÔÆäËûÏß³ÌµÄ¸ÉÈÅ£¬Èç¹û´æÔÚ£¬²Ù×÷Ê§°Ü£¬²¢ÇÒÖØÊÔ
 
 
 
