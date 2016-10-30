@@ -89,8 +89,11 @@ MyISAM压缩表: 如果表创建并导入数据后,不会再进行修改操作,�
 
 MyISAM最大的性能缺点: 会锁表
 
-
-
+7 选择合适的引擎
+切换存储引擎:
+方法一:ALTER TABLE mytable ENGING = InnoDB
+方法二:导出和导入
+方法三:
 
 
 
