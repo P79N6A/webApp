@@ -1,0 +1,7 @@
+nginx作为文件服务器下载
+将要加载的文件发到html路径下
+location /{
+   if ($request_filename ~* ^.*?\.(txt|doc|pdf|rar|gz|zip|docx|exe|xlsx|ppt|pptx)$){
+      add_header Content-Disposition 'attachment';
+   }
+}

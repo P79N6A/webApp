@@ -100,6 +100,7 @@ ssh-keygen
 ssh-keygen -t rsa -C "your_email@youremail.com"
 修改authorized_keys，设置ssh-keygen生产key的权限
 vi ~/.ssh/authorized_keys
+vim 可以通过set nu来设置显示行号
 wget
 curl
 

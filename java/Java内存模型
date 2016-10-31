@@ -40,7 +40,38 @@ happens-before 规则如下
 volatile变量规则 ： 对一个volatile域的写，happens-before 于任意后续对这个volatile域的读
 传递性 如果A happens-before B，且B happens-before C ，那么A happens-before C
 
+六 重排序
+数据依赖性 : 只有在单线程中可以保证
+如果两个操作访问同一个变量，且这两个操作中有一个写操作，此时这两个操作之间就存在数据依赖性
+as-if-serial语义: 使单线程无需担心重排序会干扰他们，也无需担心内存可见性问题
 
+程序顺序规则
+double pi = 3.14 //A
+double r = 1.0 //B
+double area = pi * r * r //C
+根据happens-before的程序顺序规则，上面代码存在三个happens-before关系
+1 A happens-before B
+2 B happens-before C
+3 A happens-before C
+这里的第3个 happens-before关系，是根据happens-before的传递性得来的
 
+这里A happens-before B，但实际执行时B却可以排在A之前执行。
+因为A happens-before B，JMM并不要求A一定要在B之前执行，JMM仅仅要求前一个操作对后一个操作可见，且前一个操作
+按顺序排在第二个操作之前。
 
+重排序对多线程的影响
+public class Reorder {
+    int a = 0;
+    boolean flag = false;
 
+    public void writer(){
+        a = 1;//1
+        flag = true;//2
+    }
+    public void reader(){
+        if (flag)//3
+        {
+            int i  = a*a ;//4
+        }
+    }
+}
