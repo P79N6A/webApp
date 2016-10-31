@@ -55,6 +55,109 @@ Innodb的MVCC
 每开始一个新的事务,系统版本号都会自动递增,事务开始时的系统版本号会作为事务的版本号,用来和查询到的每行记录的版本号比较.
 MVCC只在Repeatable和Committed两个隔离级别下工作.
 
+6 Mysql的存储引擎
+在文件系统汇中,mysql将每个数据库保存为数据目录下的一个子目录,创建表时,Mysql会在数据库子目录下创建一个和表同名的.frm文件保存表的定义
+通过:show table status like 'reading_book'
+
+(1) Innodb存储引擎 : 是Mysql的默认事务型引擎
+Innodb的数据存储在表空间中,表空间是由一系列的数据文件组成,Innodb可以将每个表的数据和索引放在单独的文件中.
+Innodb可以将每个表的数据和索引存放在单独的文件中
+
+Innodb采用mvcc来支持高并发,并且实现了四个标准的隔离级别.其默认级别是repeatable table,并且通过间隙锁策略防止幻读
+间隙锁使得innodb不仅仅锁定查询涉及的行,还会对索引中的间隙进行锁定.
+
+Innodb是基于聚簇索引建立的,Innodb的索引结构和mysql的其他存储引擎有很大的不同,聚簇索引对主键查询有很高的性能,不过它的二级索引中必须包含主键例
+
+Innodb内部做了很多优化,包括从磁盘读取数据时,能够在内存中创建hash索引加速读操作,以及能够加速插入操作的缓冲区
+
+Innodb通过一些机制和工具支持真正的热备份
+
+(2) MyISAM 存储引擎
+MyISAM提供了大量的特性,包括全文索引,压缩,空间函数等,但MyISAM不支持事务和行级锁,而且无法恢复
+
+MyISAM会将表存储在两个文件中,数据文件和索引文件,分别.MYD和.MYI为扩展名
+
+MyISAM特性
+加锁与并发: MyISAM对整张表加锁,而不是针对行
+读取时会对需要读到的所有表加共享锁,写入时则对表加排他锁.但是在表有读取查询的同时,也可以往表中插入新的记录
+
+索引特性: 对于BLOB和Text等长字段,也可以基于其前500个字符创建索引.MyISAM也支持全文索引,这是一种基于分词创建的索引,可以支持复杂的查询.
+延迟更新索引建 :
+
+MyISAM压缩表: 如果表创建并导入数据后,不会再进行修改操作,这样的表合适采用MyISAM压缩表
+压缩表减少空间占用,从而提高查询性能,压缩表支持索引,索引是只读的
+
+MyISAM最大的性能缺点: 会锁表
+
+7 选择合适的引擎
+切换存储引擎:
+方法一:ALTER TABLE mytable ENGING = InnoDB
+方法二:导出和导入
+方法三:
+
+第四章 Schema与数据类型优化(逻辑设计)
+一 选择优化的数据类型
+更小的通常更好 更小的数据类型通常更快,因为它们占用更少的磁盘,处理时间也会少.
+简单数据类型的操作通常需要更少的cpu周期.因为字符集和校对规则使字符比较比整型比较更复杂
+    使用mysql内建的类型而不是字符串来存储日期和时间
+    使用整型存储ip地址
+    使用到的两个mysql函数:IP转数字函数inet_aton(),数字转IP函数inet_ntoa()
+尽量避免使用null值
+    如果包含为null的列,mysql来说更难优化,因为可为null的列使用索引比较复杂.并且null的列会使用更多的存储空间
+mysql中很多数据类型可以存储相同的数据,只是存储的长度和范围不一样.
+
+1 整数类型
+注意: INT(1)和INT(20)不会限制值的合法范围
+
+2 实数类型
+FLOAT DOUBLE 和 DECIMAL
+
+3 字符串类型
+
+4 VARCHAR和CHAR类型 : 存储与存储引擎有关
+(1) VARCHAR 类型用于存储可变长字符串,它比定长类型更节省空间,因为它仅使用必要的空间
+VARCHAR需要使用1或者2个额外字节记录字符串的长度,如果列的最大长度小于或等于255,则使用1个字节表示,否则使用2个字节
+VARCHAR节省了存储空间,所以对性能也有帮助.如果一个行占用的空间增加,并且在页内没有更多的空间可以存储,在这种情况,不同的存储引擎处理的方式不一样
+MyISAM会将行拆成不同的片段,InnoDB需要分裂页来使行可以放进页内
+注意InnoDB会把过长的Varchar存储为BLOB
+
+(2) CHAR 类型使定长的 Mysql总是根据定义的字符串长度分配足够的空间
+CHAR不易产生碎片,合适存储密码的MD5值,因为这是一个定长的值
+CHAR会删除末尾的空格
+
+5 BLOB和TEXT类型 : 大的字符串类型
+Mysql把每个BLOB和TEXT值当作一个独立的对象处理.
+当BLOB和TEXT值太大时,Innodb会使用"外部存储区域来进行存储"
+BLOB和TEXT区别: BLOB是存储二进制,没有排序规则或字符集,而TEXT类型有字符集和排序规则
+Mysql不能将BLOB和TEXT列的全部长度的字符串进行索引
+
+6 使用枚举ENUM代替字符串类型 : 优点数据存储紧凑
+create table enum_test(e ENUM('fish','apple','dog') not null );s
+insert into enum_test(e) values ('apple'),('fish'), ('dog');
+
+7 日期和时间类型
+例如DATETIME和TIMESAMP都可以存储相同类型的数据,都是TIMESAMP只使用DATETIME一半的空间
+
+8 位数据类型
+BIT
+create table bittest (a bit(8));
+insert into bittest values(b'00111001');
+select a from bittest 结果57
+
+SET
+create table acl_test ( perms set ('can_read','can_write','can_delete') not null);
+insert into acl_test(perms) values ('can_read','can_delete');
+
+9 选择标示符 : 为标示符选择数据类型时,应该选择跟关联表中的对应列一样的类型
+当选择标示列的类型时,在可以满足值的范围需求时,应选最小的数据类型.比如TINYINT足够存储,而且比INT小,用这样作为其他表的外键.可能导致很大的性能差异
+不要使用Enum和SET作为标示符
+
+
+
+
+
+
+
 
 
 
