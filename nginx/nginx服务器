@@ -15,6 +15,7 @@
 ./nginx -g TERM|INT|QUIT
 ./nginx -g HUP
 ./nginux -s reload 重启
+./nginux -t 查看配置是否正确
 
 3 主配置文件nginx.conf
 nginx.conf分为三个部分: 全局块,events块,http块,server块,location块
