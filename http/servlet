@@ -62,4 +62,80 @@ Servlet3引入了异步处理请求的能力，使线程可以返回容器，从
 (4) 终止服务
 当Servlet容器确定servlet应该从服务中移除时，将调用Servlet接口的destory方法。
 
+三、Request
+请求对象封装了客户端请求的所有信息，在Http协议中，这些信息是从客户端发送到服务器请求的HTTP头不和信息体
 
+1、Http协议参数
+servlet的请参数以字符串的形式作为请求的一部分从客户端发送到servlet容器。
+ServletRequest接口
+getParameter、getParameterNames、getParameterValues、getParameterMap
+
+2、文件上传：当数据以 multipart/form-data 的格式发送时， servlet 容器支持文件上传
+
+3 属性
+属性是与请求相关联的对象
+属性可以由容器设置来表达信息，或者有servlet设置将信息传达给另一个servlet。
+属性通过ServletRequest接口中下面的方法来访问 getAttribute、getAttributeNames、setAttribute
+
+4 头
+servlet可以通过HttpServletRequest接口访问HTTP请求头部信息：getHeader、getHeaders、getHeaderNames
+
+5 请求路径元素
+getContextPath：
+getServletPath:
+getPathInfo:
+
+6 路径转换方法
+getRealPath 方法需要一个字符串参数，并返回一个字符串形式的路径，这个路径对应一个在本地文件系统
+上的文件。 getPathTranslated 方法推断出请求的 pathInfo 的实际路径
+
+7 非阻塞IO
+servlet容器的非阻塞 IO 允许开发人员在数据可用时读取数据或在数据可写时写数据
+
+8 Cookies
+HttpServletRequest 接口提供了 getCookies 方法来获得请求中的 cookie 的一个数组。这些 cookie 是从客户端
+发送到服务器端的客户端发出的每个请求上的数据
+
+9 SSL属性
+如果请求已经通过一个安全协议发送过，如 HTTPS，必须通过 ServletRequest 接口的 isSecure 方法公开该信
+息
+
+10 国际化
+客户端可以选择希望 Web 服务器用什么语言来响应。该信息可以和使用 Accept-Language 头与 HTTP/1.1 规范
+中描述的其他机制的客户端通信。 ServletRequest 接口提供下面的方法来确定发送者的首选语言环境：
+getLocale和getLocales
+
+11 请求数据编码
+12 Request对象的生命周期
+
+四 Servlet Context
+1 servletContext接口
+servletContext接口定义了servlet运行在的web应用的视图
+ServletContext 是 Web 服务器中已知路径的根。例如， Servlet 上下文可以从 http://www.mycorp.com/catalog
+找出， /catalog 请求路径称为上下文路径，所有以它开头的请求都会被路由到与 ServletContext 相关联的Web 应用
+
+2 servletContext接口作用范围
+每一个部署到容器的web应用都有一个servlet接口的实例与之关联
+
+3 初始化参数
+ServletContext 接口方法允许 Servlet 访问由应用开发人员在 Web 应用中的部署描述符中指定的上下文初始化参数
+getInitParameter
+getInitParameterNames
+
+4 配置方式：web.xml或编程方式定义
+
+5 上下文属性
+Servlet 可以使用指定的名字将对象属性绑定到上下文。同一个 Web 应用内的其他任何 Servlet 都可以使用绑定到上下文的任意属性
+分布式容器中的上下文属性
+在 JVM 中创建的上下文属性是本地的，这可以防止从一个分布式容器的共享内存存储中获取 ServletContext
+属性。当需要在运行在分布式环境的 Servlet 之间共享信息时，该信息应该被放到 session（请看第 7 章，“会
+话”），或存储到数据库，或者设置到企业级 JavaBean 组件（ Enterprise JavaBeans™）。
+
+6 资源 :ServletContext 接口提供了直接访问 Web 应用中静态内容层次结构的文件的方法
+getResource
+getResourceAsStream
+
+7 多主机和Servlet上下文
+Web 服务器可以支持多个逻辑主机共享一个服务器 IP 地址,每一个逻辑主机必须有它自己的上下文或一组上下文。 Servlet 上下文不会在虚拟主机之间共享
+
+8 Reload
