@@ -1,10 +1,65 @@
-Servlet
-servlet是受控于java应用,这个java应用成为容器
+一、Servlet
+1、Servlet是基于Java技术的web组件，容器(servlet引擎)托管的，用于生成动态内容。
+客户端通过Servlet容器实现的请求/应答模型与Servlet交互。
 
-servlet每个请求,都在一个单独的线程中运行
+2、Servlet容器
+Servlet 容器是web server或application server 的一部分，提供基于请求/响应发送模型的网络服务，解码基于 MIME 的请求，并且格式化基于 MIME 的响应。
+Servlet 容器也包含了管理 Servlet 生命周期
+Servlet容器必须支持基于 HTTP 协议的请求/响应模型
 
-servletConfig对象,每个servlet有一个servletConfig对象,用于访问web应用参数
+(1)、客户端（如 web 浏览器）发送一个 HTTP 请求到 web 服务器；
+(2)、 Web 服务器接收到请求并且交给 servlet 容器处理， servlet 容器可以运行在与宿主 web 服务器同一个进
+程中，也可以是同一主机的不同进程，或者位于不同的主机的 web 服务器中，对请求进行处理。
+(3)、 servlet 容器根据 servlet 配置选择相应的 servlet，并使用代表请求和响应对象的参数进行调用。
+(4)、 servlet 通过请求对象得到远程用户， HTTP POST 参数和其他有关数据可能作为请求的一部分随请求一
+起发送过来。 Servlet 执行我们编写的任意的逻辑，然后动态产生响应内容发送回客户端。发送数据到客户
+端是通过响应对象完成的。
+(5)、一旦 servlet 完成请求的处理， servlet 容器必须确保响应正确的刷出，并且将控制权还给宿主 Web 服务器
 
-servletRequest 和 serletResponse 接口 : 对应(HttpServletRequest和HttpServletResponse)
+二、Servlet接口
+Servlet接口是JavaServletAPI的核心抽象，所有Servlet类必须直接或间接的实现该接口
+GenericServlet 和 HttpServlet 这两个类实现了Servlet接口。大多数情况下，开发者只需要继承 HttpServlet 去实现自己的 Servlet 即可。
 
-HttpServlet(应用自己的servlet需要基层这个基类)
+1、请求处理方法
+Servlet基础接口定义了用于客户端请求处理的service方法，当有请求到达时，该方法有servlet容器路由到一个servlet实例
+(1) 基于Http规范的请求处理方法
+HttpServlet抽象子类在Servlet接口基础上添加协议相关的方法，并且这些方法能根据HTTP请求类型自动的有HttpServlet中实现的service方法转发到相应的协议相关的处理方法
+
+2、实例数量
+(1)
+如果未托管在分布式环境中（默认）的 servlet，servlet 容器对于每一个 Servlet 声明必须有且只能产生一个实例
+如果 Servlet实现了SingleThreadModel接口， servlet容器可以选择实例化多个实例,以便处理高负荷请求或者串行化请求到一个特定实例。
+(2)
+如果 servlet 以分布式方式进行部署，容器可以为每个虚拟机（ JVM）的每个 Servlet 声明产生一个实例。
+如果 servlet 实现了 SingleThreadModel接口，此时容器可以为每个容器的 JVM 实例化多个 Servlet 实例
+
+3、Servlet生命周期
+(1) 加载和实例化
+Servlet容器负责加载和实例化Servlet，加载和实例化可以发生在容器启动时，或者延迟初始化直到容器决定请求需要处理时。
+(2) 初始化
+一旦一个Servlet对象实例化完毕，容器接下来必须在处理客户端请求之前初始化该Servlet
+容器通过Servlet实例的init方法完成初始化，init方法定义在Servlet接口中
+并且提供一个唯一的ServletConfig接口实现的对象作为参数，该对象每个Servlet实例一个
+ServletConfig允许Servlet访问有web应用配置信息提供的key-value的初始化参数
+(3) 处理请求
+Servlet完成初始化后，Servlet容器就可以使用它处理客户端请求了。
+客户端请求由 ServletRequest 类型的
+request 对象表示。 Servlet 封装响应并返回给请求的客户端，该响应由 ServletResponse 类型的 response 对象
+表示。这两个对象（ request 和 response）是由容器通过参数传递到 Servlet 接口的service方法的
+1 多线程问题:
+Servlet容器可以并发的发送多个请求到Servlet的service方法。为了处理这些请求，Servlet开发者必须为service方法的多线程并发处理做好准备
+方案一：实现SingleThreadModel接口，保证一个service方法在同一个时间点仅被一个请求线程调用
+方案二：Servlet容器可以通过串行化访问Servlet的请求，或者维护一个Servlet实例池
+
+2 请求处理时的异常（ServletException 或 UnavailableException ）
+Servlet容器必须从服务中移除这个Servlet,调用它的destory方法
+
+3 异步处理
+Filter及Servlet生成响应之前必须等待一些资源或事件来完成请求处理
+Servlet3引入了异步处理请求的能力，使线程可以返回容器，从而执行更多的任务。
+4 线程安全
+
+(4) 终止服务
+当Servlet容器确定servlet应该从服务中移除时，将调用Servlet接口的destory方法。
+
+
