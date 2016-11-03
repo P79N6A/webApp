@@ -220,6 +220,9 @@ B-Tree索引的查询类型 : 适用于全键值,键值范围,键前缀查找
 3 匹配列前缀 : 只匹配某一列值开头的部分
 4 匹配范围值 :
 5 可以精确匹配第一列范围匹配另外一列(只能有一个范围)
+explain select * from looking_cartoon_chapter where cartoon_qipu_id = 1 and chapter_sequence > 1 可以走索引
+explain select * from looking_cartoon_chapter where chapter_sequence > 1 不会走索引
+
 6 覆盖索引
 索引还可以用于查询中的order by操作. 一般来说,如果B-tree可以按照某种方式查找到值,那么也可以按照这种方式用于排序
 
