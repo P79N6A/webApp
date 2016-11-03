@@ -405,6 +405,19 @@ SELECT actor_id FROM actor WHERE actor_id = 1 FOR UPDATE;
 该查询会被挂起，直到第一个连接的事务提交释放锁时，才会执行（这种行为对于基于语句的复制(statement-based replication)是必要的）。
 如上所示，当使用索引时，InnoDB会锁住它不需要的元组。更糟糕的是，如果查询不能使用索引，MySQL会进行全表扫描，并锁住每一个元组，不管是否真正需要。
 
+3 维护索引和表
+表损坏是很糟糕的事情,对于MYISAM存储引擎,表损坏通常是系统崩溃导致的.索引损坏导致查询错误
+ check table looking_cartoon_chapter 查看表损坏
+ REPAIR table 可以修复表,也是Alter table innodb_table Engine=innodb
+
+减少索引和数据的碎片
+B-Tree索引可能会碎片化:
+行碎片: 数据行被存储多个地方
+行间碎片:逻辑上顺序的页,或者行在磁盘上不是顺序存储的.行间碎片对全表扫描和聚簇索引扫描影响很大
+剩余空间碎片: 数据页中又大量的空间,造成浪费
+可以通过指向OPTIMIZE TABLE或者导出再导入来重新整理数据
+
+
 
 
 
