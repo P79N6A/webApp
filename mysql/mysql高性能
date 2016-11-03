@@ -316,10 +316,94 @@ order by chapter_title,chapter_sequence
 explain select * from looking_cartoon_chapter where cartoon_qipu_id = 200200070
 order by chapter_sequence,chapter_title
 
+(8)前缀压缩索引
+MyISAM使用前缀压缩来减少索引的大小,从而让更多的索引可以放入内存,这在某些情况下能极大地提高性能
+可以压缩字符串,整数
+
+(9) 冗余和重复索引(避免)
+
+(10) 索引和锁
+InnoDB仅对需要访问的元组加锁，而索引能够减少InnoDB访问的元组数。
+但是，只有在存储引擎层过滤掉那些不需要的数据才能达到这种目的。
+一旦索引不允许InnoDB那样做（即达不到过滤的目的），MySQL服务器只能对InnoDB返回的数据进行WHERE操作，此时，已经无法避免对那些元组加锁了：InnoDB已经锁住那些元组，服务器无法解锁了。
+
+create table actor(
+
+actor_id int unsigned NOT NULL AUTO_INCREMENT,
+
+name            varchar(16) NOT NULL DEFAULT '',
+
+password        varchar(16) NOT NULL DEFAULT '',
+
+PRIMARY KEY(actor_id),
+
+ KEY     (name)
+
+) ENGINE=InnoDB
+
+insert into actor(name,password) values('cat01','1234567');
+
+insert into actor(name,password) values('cat02','1234567');
+
+insert into actor(name,password) values('ddddd','1234567');
+
+insert into actor(name,password) values('aaaaa','1234567');
+
+SET AUTOCOMMIT=0;
+
+BEGIN;
+
+SELECT actor_id FROM actor WHERE actor_id < 4
+
+AND actor_id <> 1 FOR UPDATE;
+
+该查询仅仅返回2---3的数据，实际已经对1---3的数据加上排它锁了。InnoDB锁住元组1是因为MySQL的查询计划仅使用索引进行范围查询（而没有进行过滤操作，WHERE中第二个条件已经无法使用索引了）：
 
 
 
+mysql> EXPLAIN SELECT actor_id FROM test.actor
 
+    -> WHERE actor_id < 4 AND actor_id <> 1 FOR UPDATE \G
+
+*************************** 1. row ***************************
+
+           id: 1
+
+ select_type: SIMPLE
+
+        table: actor
+
+         type: index
+
+possible_keys: PRIMARY
+
+          key: PRIMARY
+
+      key_len: 4
+
+          ref: NULL
+
+         rows: 4
+
+        Extra: Using where; Using index
+
+1 row in set (0.00 sec)
+
+
+
+mysql>
+
+ 表明存储引擎从索引的起始处开始，获取所有的行，直到actor_id<4为假，服务器无法告诉InnoDB去掉元组1。
+为了证明row 1已经被锁住，我们另外建一个连接，执行如下操作：
+
+SET AUTOCOMMIT=0;
+
+BEGIN;
+
+SELECT actor_id FROM actor WHERE actor_id = 1 FOR UPDATE;
+
+该查询会被挂起，直到第一个连接的事务提交释放锁时，才会执行（这种行为对于基于语句的复制(statement-based replication)是必要的）。
+如上所示，当使用索引时，InnoDB会锁住它不需要的元组。更糟糕的是，如果查询不能使用索引，MySQL会进行全表扫描，并锁住每一个元组，不管是否真正需要。
 
 
 
