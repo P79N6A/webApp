@@ -278,10 +278,40 @@ OPTIMIZE TABLE 优化表
 
 Innodb和myisam的数据对比
 
+在InnoD表中按主键顺序插入行
+最简单的方法是使用AUTO_INCREMENT自增列.这样可以保证数据行是按顺序写入.避免使用UUID来作为聚簇索引,插入不保证顺序
+
+(6) 覆盖索引 索引包含所有需要查询的字段的值
+索引条目通常远小于数据行大小,所有如果只需要读取索引,那么MYSQL就会极大地减少数据访问量
+MYSQL只能使用B-Tree索引做覆盖索引.不同的存储引擎实现覆盖索引的方式不同,而且不是所有的引擎都支持覆盖索引
+
+当select col1,col2 两个字段时,如果建立一个多列(col1,col2)索引,就会使用索引覆盖查询,可以看到Using index
+
+(7) 使用索引扫描来做排序
+MYSQL有两种方式可以生成有序的结果,通过排序操作或索引顺序扫描
+如果Explain出来的type列的值为index,则说明MYSQL使用了索引扫描做排序
+MYSQL可以使用同一个索引既满足排序,又用于查找行.
+注意使用
+只有当索引的列顺序和order by子句的顺序完全一致，并且所有列的排序方向（倒序或升序，创建索引时可以指定ASC或DESC）都一样时，mysql才能使用索引来对结果做排序，
+如果查询需要关联多张表，则只有当order by子句引用的字段全部为第一个表时，才能使用索引做排序，order by子句和查找型查询的限制是一样的，需要满足索引的最左前缀的要求，
+否则mysql都需要执行排序操作，而无法使用索引排序。
+
+索引信息
+'looking_cartoon_chapter','0','PRIMARY','1','id','A','13609',NULL,NULL,'','BTREE','',''
+'looking_cartoon_chapter','0','idx_qipuId','1','qipu_id','A','13609',NULL,NULL,'YES','BTREE','',''
+'looking_cartoon_chapter','1','idx_cartoon_id','1','cartoon_id','A','756',NULL,NULL,'YES','BTREE','',''
+'looking_cartoon_chapter','1','union_index','1','cartoon_qipu_id','A','1046',NULL,NULL,'YES','BTREE','',''
+'looking_cartoon_chapter','1','union_index','2','chapter_sequence','A','13609',NULL,NULL,'YES','BTREE','',''
+'looking_cartoon_chapter','1','union_index','3','chapter_title','A','13609',NULL,NULL,'YES','BTREE','',''
+
+查询1: 不会使用索引来排序
+explain select * from looking_cartoon_chapter where cartoon_qipu_id = 200200070
+order by chapter_title,chapter_sequence
 
 
-
-
+查询2: 使用索引来排序
+explain select * from looking_cartoon_chapter where cartoon_qipu_id = 200200070
+order by chapter_sequence,chapter_title
 
 
 
