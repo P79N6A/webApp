@@ -1,3 +1,6 @@
+查看表里面的索引
+show index from looking_cartoon;
+
 查看见表语句：
 show create table dim_dept_saler
 

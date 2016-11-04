@@ -152,6 +152,283 @@ insert into acl_test(perms) values ('can_read','can_delete');
 当选择标示列的类型时,在可以满足值的范围需求时,应选最小的数据类型.比如TINYINT足够存储,而且比INT小,用这样作为其他表的外键.可能导致很大的性能差异
 不要使用Enum和SET作为标示符
 
+二 Mysql表设计的陷阱
+1 太多的列
+Mysql的存储引擎API工作时需要服务器层和存储引擎层之间通过行缓冲格式拷贝数据,然后在服务器层将缓冲内容解码成各个列
+2 太多的关联
+如果希望查询执行得快速并且并发好,单个查询最好在12个表以内做关联
+3 全能的枚举
+防止过度的使用枚举
+4 变相的枚举
+5 NUll: 避免使用空值
+create table t1(dt datetime not null default '0000-00-00 00:00:00')
+
+
+三 范式和反范式
+1 范式的优点和缺点
+优点 : 只有很少或者没有重复数据;表通常比较小,可以更好地放在内存里,所以执行比较快;使用DISTINCT和GROUP BY语句
+缺点 : 需要关联
+
+2 反范式的优点和缺点
+优点 : 不需要关联表;也能使用更有效的索引策略
+缺点 : 重复数据比较多
+
+四 缓存表和汇总表
+1 物化视图 : 预先计算并且存储在磁盘上的表,可以通过各种各样的策略刷新和更新
+mysql 通过第三方开源工具可以实现物化视图
+
+2 计算器表 : 可以用这种表缓存一个用户的朋友数,文件下载次数等
+
+五 ALTER TABLE
+对常见的场景,能使用的技巧有两种
+1 先在一台不提供服务的机器上执行ALTER TABLE操作,然后和提供服务的主库切换
+2 影子拷贝: 是用要求的表结构创建一张新表,然后通过重命名和删表操作交换两张表
+
+ALTER TABLE film MODIFY COLUMN duration TINYINT(3) NOT NULL DEFAULT 5; 会重建表
+ALTER TABLE film ALTER COLUMN duration SET DEFAULT 5; 效率高,因为直接.frm
+
+(1)只修改.frm文件
+从上面的列子我们看到修改表的.frm文件是很快的,但Mysql有时候会在没有必要的时候也重键表
+(2) 快速创建MyISAM索引
+
+第五章 创建高性能的索引
+索引是存储引擎用于快速找到记录的一种数据结构,这是索引的基本功能,除此之外,本章还将讨论索引其他一些方面有用的属性
+
+1 索引基础
+存储引擎先在索引中找到对应值,然后根据匹配的索引记录找到对应的数据行.
+索引可以包含一个或多个列的值,如果索引包含多个列,那么列的顺序也十分重要,因为Mysql只能高效地使用索引的最左前缀列
+
+(1)索引类型
+索引是在存储引擎层而不是服务器层实现的.
+没有统一的索引标准 : 不同存储引擎的索引的工作方式并不一样,也不是所有的存储引擎支持所有类型的索引
+即使不同的存储引擎支持同一种类型的索引,其底层的实现也可能不同
+
+B-Tree索引(默认索引)
+存储引擎以不同的方式使用B-Tree索引,性能各有不同.
+Myisam使用前缀压缩技术使得索引更小,但Innodb则按照原数据格式进行存储.
+Myisam索引通过数据的物理位置引用被索引的行,而Innodb则根据主键引用被索引的行
+
+B-Tree是平衡树意味着所有的值都是按顺序存储的
+存储引擎不再需要进行全表扫描来获取需要的数据,而是从索引的根节点开始查找,向下查找子节点,然后找到根结点(从而找到指向被索引的数据)
+B-Tree适合范围查找
+
+索引对多个值进行排序的依据是建表语句中定义索引是列的顺序.
+
+B-Tree索引的查询类型 : 适用于全键值,键值范围,键前缀查找
+1 全值匹配指的是和索引中的所有列进行匹配
+2 匹配最左前缀 : 只使用索引按顺序前面的列
+3 匹配列前缀 : 只匹配某一列值开头的部分
+4 匹配范围值 :
+5 可以精确匹配第一列范围匹配另外一列(只能有一个范围)
+explain select * from looking_cartoon_chapter where cartoon_qipu_id = 1 and chapter_sequence > 1 可以走索引
+explain select * from looking_cartoon_chapter where chapter_sequence > 1 不会走索引
+
+6 覆盖索引
+索引还可以用于查询中的order by操作. 一般来说,如果B-tree可以按照某种方式查找到值,那么也可以按照这种方式用于排序
+
+哈希索引
+只能精确匹配索引所有列的查询才有效
+哈希索引将所有的哈希吗存储在索引中,同时在哈希表中保存指向每个数据行的指针
+Memory引擎表的默认索引类型,并且只有Memory支持
+哈希索引限制
+哈希索引只包括哈希值和行指针,而不存储字段值,所以必须读行
+不支持排序
+多个字段的索引,必须全部匹配
+只支持等值比较
+哈希冲突
+注意当创建自定义哈希索引时 : 必须在where条件中带上哈希值和对应列值
+
+空间数据索引
+MyISAM表支持空间索引,不需要前缀查询,空间索引会从所有维度来索引数据.查询时,可以使用任意维度组合,但必须使用GIS相关函数来维护数据
+
+全文索引是一种特殊类型的索引,查找文本中的关键词,而不是直接比较索引中的值
+
+
+2 高性能的索引策略
+
+(1) 独立的列 : 是指索引列不能是表达表的一部分,也不能是函数的参数
+select actor_id from sakila.actor where actor_id + 1 = 5
+
+(2) 前缀索引和索引选择性
+索引选择性是指,不重复的索引指和数据表的记录总数的比指,索引的选择性越高查询效率越高,因为选择性高的索引可以让MYSQL在查找时过滤更多的行
+唯一索引的选择性是1(比如主键),这是最好的索引选择性,性能也是最好的
+
+对于BLOB,TEXT列,必须使用前缀索引,MYSQL不允许索引这些列的完整长度
+前缀索引: ALTER TABLE city add key (city_name(7)) 使用city_name 前7列创建索引
+
+(3) 多列索引
+当处理多列索引不得当时:
+MYSQL新的版本引入一种叫"索引合并"的策略,可以使用表上的多个单列索引来定位指定的行
+
+当对多个索引好的处理方式
+对多个索引做相交(AND)时,通常意味着一个(包含所有相关列)的多列索引,而不是多个独立的单列索引
+对多个索引做联合(OR)时,通常会消耗大量内存
+
+(4) 选择合适的索引列顺序
+正确的顺序依赖于使用该索引的查询,并且同时需要考虑如何更好地满足排序和分组的需要
+设置索引顺利经验法制 : 将选择性最高的列放到索引最前列
+
+(5) 聚簇索引(Innodb支持聚簇索引)
+是一种数据存储方式,但InnoDB的聚簇索引实际上在同一个结构中保存了B-TREE索引和数据行
+当表有聚簇索引时,它的数据行实际上存放在索引的叶子页中.聚簇索引只能有一个聚簇索引
+InnoDB将通过主键聚集数据
+聚簇索引的优点
+可以把相关数据保存在一起,数据访问更快,使用覆盖索引扫描的查询可以直接使用页节点的主键值
+缺点
+插入和更新时候,性能有所影响
+非聚簇索引(二级索引),要有两次查询.因为是先通过二级索引找到主键索引,然后再由主键索引找到对应行
+OPTIMIZE TABLE 优化表
+
+Innodb和myisam的数据对比
+
+在InnoD表中按主键顺序插入行
+最简单的方法是使用AUTO_INCREMENT自增列.这样可以保证数据行是按顺序写入.避免使用UUID来作为聚簇索引,插入不保证顺序
+
+(6) 覆盖索引 索引包含所有需要查询的字段的值
+索引条目通常远小于数据行大小,所有如果只需要读取索引,那么MYSQL就会极大地减少数据访问量
+MYSQL只能使用B-Tree索引做覆盖索引.不同的存储引擎实现覆盖索引的方式不同,而且不是所有的引擎都支持覆盖索引
+
+当select col1,col2 两个字段时,如果建立一个多列(col1,col2)索引,就会使用索引覆盖查询,可以看到Using index
+
+(7) 使用索引扫描来做排序
+MYSQL有两种方式可以生成有序的结果,通过排序操作或索引顺序扫描
+如果Explain出来的type列的值为index,则说明MYSQL使用了索引扫描做排序
+MYSQL可以使用同一个索引既满足排序,又用于查找行.
+注意使用
+只有当索引的列顺序和order by子句的顺序完全一致，并且所有列的排序方向（倒序或升序，创建索引时可以指定ASC或DESC）都一样时，mysql才能使用索引来对结果做排序，
+如果查询需要关联多张表，则只有当order by子句引用的字段全部为第一个表时，才能使用索引做排序，order by子句和查找型查询的限制是一样的，需要满足索引的最左前缀的要求，
+否则mysql都需要执行排序操作，而无法使用索引排序。
+
+索引信息
+'looking_cartoon_chapter','0','PRIMARY','1','id','A','13609',NULL,NULL,'','BTREE','',''
+'looking_cartoon_chapter','0','idx_qipuId','1','qipu_id','A','13609',NULL,NULL,'YES','BTREE','',''
+'looking_cartoon_chapter','1','idx_cartoon_id','1','cartoon_id','A','756',NULL,NULL,'YES','BTREE','',''
+'looking_cartoon_chapter','1','union_index','1','cartoon_qipu_id','A','1046',NULL,NULL,'YES','BTREE','',''
+'looking_cartoon_chapter','1','union_index','2','chapter_sequence','A','13609',NULL,NULL,'YES','BTREE','',''
+'looking_cartoon_chapter','1','union_index','3','chapter_title','A','13609',NULL,NULL,'YES','BTREE','',''
+
+查询1: 不会使用索引来排序
+explain select * from looking_cartoon_chapter where cartoon_qipu_id = 200200070
+order by chapter_title,chapter_sequence
+
+
+查询2: 使用索引来排序
+explain select * from looking_cartoon_chapter where cartoon_qipu_id = 200200070
+order by chapter_sequence,chapter_title
+
+(8)前缀压缩索引
+MyISAM使用前缀压缩来减少索引的大小,从而让更多的索引可以放入内存,这在某些情况下能极大地提高性能
+可以压缩字符串,整数
+
+(9) 冗余和重复索引(避免)
+
+(10) 索引和锁
+InnoDB仅对需要访问的元组加锁，而索引能够减少InnoDB访问的元组数。
+但是，只有在存储引擎层过滤掉那些不需要的数据才能达到这种目的。
+一旦索引不允许InnoDB那样做（即达不到过滤的目的），MySQL服务器只能对InnoDB返回的数据进行WHERE操作，此时，已经无法避免对那些元组加锁了：InnoDB已经锁住那些元组，服务器无法解锁了。
+
+create table actor(
+
+actor_id int unsigned NOT NULL AUTO_INCREMENT,
+
+name            varchar(16) NOT NULL DEFAULT '',
+
+password        varchar(16) NOT NULL DEFAULT '',
+
+PRIMARY KEY(actor_id),
+
+ KEY     (name)
+
+) ENGINE=InnoDB
+
+insert into actor(name,password) values('cat01','1234567');
+
+insert into actor(name,password) values('cat02','1234567');
+
+insert into actor(name,password) values('ddddd','1234567');
+
+insert into actor(name,password) values('aaaaa','1234567');
+
+SET AUTOCOMMIT=0;
+
+BEGIN;
+
+SELECT actor_id FROM actor WHERE actor_id < 4
+
+AND actor_id <> 1 FOR UPDATE;
+
+该查询仅仅返回2---3的数据，实际已经对1---3的数据加上排它锁了。InnoDB锁住元组1是因为MySQL的查询计划仅使用索引进行范围查询（而没有进行过滤操作，WHERE中第二个条件已经无法使用索引了）：
+
+
+
+mysql> EXPLAIN SELECT actor_id FROM test.actor
+
+    -> WHERE actor_id < 4 AND actor_id <> 1 FOR UPDATE \G
+
+*************************** 1. row ***************************
+
+           id: 1
+
+ select_type: SIMPLE
+
+        table: actor
+
+         type: index
+
+possible_keys: PRIMARY
+
+          key: PRIMARY
+
+      key_len: 4
+
+          ref: NULL
+
+         rows: 4
+
+        Extra: Using where; Using index
+
+1 row in set (0.00 sec)
+
+
+
+mysql>
+
+ 表明存储引擎从索引的起始处开始，获取所有的行，直到actor_id<4为假，服务器无法告诉InnoDB去掉元组1。
+为了证明row 1已经被锁住，我们另外建一个连接，执行如下操作：
+
+SET AUTOCOMMIT=0;
+
+BEGIN;
+
+SELECT actor_id FROM actor WHERE actor_id = 1 FOR UPDATE;
+
+该查询会被挂起，直到第一个连接的事务提交释放锁时，才会执行（这种行为对于基于语句的复制(statement-based replication)是必要的）。
+如上所示，当使用索引时，InnoDB会锁住它不需要的元组。更糟糕的是，如果查询不能使用索引，MySQL会进行全表扫描，并锁住每一个元组，不管是否真正需要。
+
+3 维护索引和表
+表损坏是很糟糕的事情,对于MYISAM存储引擎,表损坏通常是系统崩溃导致的.索引损坏导致查询错误
+ check table looking_cartoon_chapter 查看表损坏
+ REPAIR table 可以修复表,也是Alter table innodb_table Engine=innodb
+
+减少索引和数据的碎片
+B-Tree索引可能会碎片化:
+行碎片: 数据行被存储多个地方
+行间碎片:逻辑上顺序的页,或者行在磁盘上不是顺序存储的.行间碎片对全表扫描和聚簇索引扫描影响很大
+剩余空间碎片: 数据页中又大量的空间,造成浪费
+可以通过指向OPTIMIZE TABLE或者导出再导入来重新整理数据
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
