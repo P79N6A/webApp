@@ -392,8 +392,7 @@ possible_keys: PRIMARY
 
 
 mysql>
-
- 表明存储引擎从索引的起始处开始，获取所有的行，直到actor_id<4为假，服务器无法告诉InnoDB去掉元组1。
+    表明存储引擎从索引的起始处开始，获取所有的行，直到actor_id<4为假，服务器无法告诉InnoDB去掉元组1。
 为了证明row 1已经被锁住，我们另外建一个连接，执行如下操作：
 
 SET AUTOCOMMIT=0;
@@ -417,17 +416,54 @@ B-Tree索引可能会碎片化:
 剩余空间碎片: 数据页中又大量的空间,造成浪费
 可以通过指向OPTIMIZE TABLE或者导出再导入来重新整理数据
 
+第6章 查询性能优化
 
+1 只要返回需求的数据
+(1) 不要将不需要的结果集返回,需要加上limit
+(2) 只取需要的列
 
+2 MYSQL是否在扫描额外的记录
+(1) 扫描的行数和返回的行数
+扫描的行数和返回的行数应该是相同,扫描的行数和访问的类型
+Explain语句中的type列反应了访问类型
+全表扫描,索引扫描,范围扫描,唯一索引查询,常数引用 (扫描的速度是从慢到快,扫描的行数也是从多到少)
+(2) 扫描的行数和访问类型
 
+3 重构查询的方式
+(1) 一个复杂查询还是多个简单查询 : 尽量使用一个查询
+(2) 切分查询 : 将一个大的delete切分成多个较小的查询
+delete from message where created < DATE_SUB(NOW(),Interval 3 month);
+rows affected = 0
+do {
+    rows_affected = do_query(
+        "DELETE FROM MESSAGE WHERE create < date_sub(now(),interval 3 month) limit 10000"
+    )
+} while rows_affected > 0
 
+(3)分解关联查询
 
+4 查询执行的基础
+(1) 客户端发送一条查询给服务器: 通信协议是双半工的
+这意味着在任何一个时刻,要么是由服务器向客户端发送数据,要么是有客户端向服务器发送数据
+查询状态:对于一个mysql连接,都有一个状态,该状态表示了MYSQL当前正在做什么.
+得到状态列表 : show full processlist
+(2) 服务器先检查查询缓存,如果命中了缓存,则立刻返回存储在缓存中的结果,否则进入下一阶段
+(3) 服务器端进行SQL解析,预处理,再有优化器生成执行计划
+优化器能够优化的类型
+重新定义关联表的顺序: 数据表的关联并不总是按照在查询中指定的顺序执行
+将外连接转化成内连接: 并不是所有的OUTER JOIN语句都必须以外连接的方式执行
+使用等价变换规则 : MySQL可以使用一些等价变换来简化并规范表达式
+优化count(),min()和max() : 索引和列是否可为空通常可以帮助MYSQL优化这类表达式.
+覆盖索引扫描
+子查询优化 Mysql在某些情况下可以将子查询转换一种效率更高的形式
+提前终止查询
+等值传播 :
+select film.film_id from sakila.film inner join sakila.film_actor using(film_id) where film.film_id > 500;
+表示film.film_id > 500 and sakila.film_actor >500
+列表IN()的比较:In()完全等同于多个or条件的子句. Mysql将IN()列表的数据先进行排序.
 
-
-
-
-
-
+(4) MYSQL根据优化器生成的执行计划,调用存储引擎的API来执行查询
+(5) 将结果返回客户端
 
 
 
