@@ -1,0 +1,36 @@
+1.Calendar 转化 String
+Calendar calendat = Calendar.getInstance();
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+String dateStr = sdf.format(calendar.getTime());
+
+2.String 转化Calendar
+String str="2012-5-27";
+SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+Date date =sdf.parse(str);
+Calendar calendar = Calendar.getInstance();
+calendar.setTime(date);
+
+3.Date 转化String
+SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+String dateStr=sdf.format(new Date());
+
+4.String 转化Date
+String str="2012-5-27";
+SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+Date date= sdf.parse(str);
+
+5.Date 转化Calendar
+Calendar calendar = Calendar.getInstance();
+calendar.setTime(new java.util.Date());
+
+6.Calendar转化Date
+Calendar calendar = Calendar.getInstance();
+java.util.Date date =calendar.getTime();
+
+7.String 转成 Timestamp
+Timestamp ts = Timestamp.valueOf("2012-1-14 08:11:00");
+
+8.Date 转 TimeStamp
+SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+String time = df.format(new Date());
+Timestamp ts = Timestamp.valueOf(time);
