@@ -188,13 +188,71 @@ Web 应用部署之后，在请求导致容器访问 Web 资源之前，容器�
 3、过滤器的核心概念是包装请求或响应，以便它可以覆盖行为执行过滤任务
 
 
-会话
+七、会话
 超文本传输协议（ HTTP）被设计为一种无状态协议
 定义了一个简单的 HttpSession 接口，允许 servlet 容器使用几种方法来跟踪用户会话
 
 1、会话跟踪机制
 (1) Cookies
 通过 HTTP cookie的会话跟踪是最常用的会话跟踪机制，且所有 servlet 容器都应该支持。
+容器向客户端发送一个 cookie，客户端后续到服务器的请求都将返回该 cookie，明确地将请求与会话关联
+
+(2) SSL会话
+安全套接字，在HTTPS使用加密技术，有一种内置机制允许多个来自客户端的请求被明确识别为同一会话
+
+(3) URL重写(URL工具条会暴露信息)
+当客户端不接受 cookie 时，服务器可使用 URL 重写作为会话跟踪的基础。
+URL 重写涉及添加数据、会话 ID、容器解析 URL 路径从而请求与会话相关联
+
+2、创建会话:当会话跟踪信息返回到服务器指示会话已经建立时客户端加入到会话
+每个会话相关联是一个包含唯一标识符的字符串，也被称为会话 ID。会话 ID 的值能通过调用
+javax.servlet.http.HttpSession.getId() 获 取 ， 且 能 在 创 建 后 通 过 调 用
+javax.servlet.http.HttpServletRequest.changeSessionId()改变。
+
+3、会话范围
+HttpSession 对象必须被限定在应用（或 servlet上下文）级别。不能在上下文
+
+4 Session属性
+servlet 可以按名称绑定对象属性到 HttpSession 实现，任何绑定到会话的对象可用于任意其他的 Servlet，其
+属于同一个 ServletContext 且处理属于相同会话中的请求
+
+5 会话超时
+servlet 容器定义了默认的会话超时时间，且可以通过 HttpSession 接口的 getMaxInactiveInterval 方法获取。
+开发人员可以使用 HttpSession 接口的 setMaxInactiveInterval 方法改变超时时间
+
+6 最后访问时间
+HttpSession 接口的 getLastAccessedTime 方法允许 servlet 确定在当前请求之前的会话的最后访问时间
+
+7 重要的会话语义
+(1) 容器必须确保，以一种线程安全的方式维护表示会话属性的内部数据结构。
+(2) 分布式
+在一个标识为分布式的应用程序中，会话中的所有请求在同一时间必须仅被一个JVM 处理。
+容器必须能够使用适当的 setAttribute 或 putValue 方法把所有对象放入到 HttpSession 类实例
+
+八、分派请求
+构建 Web 应用时，把请求转发给另一个 servlet 处理、或在 response 中包含另一个 servlet 的输出通常是很有
+用的。 RequestDispatcher 接口提供了一种机制来实现这种功能
+
+1 获得一个RequestDispather
+ServletContext 和 ServletRequest 中创建 RequestDispatcher 对象的方法使用的路径信息中允许附加可选的查
+询字符串信息
+
+2 请求调度器的使用
+servlet 可调用 RequestDispatcher 接口的 include 或 forward 方法
+
+3 include方法
+RequestDispatcher 接口的 include 方法可能随时被调用
+
+4 forward方法
+RequestDispatcher接口的 forward 方法，只有在没有输出提交到向客户端时，通过正在被调用的servlet调用
+
+5 异步上下文对象
+实现了 AsyncContext 接口的对象可从 ServletRequest 的一个 startAsync 方法中获得，一旦有了 AsyncContext78
+对象，你就能够使用它的 complete()方法来完成请求处理，或使用下面描述的转发方法
+
+6 Dispatch方法:可以使用 AsyncContext 中下面的方法来转发请求：dispatch
+
+
 
 
 
