@@ -3,3 +3,9 @@
 
 2、idea的@Override is not allowed when implementing interface method
 解决办法:File-->Project Structure...-->Module-->选中模型-->Language Level
+
+3、Error:java: Compilation failed: internal java compiler error。
+解决办法:只需设置Setting->Compiler->Java Compiler,发现有的module是1.7的是1.6
+
+4、序列化增加serialVersionUID
+Setting->Inspections->Serialization issues->Serializable class without ’serialVersionUID’

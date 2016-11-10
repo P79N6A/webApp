@@ -138,4 +138,280 @@ getResourceAsStream
 7 多主机和Servlet上下文
 Web 服务器可以支持多个逻辑主机共享一个服务器 IP 地址,每一个逻辑主机必须有它自己的上下文或一组上下文。 Servlet 上下文不会在虚拟主机之间共享
 
-8 Reload
+8 Reload 重新加载
+
+五、Response响应
+响应（ response）对象封装了从服务器返回到客户端的所有信息。在 HTTP 协议中，从服务器传输到客户端的信息通过 HTTP 头信息或响应的消息体
+
+Servlet容器允许但不必为了提高效率而缓冲到客户端的输出。
+
+5.1 缓冲
+Servlet 容器允许提高效率而缓冲到客户端的输出
+ServletResponse 接口的如下方法允许servlet访问和设置缓冲信息：
+getBufferSize,setBufferSize,isCommitted,reset,resetBuffer,flushBuffer
+
+5.2 头信息
+Servlet 可以使用如下 HttpServletResponse 接口中的方法设置 HTTP 响应头 setHeader,addHeader
+
+5.3 非阻塞IO
+
+5.4 重定向
+sendRedirect 方法将设置适当的 header 和内容体将客户端重定向到另一个地址
+sendError 方法将设置适当的 header 和内容体用于返回给客户端返回错误消息
+
+5.5 结束响应对象
+当响应被关闭时，容器必须立即刷出响应缓冲区中的所有剩余的内容到客户端
+
+5.7 Response 的生命周期
+每个响应对象是只有当在servlet的service 方法的范围内或在 filter 的 doFilter 方法范围内是有效的
+
+六、Filter过滤器
+1、过滤器使用
+(1)在执行请求之前访问资源
+(2)在执行请求之前处理资源的请求
+(3)用请求对象的自定义版本包装请求对请求的 header 和数据进行修改
+(4)用响应对象的自定义版本包装响应对响应的 header 和数据进行修改
+(5)拦截资源调用之后的调用
+(6) 作用在 Servlet，一组 Servlet，或静态内容上的零个，一个或多个拦截器按指定的顺序执行
+实现 javax.servlet.Filter 接口并提供一个公共的空参构造器来创建过滤器。该类及构建Web 应用的静态资源和 Servlet 打包在 Web 应用归档文件中。
+Filter 在部署描述符中通过<filter>元素声明。一个过滤器或一组过滤器可以通过在部署描述符中定义<filter-mapping>来为调用配置。
+可以使用 servlet 的逻辑视图名把过滤器映射到一个特定的 servlet，或者使用 URL 模式把一组 Servlet 和静态内容资源映射到过滤器
+
+2、过滤器的生命周期在
+Web 应用部署之后，在请求导致容器访问 Web 资源之前，容器必须找到过滤器列表并按照如上所述的应用到 Web 资源。
+容器必须确保它为过滤器列表中的每一个都实例化了一个适当类的过滤器,并调用其init(FilterConfig config)方法
+
+在部署描述符中声明的每个<filter>在每个 JVM 的容器中仅实例化一个实例。容器提供了声明在过滤器的部署描述符的过滤器 config（译者注： FilterConfig），
+对 Web 应用的 ServletContext 的引用，和一组初始化参数。
+执行过程： Filter1.doFilter->Filter2.doFilter-> servlet.service
+
+3、过滤器的核心概念是包装请求或响应，以便它可以覆盖行为执行过滤任务
+
+
+七、会话
+超文本传输协议（ HTTP）被设计为一种无状态协议
+定义了一个简单的 HttpSession 接口，允许 servlet 容器使用几种方法来跟踪用户会话
+
+1、会话跟踪机制
+(1) Cookies
+通过 HTTP cookie的会话跟踪是最常用的会话跟踪机制，且所有 servlet 容器都应该支持。
+容器向客户端发送一个 cookie，客户端后续到服务器的请求都将返回该 cookie，明确地将请求与会话关联
+
+(2) SSL会话
+安全套接字，在HTTPS使用加密技术，有一种内置机制允许多个来自客户端的请求被明确识别为同一会话
+
+(3) URL重写(URL工具条会暴露信息)
+当客户端不接受 cookie 时，服务器可使用 URL 重写作为会话跟踪的基础。
+URL 重写涉及添加数据、会话 ID、容器解析 URL 路径从而请求与会话相关联
+
+2、创建会话:当会话跟踪信息返回到服务器指示会话已经建立时客户端加入到会话
+每个会话相关联是一个包含唯一标识符的字符串，也被称为会话 ID。会话 ID 的值能通过调用
+javax.servlet.http.HttpSession.getId() 获 取 ， 且 能 在 创 建 后 通 过 调 用
+javax.servlet.http.HttpServletRequest.changeSessionId()改变。
+
+3、会话范围
+HttpSession 对象必须被限定在应用（或 servlet上下文）级别。不能在上下文
+
+4 Session属性
+servlet 可以按名称绑定对象属性到 HttpSession 实现，任何绑定到会话的对象可用于任意其他的 Servlet，其
+属于同一个 ServletContext 且处理属于相同会话中的请求
+
+5 会话超时
+servlet 容器定义了默认的会话超时时间，且可以通过 HttpSession 接口的 getMaxInactiveInterval 方法获取。
+开发人员可以使用 HttpSession 接口的 setMaxInactiveInterval 方法改变超时时间
+
+6 最后访问时间
+HttpSession 接口的 getLastAccessedTime 方法允许 servlet 确定在当前请求之前的会话的最后访问时间
+
+7 重要的会话语义
+(1) 容器必须确保，以一种线程安全的方式维护表示会话属性的内部数据结构。
+(2) 分布式
+在一个标识为分布式的应用程序中，会话中的所有请求在同一时间必须仅被一个JVM 处理。
+容器必须能够使用适当的 setAttribute 或 putValue 方法把所有对象放入到 HttpSession 类实例
+
+八、分派请求
+构建 Web 应用时，把请求转发给另一个 servlet 处理、或在 response 中包含另一个 servlet 的输出通常是很有
+用的。 RequestDispatcher 接口提供了一种机制来实现这种功能
+
+1 获得一个RequestDispather
+ServletContext 和 ServletRequest 中创建 RequestDispatcher 对象的方法使用的路径信息中允许附加可选的查
+询字符串信息
+
+2 请求调度器的使用
+servlet 可调用 RequestDispatcher 接口的 include 或 forward 方法
+
+3 include方法
+RequestDispatcher 接口的 include 方法可能随时被调用
+
+4 forward方法
+RequestDispatcher接口的 forward 方法，只有在没有输出提交到向客户端时，通过正在被调用的servlet调用
+
+5 异步上下文对象
+实现了 AsyncContext 接口的对象可从 ServletRequest 的一个 startAsync 方法中获得，一旦有了 AsyncContext78
+对象，你就能够使用它的 complete()方法来完成请求处理，或使用下面描述的转发方法
+6 Dispatch方法:可以使用 AsyncContext 中下面的方法来转发请求：dispatch
+
+九、web应用
+1、WEB-INF 目录中的内容有：
+(1)/WEB-INF/web.xml 部署描述文件。
+(2)servlet和实用工具类目录/WEB-INF/classes/。此目录中的类对应用程序类加载器必须是可见的。
+(3)java 归档文件区域/WEB-INF/lib/*.jar。这些文件中包括了 servlet， beans，静态资源和打包在 JAR 文件中的 JSP 文件，以及其他对 Web 应用程序有用的实用工具类。 Web 应用程序的类加载器必须能够从这些归档文件中加载类。
+2、Web 应用程序归档文件
+可以使用标准的 Java 归档工具把 Web 应用程序打包并签名到一个 Web 存档格式（WAR）文件中
+3、Web 应用程序类加载器
+(1)一个类加载器的实现必须保证对部署到容器的每个 web 应用，调用 Thread.currentThread.getContextClassLoader()返回一个约定的 ClassLoader 实例。
+此外，部署的每个 Web 应用程序的 ClassLoader 实例必须是一个单独的实例。
+容器必须在任何回调（包括侦听器回调）到 Web 应用程序之前设置上面描述的线程上下文 ClassLoader，一旦回调返回，需要把它设置成原来的 ClassLoader。
+
+十 应用生命周期事件
+1、事件监听器是实现一个或多个servlet事件监听器接口的类。它们是在部署web应用时，实例化并注册到web容器中
+Servlet事件监听器支持在 ServletContext、 HttpSession 和 ServletRequest状态改变时进行事件通知
+
+2、事件类型和监听器接口
+Servlet上下文事件
+生命周期                                                       监听器接口
+Servlet上下文刚刚创建并可用于它的第一个请求或者Servlet上下文     ServletContextListener
+更改属性
+在 Servlet 上下文的属性已添加、删除、或替换                     ServletContextAttributeListener
+
+HTTP 会话事件
+生命周期                                                      监听器接口
+会话已创建、销毁或超时                                         HttpSessionListener
+更改属性
+已经在 HttpSession 上添加、移除、或替换属性                    HttpSessionAttributeListener
+
+Servlet 请求事件
+生命周期                                                     监听器接口
+一个servlet请求已经开始处理                                  ServletRequestListener
+更改属性
+已经在 ServletRequest 上添加、移除、或替换属性                ServletRequestAttributeListener
+
+3、监听器类配置
+监听器类在 Web 应用部署描述符中使用 listener 元素声明。它们根据类名列出的顺序就是它们被调用的顺序
+
+十一 映射请求到Servlet
+1、使用URL路径：
+(1)容器将尝试找到一个请求路径到 servlet 路径的精确匹配。成功匹配则选择该 servlet
+(2)容器将递归地尝试匹配最长路径前缀。
+(3)如果 URL 最后一部分包含一个扩展名（如 .jsp）， servlet 容器将视图匹配为扩展名处理请求的 Servlet。扩展名定义在最后一部分的最后一个‘ .’字符之后
+(4)如果前三个规则都没有产生一个servlet匹配，容器将试图为请求资源提供相关的内容
+
+2、映射规范
+以‘ /’字符开始、以‘ /*’后缀结尾的字符串用于路径匹配
+以‘ *.’开始的字符串用于扩展名映射
+空字符串“”是一个特殊的 URL 模式， 其精确映射到应用的上下文根，即， http://host:port/<context-root>/
+请求形式。在这种情况下，路径信息是‘ /’且 servlet 路径和上下文路径是空字符串（“”）
+只包含“ /”字符的字符串表示应用的“ default” servlet。在这种情况下， servlet 路径是请求 URL 减去上下文路径且路径信息是 null
+所以其他字符串仅用于精确匹配
+
+十二 安全
+1、声明式安全
+安全模型适用于 web 应用的静态内容部分和客户端请求到的应用内的 servlet 和过滤器。安全模型不适用于
+当 servlet 使用 RequestDispatcher 调用静态内容或使用 forward 或 include 到的 servlet
+
+2、编程式安全包括以下 :当仅仅声明式安全是不足以表达应用的安全模型时，编程式安全被用于意识到安全的应用
+HttpServletRequest 接口的方法
+(1)login 方法允许应用执行用户名和密码收集（作为一种 Form-Based Login 的替代）。
+(2)authenticate 方法允许应用由容器发起在一个不受约束的请求上下文内的来访者请求认证。
+(3)logout 方法提供用于应用重置来访者的请求身份。
+(4)getRemoteUser 方法由容器返回与该请求相关的远程用户（即来访者）的名字。
+(5)isUserInRole 方法确定是否与该请求相关的远程用户（即来访者）在一个特定的安全角色中。
+(6)getUserPrincipal 方法确定远程用户（ 即 来 访 者 ） 的 Principal 名 称 并 返 回 一 个 与 远 程 用 户 相 关 的
+java.security.Principal 对象。调用 getUserPrincipal 返回的 Principal 的 getName 方法返回远程用户的名字。这
+些 API 允许 Servlet 基于获得的信息做一些业务逻辑决策
+
+例如，映射安全角色应用“ FOO”到 role-name 为"manager"的安全角色的语法是
+<security-role-ref>
+<role-name>FOO</role-name> //应用
+<role-link>manager</role-link> //角色
+</security-role-ref>
+
+十三 部署描述文件
+1、 web-app 元素 : web-app 元素是一个 Web 应用程序的根部署描述符。
+2、 description 元素 : description 元素提供了父元素的文本描述。
+3、 display-name 元素: display-name 元素包含一个简短的名称
+5、 distributable 元素
+distributable 元素表示设定该 Web 应用程序适合部署到一个分布式的 servlet 容器中。
+
+6、 context-param 元素
+context-param 元素包含了 Web 应用程序的 servlet 上下文初始化参数的声明。
+
+7、 filter 元素
+filter 元素声明了 Web 应用程序中的过滤器。该过滤器映射到一个 servlet 或 filter-mapping 元素中的一个 URL模式，使用 filter-name 的值来引用。
+过滤器在运行时可以通过 FilterConfig 接口访问部署描述文件中声明的初始化参数。
+filter-name 元素是过滤器的逻辑名称。它在 Web 应用程序中必须是唯一的。
+filter-name 元素的元素内容不能为空。 filter-class 是过滤器的完全限定类名。 init-param 元素包含的名值对作为此过滤器的初始化参数。
+当指定可选的 async-supported 元素时，表示该过滤器支持异步请求处理。
+
+8、 filter-mapping 元素
+容器使用 filter-mapping 决定哪个过滤器以什么样的顺序应用到请求。 filter-name 的值必须是部署描述文件
+中声明的过滤器中的一个。匹配的请求可以被指定为 url-pattern 或 servlet-name。
+
+9、 listener 元素
+listener 表示应用程序监听器 bean 的部署属性。子元素 listener-class 声明应用程序中的一个类必须注册为
+Web 应用程序监听器 bean。它的值是监听器类的完全限定类名。
+
+10、 servlet 元素
+在 Web 应用程序中每个 servlet 的名称是唯一的。
+servlet-name 元素内容不能为空。 servlet-class 包含了 servlet 的完全限定类名。
+它包含一个可选的 description，和一个由 role-name 元素指定安全角色。 load-on-startup 元素表示该 servlet 应该在 Web 应用程序启动时加载（实例化并调用它的 init()方法）。
+该元素的元素内容必须是一个整数，表示 servlet 应该被加载的顺序。如果该值是一个负整数，或不存在该元素，容器自由选择什么时
+候加载这个 servlet。如果该值是一个正整数或 0，当应用部署后容器必须加载和初始化这个 servlet。容器必须保证较小整数标记的 servlet 在较大整数标记的 servlet 之前加载。容器可以选择具有相同 load-on-startup值的 servlet 的加载顺序。
+
+11、 servlet-mapping 元素
+servlet-mapping 定义了 servlet 和 URL 模式之间的映射
+
+12、 session-config 元素
+session-config 元素定义了该 Web 应用程序的会话参数
+
+13、 mime-mapping 元素
+mime-mapping 定义了扩展名和 MIME 类型之间的映射.
+
+14、 welcome-file-list 元素
+welcome-file-list 包含了一个有序的欢迎文件列表
+
+15、 error-page 元素
+error-page 包含一个错误代码或异常类型到 Web 应用程序中资源的路径之间的映射。
+
+16、 jsp-config 元素
+jsp-config 用 来 提 供 Web 应 用 程 序 中 的 JSP 文 件 的 全 局 配 置 信 息 。
+
+17、 security-constraint 元素
+security-constraint 用于关联安全约束和一个或多个 Web 资源集合。子元素 web-resource-collection 确定安全约束应用到哪一些 Web 应用程序中资源的子集和这些资源的 HTTP 方法。
+auth-constraint 表示用户角色应该允许访问此资源集合。
+这里使用的 role-name 必须与该 Web 应用程序定义的其中一个 security-role 元素的role-name 对应，或者是指定的保留 role-name“*”对应，这是一个表示 web 应用程序中的所有角色的紧凑语法。
+如果“*”和角色名都出现了，容器会将此解释为所有角色。如果没有定义角色，不允许任何用户访问由包含 security-constraint 所描述的 Web 应用程序的部分。当容器确定访问时匹配角色名称是区分大小写的。
+user-data-constraint 表示客户端和容器之间的通信数据如何受到子元素 transport-guarantee 的保护。transport-guarantee 的合法值是 NONE， INTEGRAL 或 CONFIDENTIAL 之一。
+
+18、 login-config 元素
+login-config 用于配置应该使用的验证方法，可用于此应用程序的领域名，以及表单登录机制所需要的属性。
+
+19、 security-role 元素
+security-role 定义了一个安全角色。子元素 role-name 指定安全角色的名称。
+
+20、 env-entry 元素
+env-entry 声明了一个应用程序的环境入口。
+
+21、 ejb-ref 元素
+ejb-ref 声明了一个对企业 bean 的 home 引用。
+
+22、 ejb-local-ref 元素
+ejb-local-ref 声明了对企业 bean 的本地 home 引用。
+
+23、 service-ref 元素
+service-ref 声明了一个对 Web service 的引用。 service-ref-name 声明了用于查找 Web service 模块组件的逻辑
+名称。建议所有 service 的引用名称以/service/ 开头。
+
+24、 resource-ref 元素
+resource-ref 元素包含了部署组件对外部资源的引用声明。 res-ref-name 指定了一个资源管理器连接工厂引用的名称。
+
+25、 resource-env-ref 元素
+resource-env-ref 包含了部署组件和对部署组件环境中的资源有关的管理对象的引用。
+
+25、 resource-env-ref 元素
+resource-env-ref 包含了部署组件和对部署组件环境中的资源有关的管理对象的引用。
+27、 message-destination 元素
+message-destination 指 定 消 息 的 目 标 。
+
+28、 locale-encoding-mapping-list 元素
+locale-encoding-mapping-list 包含了语言环境和编码之间的映射。
