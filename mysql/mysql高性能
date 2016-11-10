@@ -466,6 +466,36 @@ select film.film_id from sakila.film inner join sakila.film_actor using(film_id)
 (5) 将结果返回客户端
 
 
+5 MYSQL查询优化器的局限性
+(1) 关联子查询
+最糟糕的一类查询是where条件中包含in()的子查询
+select * from sakila.film where film_id in (select film_id from sakila.film_actor where actor_id = 1) 表数据量大的时候,效率低
+可以使用表连接查询来替代
+select film.* from sakila film inner join sakila.film_actor using(film_id) where actor_id = 1;
+
+(2) UNION的限制 : 没有办法将限制分别用于union内层,减少临时表
+
+(3) 索引合并优化 : 访问单个表的多个索引以合并和交叉过滤的方式来定位需要查询的行.最好使用联合索引
+
+(4) 等值传递 : IN()列表都复制应用到关联的各个表中
+
+(5) 松散索引扫描 : mysql并不支持松散索引扫描,也就无法按照不连续的方式扫描一个索引
+
+(6) Mysql对最大值Max和最小值Min优化不好
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
