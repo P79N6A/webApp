@@ -484,6 +484,37 @@ select film.* from sakila film inner join sakila.film_actor using(film_id) where
 (6) Mysql对最大值Max和最小值Min优化不好
 
 
+6 优化特定类型的查询
+(1)优化COUNT查询 :
+MyISAM的count函数在没有where条件时比较快.这时不需要计算表的行数,MYSQL可以利用存储引擎直接获取这个值.
+select sum(if(color ='blue',1,0)) as blue, sum(if(color='red',1,0)) as red from items; 统计blue的item和red的item的数量
+
+(2)优化关联查询
+确保ON或者USING子句中的列上有索引.
+确保任何的GROUP BY和ORDER BY中的表达式只涉及到一个表中的列,这样Mysql才有可能使用索引来优化这个过程
+
+(3)优化子查询: 尽可能使用关联查询替代
+
+(4)优化GROUP BY 和 DISTINCT
+1 方式一: 使用索引来优化
+2 方式二:
+
+(5) GROUP BY WITH ROLLUP
+
+(6)优化LIMIT分页 : 使用Limit 加上偏移量的办法实现,同时加上合适的order by 子句.如果有对应的索引,通常会不错,否则mysql需要做大量的文件排序操作
+(7)优化UNION查询 : 使用Union all,如果没有ALL关键字,MYSQL会给临时表加上DISTINCT选项,会导致对整个临时表的数据做唯一性检查
+
+(8)使用用户自定义变量
+1 使用自定义变量的查询,无法使用查询缓存
+2 只能在一个连接中使用
+3 自定义变量的类型,不能自己指定
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,96 @@
+第7章 MYSQL高级特性
+
+一 分区表
+分区表是一个独立的逻辑表,但是底层由多个物理子表组成. 从底层的文件系统来看,每个分区表都有一个使用#分隔命名的表文件
+
+MYSQL实现分区表的方式对底层表的封装,意味着索引也是按照分区的子表定义的,而没有全局索引
+MYSQL在创建表时使用PARTITION BY子句定义每个分区存放的数据.在执行查询的时候,优化器会根据分区定义过滤那些没有我们需要数据的分区
+1 表非常大以至于无法全部放在内存中
+2 分区表的数据更容易维护
+3 分区表的数据可以分布在不同的机器上
+4 可以使用分区表避免Innodb的单个索引互斥访问
+使用限制
+一个表最多只能有1024个分区,分区表达式必须是整数
+如果分区字段中有主键或者唯一索引,那么所有主键列和唯一索引都必须包含进来
+分区表无法使用外键约束
+
+(1) 分区表的原理
+存储引擎管理分区的各个底层表和管理普通表一样,分区表的索引只是在各个底层表上各自加上一个完全相同的索引.
+MYSQL先确定这条记录属于那个分区,再将记录写入对应的底层分区表,无须对任何其他分区进行操作
+
+(2) 分区表的类型
+RANGE分区：基于属于一个给定连续区间的列值，把多行分配给分区
+CREATE TABLE employees (
+    id INT NOT NULL,
+    fname VARCHAR(30),
+    lname VARCHAR(30),
+    hired DATE NOT NULL DEFAULT '1970-01-01',
+    separated DATE NOT NULL DEFAULT '9999-12-31',
+    job_code INT,
+    store_id INT
+)
+ PARTITION BY RANGE (YEAR(separated)) (
+    PARTITION p0 VALUES LESS THAN (1991),
+    PARTITION p1 VALUES LESS THAN (1996),
+    PARTITION p2 VALUES LESS THAN (2001),
+    PARTITION p3 VALUES LESS THAN MAXVALUE
+)；
+
+LIST分区:类似于按RANGE分区，区别在于LIST分区是基于列值匹配一个离散值集合中的某个值来进行选择
+CREATE TABLE employees (
+    id INT NOT NULL,
+    fname VARCHAR(30),
+    lname VARCHAR(30),
+    separated DATE NOT NULL DEFAULT '9999-12-31',
+    job_code INT,
+    store_id INT
+)
+ PARTITION BY LIST(store_id)
+    PARTITION pNorth VALUES IN (3,5,6,9,17),
+    PARTITION pEast VALUES IN (1,2,10,11,19,20),
+    PARTITION pWest VALUES IN (4,12,13,14,18),
+    PARTITION pCentral VALUES IN (7,8,15,16)
+)；
+
+HASH分区：基于用户定义的表达式的返回值来进行选择的分区，该表达式使用将要插入到表中的这些行的列值进行计算
+CREATE TABLE employees (
+    id INT NOT NULL,
+    fname VARCHAR(30),
+    lname VARCHAR(30),
+    hired DATE NOT NULL DEFAULT '1970-01-01',
+    separated DATE NOT NULL DEFAULT '9999-12-31',
+    job_code INT,
+    store_id INT
+)
+PARTITION BY HASH(store_id)
+PARTITIONS 4；它表示表将要被分割成分区的数量
+
+KEY分区:类似于按HASH分区，区别在于KEY分区只支持计算一列或多列，且MySQL 服务器提供其自身的哈希函数
+CREATE TABLE tk (
+    col1 INT NOT NULL,
+    col2 CHAR(5),
+    col3 DATE
+)
+PARTITION BY LINEAR KEY (col1)
+PARTITIONS 3;
+
+(3) 分区表使用注意
+1 : null值会使分区过滤无效
+2 : 分区列和索引列不匹配,会导致查询无法进行分区过滤.
+3 : 分区都必须使用相同的存储引擎
+4 : 分区函数和表达式也有一些限制
+5 : 在查询where,分区的列不能使用函数
+
+二 视图 : 视图本身是一个虚拟表,不存放任何数据.比较灵活,好维护
+1 视图特点:不能创建触发器,也不能使用DROP TABLE删除视图
+
+2 可更新视图 : 因为视图是一个虚拟表，其中没有数据，所以通过视图更新时，都是转换到基本表来更新
+CHECK OPTION : 表示任何通过视图更新的行,都必须符合视图本身的where条件定义.
+3 处理视图的算法: 合并算法和临时表算法
+
+
+
+
+
+
+
