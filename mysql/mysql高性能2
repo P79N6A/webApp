@@ -89,9 +89,85 @@ CHECK OPTION : 表示任何通过视图更新的行,都必须符合视图本身�
 3 处理视图的算法: 合并算法和临时表算法
 4 MYSQL视图不支持物化视图,也不支持索引
 
+三 外键约束
+InnoDB是目前MYSQL中唯一支持外键的内置存储引擎
+使用外键是有成本的: 每次在修改数据时都要在另一张表执行一次查找操作
+但如果想确保两个相关表始终有一致的数据,那么使用外键比在应用程序中检查一致性的性能要高得多.
 
+四 MYSQL内部存储代码
+MYSQL允许通过触发器,存储过程,函数的形式来存储代码.从MYSQL5.1开始,还可以在定时任务中存放代码,这个定时任务也被称为"事件".
 
+存储过程和存储函数都可以接受参数然后返回值,但是触发器和事件却不可以
+存储代码的优点: 在服务器内部执行,代码重用; 缺点: 存储代码效率要稍微查,难实现太复杂的逻辑
 
+(1) 存储过程和函数
+DELIMITER
+    CREATE PROCEDURE proc1(OUT s int)
+        BEGIN
+            SELECT COUNT(*) INTO s FROM user;
+        END
+DELIMITER ;
 
+(2) 触发器 : 触发器可以让你在执行INSERT,UPDATE或DELETE的时候,执行一些特定的操作
+注意
+对每个表的每一个事件,最多只能定义一个触发器.MYSQL只支持"基于行的触发"也就是说,触发器始终是针对一条记录的
+触发器可能导致死锁和锁等待.
+触发器并不能一定保证更新的原子性.如MyISAM存储引擎
+INNODB表上的触发器是在同一个事务中完成的,所以他们执行的操作是原子的.
+CREATE TRIGGER t_afterinsert_on_tab1
+AFTER INSERT ON tab1
+FOR EACH ROW
+BEGIN
+     insert into tab2(tab2_id) values(new.tab1_id);
+END;
 
+(3) 事件: 指定Mysql在某个时候执行一段SQL代码,或者每隔一个时间间隔执行一段SQL代码.可以把复杂的SQL都封装到一个存储过程中, 这样事件在执行的时候只需要做一个简单的CALL调用
+CREATE EVENT test ON SCHEDULE EVERY 1DAY
+STARTS '2012-08-22 00:00:00'
+ENDS '2012-08-22 00:00:00'+INTERVAL40 DAY
+ON COMPLETION PRESERVE DO
+CALL test_add();// 可以是调存储过程,也是执行MYSQL语句
 
+五 游标
+MYSQL提供只读,单向的游标,而且只能在存储过程或者更底层的客户端使用.
+游标中指向的对象都是存储在临时表中而不是实际查询到的数据,所以mysql游标总是只读的.它可以每行得指向查询结果,然后让程序做进一步处理
+
+在存储过程里面用到游标，逐条更新数据
+CREATE PROCEDURE CURSOR()
+BEGIN
+ DECLARE  no_more_record INT DEFAULT 0;
+ DECLARE  pID BIGINT(20);
+ DECLARE  pValue DECIMAL(15,5);
+ DECLARE  cur_record CURSOR FOR   SELECT colA, colB from tableABC;  /*首先这里对游标进行定义*/
+ DECLARE  CONTINUE HANDLER FOR NOT FOUND  SET  no_more_record = 1; /*这个是个条件处理,针对NOT FOUND的条件,当没有记录时赋值为1*/
+
+ OPEN   cur_record; /*接着使用OPEN打开游标*/
+ FETCH  cur_record INTO pID, pValue; /*把第一行数据写入变量中,游标也随之指向了记录的第一行*/
+
+ WHILE   no_more_record != 1 DO INSERT  INTO testTable(ID, Value) VALUES  (pID, pValue);
+ FETCH   cur_record INTO pID, pValue;
+
+ END WHILE;
+ CLOSE  cur_record;  /*用完后记得用CLOSE把资源释放掉*/
+END
+
+六 绑定变量
+1 服务器只需要解析一次SQL语句
+2 不需要将整个查询语句发送到服务器端,只需要传参数
+3 避免SQL注入和攻击
+
+七 用户自定义函数
+
+八 字符集和校对 : 字符集是一种从二进制到某类字符符号的映射
+MySQL使用字符集
+创建数据库的时候,将根据服务器上的character_set_server设置来设定该数据库的默认字符集
+创建表的时候,将根据数据库的字符集设置指定这个表的字符集设置
+创建列,根据设置列的字符集设置
+
+服务器和客户端会有字符集转换过程: character_set_client -> character_set_connection -> character_set_result
+
+MYSQL比较两个字符串的大小 : 必须转为同一个字符集再进行比较
+
+选择字符集和校对规则
+查看字符集 : show charset
+查看校验规则 : SHOW COLLATION
