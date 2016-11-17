@@ -171,3 +171,55 @@ MYSQL比较两个字符串的大小 : 必须转为同一个字符集再进行比
 选择字符集和校对规则
 查看字符集 : show charset
 查看校验规则 : SHOW COLLATION
+
+字符集和校对规则如何影响查询
+
+九 全文索引 : 基于相似度的查询,而不是原来的精确数值比较
+全文索引支持各种字符内容的搜索,也支持自然语言搜索和布尔搜索.
+在MYSQL5.6版本正式发布后,直接使用InnoDB的全文索引.
+
+MYISAM的全文索引作用对象是一个"全文集合".这可能是某个数据表的一列,也可能是多个列.
+MYISAM的全文索引是一类特殊的B-Tree索引,包含两层: 第一层是所有关键字,然后对于每一个关键字的第二层,包含的是一组相关的文档指针
+根据如下规则过滤
+1 停用词列表中的词不会被索引
+SELECT * FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD;
+2 对于ft_min_word_len的词语和长度小于ft_max_word_len的词语,都不会被索引
+SHOW GLOBAL VARIABLES LIKE '%ft_%';
+3 创建和使用全文索引
+CREATE TABLE article (
+    id INT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    title VARCHAR(200),
+    content TEXT,
+    FULLTEXT (title, content)
+);
+show index from article 查看表里的索引
+INSERT INTO article (title, content) VALUES('jjiii','The here and the past');
+SELECT * FROM article WHERE MATCH(title, content) AGAINST('jjiii The')
+
+如果导入大量的数据,先通过命令DISABLE KEY禁用,然后导入结束后使用ENABLE KEY建立
+4 MYSQL全文索引只有全部在内存中的时候,性能才好. 与其他索引类型,INSERT,UPDATE,DELETE操作进行时,全文索引代价高
+5 普通索引与全文索引一起使用:
+Where Match(content,filters) Agaist('jalsfjlasd +author_id_123' IN BOOLEAN MODE);
+
+十 分布式事务
+存储引擎的事务特性能够保证在存储引擎级别实现ACID
+XA事务则让存储引擎级别的ACID可以扩展到数据层,甚至可以扩展到多个数据库之间
+
+XA事务中需要有一个事务协调器来保证所有的事务参与者都完成了准备工作.如果协调器收到所有的参与者都准备好的消息,就会告诉所有的事务可以提交了
+MYSQL只是XA过程中一个参与者,而不是协调者
+
+(1) 内部XA事务
+(2) 外部XA事务
+
+十一 查询缓存
+Mysql查询缓存保存查询返回的完整结果,当查询命中该缓存,Mysql会立刻返回结果
+查询缓存系统会跟踪查询中涉及的每个表,如果这些表发生数据变化,那么和这个表相关的所有缓存数据将失效
+
+(1) MYSQL判断缓存命中
+当查询语句中有一些不确定的数据时,则不会被缓存.例如包含函数NOW().
+如果查询中包含任何用户自定义函数,存储函数等都不会被缓存
+子查询和存储过程都没有办法使用缓存
+
+
+
+
