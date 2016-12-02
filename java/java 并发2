@@ -167,6 +167,26 @@ TimeUnit	    keepAliveTime时间单位
 workQueue	    阻塞任务队列
 threadFactory	新建线程工厂
 RejectedExecutionHandler	当提交任务数超过maxmumPoolSize+workQueue之和时，任务会交给RejectedExecutionHandler来处理
+列子：
+(1) 定义线程池
+private static ThreadPoolExecutor pool = new ThreadPoolExecutor(20, 100, 10, TimeUnit.MINUTES,new LinkedBlockingQueue<Runnable>(50),
+ new ThreadPoolExecutor.AbortPolicy());
+(2) 多线程执行任务
+for(String bookId : bookIds){
+    try{
+        long bookIdNum = Long.parseLong(bookId);
+        while(true){//重试
+            try{
+                pool.execute(new Handler(bookIdNum));
+                break;
+            }catch(RejectedExecutionException e){
+
+            }
+        }
+    }catch(Exception e){
+        log.error(e);
+    }
+}
 
 (2) 管理队列任务
 ThreadPoolExecutor允许提供一个BlockingQueue来保存等待执行的任务

@@ -246,5 +246,111 @@ jstack命令用于生成虚拟机当前时刻的线程快照（一般称为threaddump 或javacore 文件）
 
 二 JDK的可视化工具
 
+第二部分：虚拟机执行子系统
+各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——字节码
+
+1 Class类文件的结构: http://blog.csdn.net/a19881029/article/details/16117251
+
+
+Class文件格式采用一种类似于C语言结构体的伪结构来存储数据，这种伪结构中只有两种数据类型：无符号数和表
+无符号数属于基本的数据类型，以u1、 u2、 u4、 u8来分别代表1个字节、 2个字节、 4个字节和8个字节的无符号数，
+无符号数可以用来描述数字、 索引引用、 数量值或者按照UTF-8编码构成字符串值。
+表是由多个无符号数或者其他表作为数据项构成的复合数据类型，所有表都习惯性地以“_info”结尾。
+(1) 魔数与Class文件
+每个Class文件的头4个字节称为魔数（Magic Number），它的唯一作用是确定这个文件是否为一个能被虚拟机接受的Class文件
+紧接着魔数的4个字节存储的是Class文件的版本号：第5和第6个字节是次版本号（Minor Version），第7和第8个字节是主版本号（Major Version）。
+
+(2) 常量池：常量池可以理解为Class文件之中的资源仓库
+常量池中主要存放两大类常量：字面量（Literal）和符号引用（Symbolic References）。
+字面量比较接近于Java语言层面的常量概念，如文本字符串、 声明为final的常量值等。
+而符号引用则属于编译原理方面的概念，包括了下面三类常量：
+类和接口的全限定名（Fully Qualified Name）,字段的名称和描述符（Descriptor）,方法的名称和描述符
+
+在Class文件中不会保存各个方法、 字段的最终内存布局信息，因此这些字段、 方法的符号引用不经过运行期转换的话无法得到真正的内存入口地址，也就无法直接被虚拟机使用。
+当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建时或运行时解析、 翻译到具体的内存地址之中.
+
+(3) 访问标识
+这个标志用于识
+别一些类或者接口层次的访问信息，包括：这个Class是类还是接口；是否定义为public类型；
+是否定义为abstract类型；如果是类的话，是否被声明为final等。
+
+(4) 类索引、父类索引与接口索引的集合
+类索引（this_class）和父类索引（super_class）都是一个u2类型的数据，而接口索引集合（interfaces）是一组u2类型的数据的集合，
+Class文件中由这三项数据来确定这个类的继承关系
+
+(5) 字段表集合
+字段表（field_info）用于描述接口或者类中声明的变量。 字段（field）包括类级变量以及实例级变量，但不包括在方法内部声明的局部变量
+
+(6) 方法表集合
+(7) 属性表集合
+
+2 字节码指令简介
+Java虚拟机的指令由一个字节长度的、 代表着某种特定操作含义的数字（称为操作码，Opcode）以及跟随其后的零至多个代表此操作所需参数（称为操作数，Operands）而构成。
+
+(1) 字节码与数据类型
+
+(2) 加载和存储指令: 加载和存储指令用于将数据在栈帧中的局部变量表和操作数栈（见第2章关于内存区域的介绍）之间来回传输
+将一个局部变量加载到操作栈(从局部变量表)：iload、 iload_＜n＞、 lload、 lload_＜n＞、 fload、 fload_＜n＞、 dload、 dload_＜n＞、 aload、 aload_＜n＞。
+将一个数值从操作数栈存储到局部变量表：istore、 istore_＜n＞、 lstore、 lstore_＜n＞、fstore、 fstore_＜n＞、 dstore、 dstore_＜n＞、 astore、 astore_＜n＞。
+将一个常量加载到操作数栈：bipush、 sipush、 ldc、 ldc_w、 ldc2_w、 aconst_null、iconst_m1、 iconst_＜i＞、 lconst_＜l＞、 fconst_＜f＞、 dconst_＜d＞。
+扩充局部变量表的访问索引的指令：wide。
+
+(3)运算指令 : 运算或算术指令用于对两个操作数栈上的值进行某种特定运算，并把结果重新存入到操作栈顶
+加法指令：iadd、 ladd、 fadd、 dadd。
+减法指令：isub、 lsub、 fsub、 dsub。
+乘法指令：imul、 lmul、 fmul、 dmul。
+除法指令：idiv、 ldiv、 fdiv、 ddiv。
+求余指令：irem、 lrem、 frem、 drem。
+取反指令：ineg、 lneg、 fneg、 dneg。
+位移指令：ishl、 ishr、 iushr、 lshl、 lshr、 lushr。
+按位或指令：ior、 lor。
+按位与指令：iand、 land。
+按位异或指令：ixor、 lxor。
+局部变量自增指令：iinc。
+比较指令：dcmpg、 dcmpl、 fcmpg、 fcmpl、 lcmp。
+
+(4) 类型转换指令 : 类型转换指令可以将两种不同的数值类型进行相互转换，这些转换操作一般用于实现用户代码中的显式类型转换操作
+宽化类型转换
+int类型到long、 float或者double类型。long类型到float、 double类型。float类型到double类型。
+窄化类型转换（Narrowing Numeric Conversions）时，必须显式地使用转换指令来完成.
+这些转换指令包括：i2b、 i2c、 i2s、 l2i、 f2i、 f2l、 d2i、 d2l和d2f。
+
+(5) 对象创建与访问指令
+对象创建与访问指令
+创建类实例的指令：new。
+创建数组的指令：newarray、 anewarray、 multianewarray。
+访问类字段（static字段，或者称为类变量）和实例字段（非static字段，或者称为实例变量）的指令：getfield、 putfield、 getstatic、 putstatic。
+把一个数组元素加载到操作数栈的指令：baload、 caload、 saload、 iaload、 laload、faload、 daload、 aaload。
+将一个操作数栈的值存储到数组元素中的指令：bastore、 castore、 sastore、 iastore、fastore、 dastore、 aastore。
+取数组长度的指令：arraylength。
+检查类实例类型的指令：instanceof、 checkcast。
+
+(6) 操作数栈管理指令
+将操作数栈的栈顶一个或两个元素出栈：pop、 pop2。
+复制栈顶一个或两个数值并将复制值或双份的复制值重新压入栈顶：dup、 dup2、dup_x1、 dup2_x1、 dup_x2、 dup2_x2。
+将栈最顶端的两个数值互换：swap。
+
+(7) 控制转移指令
+条件分支：ifeq、 iflt、 ifle、 ifne、 ifgt、 ifge、 ifnull、 ifnonnull、 if_icmpeq、 if_icmpne、if_icmplt、 if_icmpgt、 if_icmple、 if_icmpge、 if_acmpeq和if_acmpne。
+复合条件分支：tableswitch、 lookupswitch。
+无条件分支：goto、 goto_w、 jsr、 jsr_w、 ret。
+
+(8) 方法调用和返回指令
+invokevirtual指令用于调用对象的实例方法，根据对象的实际类型进行分派（虚方法分派），这也是Java语言中最常见的方法分派方式。
+invokeinterface指令用于调用接口方法，它会在运行时搜索一个实现了这个接口方法的对象，找出适合的方法进行调用。
+invokespecial指令用于调用一些需要特殊处理的实例方法，包括实例初始化方法、 私有方法和父类方法。
+invokestatic指令用于调用类方法（static方法）。
+invokedynamic指令用于在运行时动态解析出调用点限定符所引用的方法，并执行该方法，前面4条调用指令的分派逻辑都固化在Java虚拟机内部，而invokedynamic指令的分派逻辑是由用户所设定的引导方法决定的。
+
+(9) 异常处理指令
+在Java程序中显式抛出异常的操作（throw语句）都由athrow指令来实现
+
+(10) 同步指令
+1、方法级的同步是隐式的，即无须通过字节码指令来控制，它实现在方法调用和返回操作之中。 虚拟机可以从方法常量池的方法表结构中的ACC_SYNCHRONIZED访问标志得知一个方法是否声明为同步方法。
+2、同步一段指令集序列通常是由Java语言中的synchronized语句块来表示的，Java虚拟机的
+指令集中有monitorenter和monitorexit两条指令来支持synchronized关键字的语义
+
+3 公有设计和私有实现
+Java虚拟机规范描绘了Java虚拟机应有的共同程序存储格式：Class文件格式以及字节码指令集。
 
 
