@@ -139,7 +139,7 @@ try{
 }catch(Ex){
 
 }finally{
-    locks[lockIndex].lock();
+    locks[lockIndex].unlock();
 }
 
 
