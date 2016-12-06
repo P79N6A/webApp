@@ -124,6 +124,24 @@ AÏß³Ì³ÖÓĞËø£¬BÇëÇóÕâ¸öËøÊ±»á±»¹ÒÆğ£¬µ±AÊÍ·ÅËøÊ±£¬B»½ĞÑ£¬ÔÙ´Î³¢ÊÔ»ñÈ¡Ëø£¬ÕâÊ±CÒ²Ç
 ÄÇÃ´C¿ÉÄÜÔÚB±»ÍêÈ«»½ĞÑÇ°£¬¾ÍÖ´ĞĞÍê£¬B»ñµÃËøÔÙÖ´ĞĞ
 Èç¹ûÊÇ¹«Æ½Ëø£¬ÄÇÃ´CµÄÇëÇóËøË³ĞòÔÙBºó£¬¾Í²»ÄÜ½»ÌæÖ´ĞĞ¡£ÍÌÍÂÁ¿Ğ¡
 
+Ê¹ÓÃÀı×Ó:
+¸ù¾İÃ¿¸öÓÃ»§uid+time£¬½øĞĞ¼ÓËø
+private static ReentrantLock[] locks = new ReentrantLock[1 << 11];
+
+static{
+    for(int i=0; i<locks.length; i++){
+        locks[i] = new ReentrantLock();
+    }
+}
+try{
+    lockIndex = (int) getLockIndex(time + uid);
+    locks[lockIndex].lock();
+}catch(Ex){
+
+}finally{
+    locks[lockIndex].lock();
+}
+
 
 Èı¡¢¶Á-Ğ´Ëø
 ReentrantLockÊÇÒ»ÖÖ±ê×¼µÄ»¥³âËø£¬Ã¿´Î×î¶àÖ»ÓĞÒ»¸öÏß³ÌÄÜ³ÖÓĞReentrantLock
