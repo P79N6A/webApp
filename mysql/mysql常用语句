@@ -24,3 +24,6 @@ end;
 //
 
 Call insert_test1(1);
+
+删除数据库中重复的信息，只保留一条
+delete from user where exists(select 1 from user a where a.name=user.name and a.tel=user.tel and a.id<user.id)
