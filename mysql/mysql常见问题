@@ -1,0 +1,58 @@
+Mysql常见问题与优化
+代价估算：
+SQL代价 = Random IO(RO) + Sequence IO(SO) + CPU(内存计算)
+
+一、单表查询：
+主键查询
+select … from table where primary_key=?
+RO(PK-Tree(h))
+
+全表扫描
+SELECT ... FROM table where col = ???
+SO(PK-Tree)
+
+二级索引查询
+SELECT ... FROM table where key = ???
+RO(Sec-Tree(h)) + N*RO(PK-Tree(h))
+
+二级索引扫描  index(col_A,col_B)
+SELECT col_A, col_B FROM table;
+SO(Sec-Tree)
+
+排序
+SELECT * FROM table where col_A> ? Order by col_A
+代价：SO(PK-Tree) + CPU运算
+
+利用二级索引排序 index(col_A)
+SELECT * FROM table where col_A> ? Order by col_A
+代价：RO(PK-Tree)
+
+二、连接查询
+SELECT ... FROM t1 join on t2 where t1.name = t2.name
+情况1代价：SO(R-tree) * SO(S-tree)
+情况2代价：SO(R-tree) * RO(S-tree(h))
+情况3代价: SO(R-tree)
+情况4代价：SO(R-tree) + SO(S-tree)
+
+主键查询优先于二级索引查询,单表查询优先于连接查询
+表连接数量越少越好,二级索引扫描优先于全表扫描
+适当冗余，不要使用多表join查询,使用通过索引避免排序代价
+
+三、SQL写法
+1、建议读写都采用主键索引
+2、尽量利用索引排序，避免产生临时表 order by col1,col2 index(col1,col2)
+3、避免对查询字段进行计算(类型转换，计算) where  id*2 > 4 -> id>2
+4、避免使用select *
+5、避免使用全模糊查询 like '%xxx%’like ’%xxx’，no        like ‘xxx%’,  yes，可以使用索引
+6、数据库分页
+SELECT * FROM tbl_1 where col_1=‘abc’ LIMIT 100, 30
+SELECT * FROM (select id from tbl_1 where col_1='abc' limit 100,30)t1,tb1_1 t2 where t1.id=t2.id
+
+
+
+
+
+
+
+
+
