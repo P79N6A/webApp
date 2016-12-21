@@ -1,4 +1,4 @@
-Mysql常见问题与优化
+(1)Mysql常见问题与优化
 代价估算：
 SQL代价 = Random IO(RO) + Sequence IO(SO) + CPU(内存计算)
 
@@ -47,6 +47,104 @@ SELECT ... FROM t1 join on t2 where t1.name = t2.name
 6、数据库分页
 SELECT * FROM tbl_1 where col_1=‘abc’ LIMIT 100, 30
 SELECT * FROM (select id from tbl_1 where col_1='abc' limit 100,30)t1,tb1_1 t2 where t1.id=t2.id
+
+四、执行计划
+(1) id 越大越先执行
+(2) select_type :表示查询中每个select子句的类型
+SIMPLE：查询中不包含子查询或者UNION
+查询中若包含任何复杂的子部分，最外层查询则被标记为：PRIMARY
+在SELECT或WHERE列表中包含了子查询，该子查询被标记为：SUBQUERY
+在FROM列表中包含的子查询被标记为：DERIVED（衍生）
+若第二个SELECT出现在UNION之后，则被标记为UNION；若UNION包含在  FROM子句的子查询中，外层SELECT将被标记为：DERIVED
+从UNION表获取结果的SELECT被标记为：UNION RESULT
+(3) type :访问类型
+All->index->range->ref->eq_ref->const,system->null 由最差到最好
+all   :代表全表扫描
+index :只遍历索引树
+range :索引范围扫描，常见于between < > 查询
+ref   ：非唯一性索引扫描，返回匹配某个单独值的所有行
+eq_ref : 唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配
+const、system：当MySQL对查询某部分进行优化，并转换为一个常量时，使用这些类型访问
+null：MySQL在优化过程中分解语句，执行时甚至不用访问表或索引
+(4)possible_keys
+指出MySQL能使用哪个索引在表中找到行，查询涉及到的字段上若存在索引，则该索引将被列出，但不一定被查询使用
+(5)key(实际使用的)
+显示MySQL在查询中实际使用的索引，若没有使用索引，显示为NULL
+TIPS：查询中若使用了覆盖索引，则该索引仅出现在key列表中
+(6)key_len : 表示索引中使用的字节数，可通过该列计算查询中使用的索引的长度
+(7)ref :表示上述表的连接匹配条件，即哪些列或常量被用于查找索引列上的值
+(8)rows : 表示MySQL根据表统计信息及索引选用情况，估算的找到所需的记录所需要读取的行数
+(9)extra :
+Using index :     该值表示相应的select操作中使用了覆盖索引（Covering Index）
+Using where :     MySQL服务器在收到存储引擎记录后进行“后过滤”（Post-filter）,如果查询未能使用索引，Using where的作用只是提醒我们MySQL将用where子句来过滤结果集
+Using temporary : 表示MySQL需要使用临时表来存储结果集，常见于排序和分组查询
+Using filesort:   无法利用索引完成的排序操作称为“文件排序”
+Using Index Condition : 让storage engine 根据index 做判断, 如果不符合条件则无须 读表，节省disk IO
+
+重要：应用场景
+1、对列运算
+select count(id) from cservice_invoke where date_format(add_time, '%Y-%m-%d') = '2016-11-10';
+select count(id) from cservice_invoke where add_time between '2016-11-10' and '2016-11-11';
+
+2、隐式类型
+再使用索引时，要保证类型一致
+
+3、子查询优化
+select * from livehelp_chat where conversation_id in(select conversation_id from livehelp_conversation where conversation_user_uid='33672')
+select * from livehelp_chat,(select conversation_id from livehelp_conversation where conversation_user_uid='33672') as tmp where livehelp_chat.conversation_id = tmp.conversation_id
+
+4、Order by
+
+5、索引中列缺失
+select * from weibo_sentiment_info where sender_uid = 1745262670 and create_time > '2016-01-01'
+优化：缺失的列值比较少的情况下，可以用“IN”来填补这个“坑”从而形成最左前缀
+select * from weibo_sentiment_info where sender_uid = 1745262670 and strategy_id in (1,4,3,7,6,8,5) and create_time > '2016-01-01'
+
+6-多表连接慢查询
+select T1.*,T2.name,T2.weight from weibo_sentiment_info T1,strategy T2 where T1.strategy_id = T2.id order by T2.weight desc,T1.id desc limit 0,10
+
+优化1： 拆分成两次join，第一次小列表join，排序后再join
+Select WSI.*,tmp.strategy_name,tmp.weight from weibo_sentiment_info WSI,
+(select T1.id, T2.name as strategy_name, T2.weight from weibo_sentiment_info T1,
+strategy T2 where T1.strategy_id = T2.id order by T2.weight desc,T1.id desc limit 0,10) as tmp where WSI.id = tmp. id
+
+优化2： weibo_sentiment_info 添加 strategy_weight列，利用索引转化为单表排序。
+Alter table weibo_sentiment_info add index strategy_weight_id (strategy_weight, id)
+Select T1.*,T2.name from weibo_sentiment_info T1, strategy T2 WHERE T1 .strategy_id = T2.id order by T1.strategy_weight desc,T1. id desc limit 0,10;
+
+Mysql锁问题(Mysql/InnoDB中的锁)
+共享锁（S）
+排它锁（X）
+意向共享锁（IS）
+意向排它锁（IX）
+间隙锁（GAP）: 就是在两个记录之间中加锁，避免插入和删除数据，从而避免幻读
+Next-key锁（S/X+GAP）
+
+Mysql/InnoDB 隔离级别
+Read Uncommited
+Read Commited(RC)—当前读：对读取到的记录加锁 (记录锁)，存在幻读现象。
+Repeatable Read(RR)—当前读：对读取到的记录和范围加锁 (记录锁+间隙锁) ，不存在幻读现象。
+Serializable—从MVCC并发控制退化为LBCC，无快照读。读写冲突，效率低。
+
+死锁问题
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
