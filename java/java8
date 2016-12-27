@@ -58,10 +58,27 @@ Arrays.sort(players, new Comparator<String>() {
 使用 lambda expression
 Arrays.sort(players, (String s1, String s2) -> (s1.compareTo(s2)));
 
-二 使用Lambdas和Streams
+(4)使用Lambdas和Streams
 Stream是对集合的包装,通常和lambda一起使用。
 使用lambdas可以支持许多操作,如 map, filter, limit, sorted, count, min, max, sum, collect 等等。
 
 System.out.println("下面是月薪超过 $1,400 的PHP程序员:")
 phpProgrammers.stream().filter((p) -> (p.getSalary() > 1400))
 .forEach((p) -> System.out.printf("%s %s; ", p.getFirstName(), p.getLastName()));
+
+二： Stream API
+1 从迭代器到Stream操作
+不支持并行计算
+for(String w : words){
+    if(w.length>12) count++;
+}
+支持并行计算
+long count = words.parallelStream().filter(w-> w.length()>12).count();
+
+
+
+
+
+
+
+
