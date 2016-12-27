@@ -1,0 +1,62 @@
+一： lambda表达式
+(1)for循环
+String[] atp = {"Rafael Nadal", "Novak Djokovic","Stanislas Wawrinka","David Ferrer","Roger Federer",
+       "Andy Murray","Tomas Berdych",
+       "Juan Martin Del Potro"};
+List<String> players =  Arrays.asList(atp);
+
+// 以前的循环方式
+for (String player : players) {
+     System.out.print(player + "; ");
+}
+
+// 使用 lambda 表达式以及函数操作(functional operation)
+players.forEach((player) -> System.out.print(player + "; "));
+
+(2)内部类
+// 使用匿名内部类
+btn.setOnAction(new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+              System.out.println("Hello World!");
+          }
+    });
+
+// 或者使用 lambda expression
+btn.setOnAction(event -> System.out.println("Hello World!"));
+
+// 使用匿名内部类
+new Thread(new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("Hello world !");
+    }
+}).start();
+
+// 使用 lambda expression
+new Thread(() -> System.out.println("Hello world !")).start();
+
+(3)排序
+String[] players = {"Rafael Nadal", "Novak Djokovic",
+    "Stanislas Wawrinka", "David Ferrer",
+    "Roger Federer", "Andy Murray",
+    "Tomas Berdych", "Juan Martin Del Potro",
+    "Richard Gasquet", "John Isner"};
+
+// 1.1 使用匿名内部类根据 name 排序 players
+Arrays.sort(players, new Comparator<String>() {
+    @Override
+    public int compare(String s1, String s2) {
+        return (s1.compareTo(s2));
+    }
+});
+使用 lambda expression
+Arrays.sort(players, (String s1, String s2) -> (s1.compareTo(s2)));
+
+二 使用Lambdas和Streams
+Stream是对集合的包装,通常和lambda一起使用。
+使用lambdas可以支持许多操作,如 map, filter, limit, sorted, count, min, max, sum, collect 等等。
+
+System.out.println("下面是月薪超过 $1,400 的PHP程序员:")
+phpProgrammers.stream().filter((p) -> (p.getSalary() > 1400))
+.forEach((p) -> System.out.printf("%s %s; ", p.getFirstName(), p.getLastName()));
