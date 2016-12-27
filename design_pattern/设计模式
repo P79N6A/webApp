@@ -69,6 +69,70 @@ Java api中 流就是使用这种模式
                     |        |
              装饰者实现1     装饰者实现2
 
+
+一个Component抽象类
+package decorator;
+public abstract class Meal
+{
+    String description = "Unknown Meal";
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public abstract double cost();
+}
+
+ConcreteComponent具体类
+package decorator;
+public class ChineseMeal extends Meal
+{
+    public ChineseMeal()
+    {
+        description = "Chinese Meal";
+    }
+
+    @Override
+    public double cost()
+    {
+        return 1.0;        // 一次性餐具费用
+    }
+
+}
+
+一个Decorator抽象类
+package decorator;
+public abstract class Decorator extends Meal
+{
+    public abstract String getDescription();
+}
+
+ConcreteDecorator具体类
+
+// 茄子豆角
+public class EggplantBean extends Decorator
+{
+    Meal meal;
+
+    public EggplantBean(Meal meal)
+    {
+        this.meal = meal;
+    }
+    @Override
+    public String getDescription()
+    {
+        return meal.getDescription() + ", 茄子豆角";
+    }
+
+    @Override
+    public double cost()
+    {
+        return 2 + meal.cost();
+    }
+
+}
+
 4、单列模式
 保证一个类仅有一个实例，并提供一个访问它的全局访问点（public方法）
 必须提供一个private 构造方法，保证这个实例不可以被其他类单独实例化，但要提供一个public方法，保证实例化在类内部完成，并且其他内可以访问这个方法。
