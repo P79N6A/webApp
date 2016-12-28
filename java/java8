@@ -75,7 +75,45 @@ for(String w : words){
 支持并行计算
 long count = words.parallelStream().filter(w-> w.length()>12).count();
 
+三： 新的日期和时间API
+Instant start = Instant.now();
+Instant end = Instant.now();
+Duration time = Duration.between(start,end);
+long millis = time.toMillis();
+System.out.println("=====mills===="+millis);
 
+LocalDate today = LocalDate.now();
+LocalDate alonzosBirthday = LocalDate.of(1999,6,10);
+
+LocalTime rightNow = LocalTime.now();
+LocalTime bedtime = LocalTime.of(22,30);
+
+
+四 并发增强
+1 原子值
+当你有大量线程访问一个原子值时，由于乐观锁更新需要太多次重试
+java8
+LongAdder和LongAccumulator来解决该问题。
+LongAdder由多个变量组成，这个变量累加的值即为当前值。
+多个线程可以更新不同的被加数，当线程数量增加是会自动增加新的
+可以使用LongAdder来代替AtomicLong
+
+
+2 ConcurrentHashMap改进
+(1)更新值：
+原来的ConcurrentHashMap只有一些用于原子更新的方法，这也带来了一些糟糕的编程方式.
+java8提供了许多可以更方便进行原子更新的方法。
+compute方法可以通过一个键和一个函数来计算出新的值。该函数会获取键及其所关联的值，然后计算出新的值
+
+(2)批量数据操作
+批量数据操作会遍历映射并对匹配的元素进行操作。
+
+3 并行数组操作
+Arrays类现在有了许多并行化的操作，静态方法Arrays.parallelSort可以对原始类型数组或者对象数组进行排序
+
+4 可完成的Future
+
+五 其他内容的改进
 
 
 

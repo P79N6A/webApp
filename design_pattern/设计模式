@@ -140,14 +140,14 @@ public class EggplantBean extends Decorator
 1: 双重锁定(懒汉)
 在加锁前，先判定是否已经存在实例
 public class Singleton {
-    private volatile static Singleton singleton;
+    private  volatile static Singleton singleton;
     private Singleton (){}
     public static Singleton getSingleton() {
-    if (singleton == null) {
+    if (singleton == null) {//volatile变量
         synchronized (Singleton.class) {
-        if (singleton == null) {
-            singleton = new Singleton();
-        }
+            if (singleton == null) {
+                singleton = new Singleton();
+            }
         }
     }
     return singleton;
