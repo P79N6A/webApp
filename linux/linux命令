@@ -1,6 +1,7 @@
 一、linux文件与目录管理
 ls、cd、cp、mv、pwd、rm
-cd- 回到一个访问的目录
+ls -lSr 按文件的大小列出所有文件
+cd - 回到上一个访问的目录
 groupadd、chgrp、useradd、chown、chmod （增加组、切换组、增加用户、切换用户、修改文件和目录权限）
 chattr 修改文件的特殊属性
 find、ln、mkdir
@@ -17,7 +18,7 @@ dirname 显示文件的目录
 查看环境变量
 echo $PATH
 linux文件类型
-- ：普通文件　d ：目录 l ： 链接
+- ：普通文件　d ：目录 l ： 链接 c:设备
 
 二、文件过滤和处理
 cat、more、less 查看文件内容
@@ -34,10 +35,11 @@ grep 过滤文件内容，并显示
 5、'*' 配置零个或多个字符
 6、egrep '111|aaa' test.txt 查看包含111或aaa的行
 7、grep 'text' －c 查看匹配字符的计数。
+8、grep dddadfa -r /data 查看data目录下，包含dddadfa文件
 
 sed  替换或删除文件内容
 1、sed -i 's/name/name1/g' test.txt 替换name为name1\
-2、sed -i 's/name//g' test.txt 删除name
+2、sed -i 's/name//g' test.txt 删除name单词
 3、sed -n '3,10'p test.txt 打印test.txt的3到10行
 4、sed -n 'root'p test.txt 打印test.txt包含root的行
 5、sed -i '/bash/'d test.txt 删除test包含bash的行
@@ -114,6 +116,9 @@ more /proc/cpuinfo | grep "model name" 查看cpu信息
 getconf LONG_BIT 查看cpu的位数
 grep MemTotal /proc/meminfo 查看内存
 
+mount /dev/hda2 / 挂载一个文件系统 在根目录下挂载文件系统
+umount /dev/hda2
+
 
 
 七、文本操作
@@ -148,6 +153,13 @@ cat touch2.sh | grep adfa | tr -d 'a'
 /usr:应用程序目录
 
 linux关机时应该先将内存数据同步到磁盘： sync -> shutdown
+
+十、字符设置和文件格式转换
+
+将一个文本文件的格式从MSDOS转换成UNIX
+dos2unix filedos.txt fileunix.txt
+将一个文本文件的格式从UNIX转换成MSDOS
+unix2dos fileunix.txt filedos.txt
 
 
 
