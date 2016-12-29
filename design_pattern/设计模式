@@ -180,7 +180,40 @@ public class Singleton {
 Object接口         Factory接口
 |                        |
 Object实现<--------Factory实现
-
+(1) 简单工厂
+public class McChicken implements Food{
+    /*
+     * 获取一份麦香鸡
+     */
+    public void get(){
+        System.out.println("我要一份麦香鸡");
+    }
+}
+public class Chips implements Food{
+    /*
+     * 获取一份薯条
+     */
+    public void get(){
+        System.out.println("我要一份薯条");
+    }
+}
+根据不同类型返回实例
+public class FoodFactory {
+    public static Food getFood(String type) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        if(type.equalsIgnoreCase("mcchicken")) {
+            return new McChicken();
+        } else if(type.equalsIgnoreCase("chips")) {
+            return new Chips();
+        } else {
+            System.out.println("哎呀！找不到相应的实例化类啦！");
+            return null;
+        }
+    }
+}
+(2) 抽象工厂模式 : 将工厂也设计也抽象，有不同的工厂实现
+public interface AbsFactory(){
+    public Pizza getFood(String type);
+}
 
 7、责任链模式 : 定义一个处理请求的接口，使多个对象继承这个处理接口，并将这些对象连成一条链，沿着这条链传递该请求，直到有一个对象处理它为止。
 用于多分支的处理场景，将每个分支做为一个处理对象，并且必须前一个对象要设置后一个对象,这样就会进入一个分支（处理对象）来处理
