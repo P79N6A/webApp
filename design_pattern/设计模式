@@ -235,9 +235,45 @@ Abstraction -> Implementor
 |       |        |       |
 Abstr1 Abstr2   impl1   impl2
 
-10、抽象工厂模式
+10、命令模式
+请求者持有命令对象，调用命令对象的方法，命令对象持有接受者，进而调用接受者的执行方法。
 
+//接收者类
+public class Receiver {
+    //真正执行命令逻辑的方法
+   public  void action(){
+       System.out.println("执行具体操作！");
+   }
+}
 
+//抽象命令接口
+public interface Command {
+    //执行具体操作的命令
+    void execute();
+}
+
+//具体命令类
+public class ConcreteCommand implements Command {
+    private  Receiver  receiver;//接收者作为成员变量
+    public ConcreteCommand(Receiver  receiver){
+        this.receiver=receiver;
+    }
+    //调用接收者的相关方法来执行具体逻辑
+    public void execute() {
+        receiver.action();
+    }
+}
+//请求者类
+public class Invoker {
+    private Command command;//命令对象做成员变量
+    public Invoker(Command command){
+        this.command=command;
+    }
+    public void action(){
+        //调用命令对象的相关方法，执行具体命令
+        command.execute();
+    }
+}
 
 
 
