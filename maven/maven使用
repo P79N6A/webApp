@@ -170,6 +170,7 @@ compiler时使用的插件
     <groupId></groupId>
     <version></version>
     <relativePath></relativePath>
+    //例如../account-parent/pom.xml 表示平行目录
 </parent>
 
 3:依赖管理
