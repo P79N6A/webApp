@@ -223,11 +223,65 @@ Handler ->Handler
 H1H2H3
 
 8、适配器模式 : 将一个类的接口转换成客户需要的另外一种接口，在不改变现有的类实现前提，使它能够应用于新的目标接口
+主要目的扩展功能
 类图
 Target 目标接口
 |
 Adapter—>Adaptee(被适配类)
 适配器
+
+package adapter;
+/**
+ *
+ * DOC 源对象，只有跑的功能
+ *
+ */
+public class Animal {
+    public void run() {
+        System.out.println("run");
+    }
+}
+
+package adapter;
+/**
+ * DOC 目标接口，既能跑，又能飞
+ *
+ */
+public interface ITarget {
+    public void run();
+    public void fly();
+}
+
+package adapter;
+
+/**
+ * DOC 通过构造函数引入了源对象，并实现了目标的方法
+ *
+ */
+public class Adapter implements ITarget {
+
+    private Animal animal;
+
+    // private animal animal2....可以适配多个对象
+
+    public Adapter(Animal animal) {
+        this.animal = animal;
+    }
+
+    /**
+     * DOC 拓展接口要求的新方法
+     */
+    public void fly() {
+        System.out.println("fly");
+    }
+
+    /**
+     * DOC 使用源对象的方法
+     */
+    public void run() {
+        this.animal.run();
+    }
+}
 
 9、桥接模式:
 当系统可能有多角度分类，每一种分类都有可能变化，那么就把这种多角度分离出来让他们独立变化，减少他们之间的耦合
