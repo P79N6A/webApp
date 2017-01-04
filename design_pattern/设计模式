@@ -329,6 +329,20 @@ public class Invoker {
     }
 }
 
+11 外观模式 : 通过一个方法中，调用多个接口方法。将相关关联的方法，联系起来一起调用
+class Facade
+{
+    private SubSystemA obj1 = new SubSystemA();
+    private SubSystemB obj2 = new SubSystemB();
+    private SubSystemC obj3 = new SubSystemC();
+
+    public void Method()
+    {
+        obj1.MethodA();
+        obj2.MethodB();
+        obj3.MethodC();
+    }
+}
 
 
 
