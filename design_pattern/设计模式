@@ -373,8 +373,56 @@ public class Client {
     }
 }
 
+12、模板模式: 下面是一个列子
+public abstract class Beverage {
+    /**
+     * 冲泡咖啡或茶...流程
+     */
+    public final void create(){//模板
+        boilWater();//把水煮沸
+        brew();//用沸水冲泡...
+        pourInCup();//把...倒进杯子
+        addCoundiments();//加...
+    }
 
+    public abstract void addCoundiments();//由子类执行
 
+    public abstract void brew();//由子类执行
+
+    public void boilWater() {//由基类执行
+        System.out.println("煮开水");
+    }
+
+    public void pourInCup() {
+        System.out.println("倒进杯子");
+    }
+}
+
+public class Coffee extends Beverage{
+
+    @Override
+    public void addCoundiments() {
+        System.out.println("添加糖和牛奶");   }
+
+    @Override
+    public void brew() {
+        System.out.println("用水冲咖啡");
+    }
+}
+
+public class Tea extends Beverage{
+
+    @Override
+    public void addCoundiments() {
+        System.out.println("添加蜂蜜");
+    }
+
+    @Override
+    public void brew() {
+        System.out.println("用水冲茶");
+    }
+
+}
 
 
 
