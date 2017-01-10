@@ -424,6 +424,8 @@ public class Tea extends Beverage{
 
 }
 
+13 迭代器模式 : 封装遍历
+
 
 
 
