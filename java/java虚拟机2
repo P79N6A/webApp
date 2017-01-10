@@ -117,4 +117,121 @@ public class StaticDispatch{
     }
 }
 
-2、动态分派
+2、动态分派(重写):把这种在运行期根据实际类型确定方法执行版本的分派过程称为动态分派。
+不再根据静态类型来决定类型决定
+public class DynamicDispatch{
+    static abstract class Human{
+        protected abstract void sayHello（）；
+    }
+    static class Man extends Human{
+        @Override
+        protected void sayHello（）{
+            System.out.println（"man say hello"）；
+        }
+    }
+    static class Woman extends Human{
+        @Override
+        protected void sayHello（）{
+            System.out.println（"woman say hello"）；
+        }
+    }
+    public static void main（String[]args）{
+        Human man=new Man（）；
+        Human woman=new Woman（）；
+        man.sayHello（）；
+        woman.sayHello（）；
+        man=new Woman（）；
+        man.sayHello（）；
+    }
+}
+Java虚拟机是如何根据实际类型来分派方法执行版本的呢
+public static void main（java.lang.String[]）；
+Code：
+Stack=2，Locals=3，Args_size=1
+0：new#16；//class org/fenixsoft/polymorphic/DynamicDispatch $Man
+3：dup
+4：invokespecial#18；//Method org/fenixsoft/polymorphic/DynamicDispatch $Man."＜init＞"：（）V
+7：astore_1
+8：new#19；//class org/fenixsoft/polymorphic/DynamicDispatch $Woman
+11：dup
+12：invokespecial#21；//Method org/fenixsoft/polymorphic/DynamicDispa
+tch $Woman."＜init＞"：（）V
+15：astore_2
+16：aload_1
+17：invokevirtual#22；//Method org/fenixsoft/polymorphic/DynamicDispatch $Human.sayHello：（）V
+20：aload_2
+21：invokevirtual#22；//Method org/fenixsoft/polymorphic/DynamicDispatch $Human.sayHello：（）V
+24：new#19；//class org/fenixsoft/polymorphic/DynamicDispatch $Woman
+27：dup
+28：invokespecial#21；//Method org/fenixsoft/polymorphic/Dynam
+icDispatch $Woman."＜init＞"：（）V
+31：astore_1
+32：aload_1
+33：invokevirtual#22；//Method org/fenixsoft/polymorphic/
+DynamicDispatch $Human.sayHello：（）V
+36：return
+
+3、虚拟机动态分派的实现
+面对这种情况，最常用的“稳定优化”手段就是为类在方法区中建立一个虚方法表（Vritual Method Table，也称为vtable，
+与此对应的，在invokeinterface执行时也会用到接口方法表——Inteface Method Table，简称itable），使用虚方法表索引来代替元数据查找以提高性能。
+
+虚方法表： 虚方法表中存放着各个方法的实际入口地址。
+如果某个方法在子类中没有被重写，那子类的虚方法表里面的地址入口和父类相同方法的地址入口是一致的都指向父类的实现入口。
+如果子类中重写了这个方法，子类方法表中的地址将会替换为指向子类实现版本的入口地址。
+
+4 基于栈的字节码解释执行引擎
+虚拟机如何执行方法中的字节码指令:
+解析执行（通过解析器执行）和编译执行（通过即时编译器产生本地代码执行）
+
+1、解析执行
+Java语言经常被人们定位为“解释执行”的语言，在Java初生的JDK 1.0时代，这种定义还算是比较准确的，
+但当主流的虚拟机中都包含了即时编译器后，Class文件中的代码到底会被解释执行还是编译执行，就成了只有虚拟机自己才能准确判断的事情。
+
+2、基于栈的指令集与基于寄存器的指令集
+
+3、基于栈的解析器执行过程
+
+第9章 类加载及执行子系统的案例与实战
+通过程序进行操作:字节码生成与类加载器这两部分
+
+1、Tomcat类加载器的架构
+Common类加载器 ->Catalina类加载器和Shared类加载器
+Shared类加载器 ->WebApp类加载器->Jsp类加载器
+
+2、字节码技术与动态代理
+JDK动态代理
+public class DynamicProxyTest{
+    interface IHello{
+        void sayHello（）;
+    }
+    static class Hello implements IHello{
+        @Override
+        public void sayHello（）{
+            System.out.println（"hello world"）;
+        }
+    }
+    static class DynamicProxy implements InvocationHandler{
+        Object originalObj;
+
+        Object bind（Object originalObj）{
+            this.originalObj=originalObj;
+            //这个方法返回一个实现了IHello的接口，并且代理了new Hello（）实例行为的对象。
+            return Proxy.newProxyInstance（originalObj.getClass（）.getClassLoader（），originalObj.getClass（）.getInterfaces（），this）;
+        }
+
+        @Override
+        public Object invoke（Object proxy,Method method,Object[]args）throws Throwable{
+            System.out.println（"welcome"）;
+            return method.invoke（originalObj,args）;
+        }
+    }
+    public static void main（String[]args）{
+        IHello hello=（IHello）new DynamicProxy（）.bind（new Hello（））;
+        hello.sayHello（）;
+    }
+}
+
+
+
+
+

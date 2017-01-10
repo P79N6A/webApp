@@ -1,6 +1,7 @@
 一、linux文件与目录管理
 ls、cd、cp、mv、pwd、rm
-cd- 回到一个访问的目录
+ls -lSr 按文件的大小列出所有文件
+cd - 回到上一个访问的目录
 groupadd、chgrp、useradd、chown、chmod （增加组、切换组、增加用户、切换用户、修改文件和目录权限）
 chattr 修改文件的特殊属性
 find、ln、mkdir
@@ -8,7 +9,7 @@ find / -name 'jenkins' -type d 查找目录
 find .|xargs grep -ri "IBM"  linux查找目录下的所有文件中是否含有某个字符串
 ln (s) 没有参数(s)硬连接，否则是软连接
 硬连接: 不能对目录建硬连接，必须管理员才能建硬连接
-软连接: 删除软连接不会影响源文件
+软连接: 不空占用空间，删除原文件时，软连接找不到
 which 查看命令的地址
 file 查看文件类型
 touch 修改文件的时间，或新建一个空文件
@@ -17,7 +18,7 @@ dirname 显示文件的目录
 查看环境变量
 echo $PATH
 linux文件类型
-- ：普通文件　d ：目录 l ： 链接
+- ：普通文件　d ：目录 l ： 链接 c:设备
 
 二、文件过滤和处理
 cat、more、less 查看文件内容
@@ -34,10 +35,11 @@ grep 过滤文件内容，并显示
 5、'*' 配置零个或多个字符
 6、egrep '111|aaa' test.txt 查看包含111或aaa的行
 7、grep 'text' －c 查看匹配字符的计数。
+8、grep dddadfa -r /data 查看data目录下，包含dddadfa文件
 
 sed  替换或删除文件内容
 1、sed -i 's/name/name1/g' test.txt 替换name为name1\
-2、sed -i 's/name//g' test.txt 删除name
+2、sed -i 's/name//g' test.txt 删除name单词
 3、sed -n '3,10'p test.txt 打印test.txt的3到10行
 4、sed -n 'root'p test.txt 打印test.txt包含root的行
 5、sed -i '/bash/'d test.txt 删除test包含bash的行
@@ -63,11 +65,10 @@ whoami、logname 当前登录用户名
 linux系统的重要文件： /etc/passwd 和 /etc/shadow 维护用户相关信息
 
 su [-] :
-后面可以跟”-”也可以不跟，普通用户su不加username时就是切换到root用户，当然root用户同样可以su到普通用户
-加”-“后会连同用户的环境变量一起切换过来
-如root原来切换用户test时，如果不加 - ，则切换后还是root目录
-加上 - 后，切换到test目录
-sudo 以root的身份执行命令
+su命令和su -命令最大的本质区别就是：前者只是切换了root身份，但Shell环境仍然是普通用户的Shell；
+而后者连用户和Shell环境一起切换成root身份了。只有切换了Shell环境才不会出现PATH环境变量错误。
+su切换成root用户以后，pwd一下，发现工作目录仍然是普通用户的工作目录；而用su -命令切换以后，工作目录变成root的工作目录了。
+用echo $PATH命令看一下su和su -以后的环境变量有何不同。以此类推，要从当前用户切换到其它用户也一样，应该使用su -命令。
 
 四、备份压缩
 1、tar
@@ -104,16 +105,19 @@ vim 可以通过set nu来设置显示行号
 wget
 curl
 
-
 六、磁盘管理
-df 查看磁盘使用情况
+df -h 查看磁盘使用情况
 du 用来查看目录所占空间大小
+du -sh ./*
 free 查看内存使用
 history 查看历史执行的命令
 !num 可以执行历史执行的命令
 more /proc/cpuinfo | grep "model name" 查看cpu信息
 getconf LONG_BIT 查看cpu的位数
 grep MemTotal /proc/meminfo 查看内存
+
+mount /dev/hda2 / 挂载一个文件系统 在根目录下挂载文件系统
+umount /dev/hda2
 
 
 
@@ -149,6 +153,13 @@ cat touch2.sh | grep adfa | tr -d 'a'
 /usr:应用程序目录
 
 linux关机时应该先将内存数据同步到磁盘： sync -> shutdown
+
+十、字符设置和文件格式转换
+
+将一个文本文件的格式从MSDOS转换成UNIX
+dos2unix filedos.txt fileunix.txt
+将一个文本文件的格式从UNIX转换成MSDOS
+unix2dos fileunix.txt filedos.txt
 
 
 

@@ -25,3 +25,7 @@
 1、配置maven-complier-plugins插件：支持java编译
 2、maven-shade-plugin，打出的jar，可以在命令行中运行
 
+四：依赖两个不同版本的问题
+当依赖一个高版本和一个低版本时，maven会优先使用低版本，所以高版本就不会使用加载，里面的方法就不会使用到，就会出现了熟悉的NoSuchMethodError异常
+解决方法： 通过mvn dependency:tree，找到依赖关系,将低版本的依赖去掉.
+
