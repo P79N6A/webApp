@@ -426,11 +426,93 @@ public class Tea extends Beverage{
 
 13 迭代器模式 : 封装遍历
 
+14 组合模式 ：将对象聚合成树形结构来表现"整体/部分"的层次结构
+abstract class AbstractFile {
+    public abstract void add(AbstractFile file);
+    public abstract void remove(AbstractFile file);
+    public abstract AbstractFile getChild(int i);
+    public abstract void killVirus();
+}
 
+public class ImageFile extends AbstractFile{
+    private String name;
+    public ImageFile (String name) {
+        this.name = name;
+    }
 
+    public void add(AbstractFile file) {
+        System.out.println("对不起，不支持该方法！");
+    }
 
+    public void remove(AbstractFile file) {
+        System.out.println("对不起，不支持该方法！");
+    }
 
+    public AbstractFile getChild(int i) {
+        System.out.println("对不起，不支持该方法！");
+        return null;
+    }
 
+    public void killVirus() {
+        // 模拟杀毒
+        System.out.println("----对图像文件'" + name + "'进行杀毒----");
+
+    }
+
+}
+public class TextFile extends AbstractFile{
+    private String name;
+    public TextFile (String name) {
+        this.name = name;
+    }
+
+    public void add(AbstractFile file) {
+        System.out.println("对不起，不支持该方法！");
+    }
+
+    public void remove(AbstractFile file) {
+        System.out.println("对不起，不支持该方法！");
+    }
+
+    public AbstractFile getChild(int i) {
+        System.out.println("对不起，不支持该方法！");
+        return null;
+    }
+
+    public void killVirus() {
+        // 模拟杀毒
+        System.out.println("----对文本文件'" + name + "'进行杀毒----");
+
+    }
+
+}
+public class Folder extends AbstractFile{
+    private ArrayList<AbstractFile> fileList = new ArrayList<AbstractFile>(); // 规定集合中成员类型
+    private String name;
+    public Folder(String name) {
+        this.name = name;
+    }
+
+    public void add(AbstractFile file) {
+        fileList.add(file);
+    }
+
+    public void remove(AbstractFile file) {
+        fileList.remove(file);
+    }
+
+    public AbstractFile getChild(int i) {
+        return (AbstractFile)fileList.get(i); // 强制转换为类型
+    }
+
+    public void killVirus() {
+        System.out.println("****对文件夹'" + name + "'进行杀毒****"); // 模拟杀毒
+        // 递归调用成员构件的杀毒方法
+        for (Object obj :fileList) {
+            ((AbstractFile)obj).killVirus();
+        }
+    }
+}
 
 
 
