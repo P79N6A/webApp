@@ -1,0 +1,252 @@
+public class TestGetHql {
+    private static Configuration cfg = new Configuration().configure();
+    private static SessionFactory fac = cfg.buildSessionFactory();
+    private static Session son = fac.openSession();
+
+    // hql普通查询 Card为类名，不是表名，可以写全路径
+    public static void from() {
+        String hql = "from Card";
+        Query query = son.createQuery(hql);
+        List<Card> cards = query.list();
+        for (Card c : cards) {
+            System.out.println(c.getCardName());
+            System.out.println(c.getCreateDate());
+        }
+    }
+
+    // 条件查询 where
+    public static void where() {
+        String hql = "from Card where cardName='三国无双'";
+        Query query = son.createQuery(hql);
+        List<Card> cardss = query.list();
+        for (Card c : cardss) {
+            System.out.println(c.getCardName());
+            System.out.println(c.getCreateDate());
+        }
+    }
+
+    // 模糊查询 like
+    public static void like() {
+        String hql = "from Card where cardName like '%世%'";
+        Query query = son.createQuery(hql);
+        List<Card> cards = query.list();
+        for (Card c : cards) {
+            System.out.println(c.getCardName());
+            System.out.println(c.getCreateDate());
+        }
+    }
+
+    // 逻辑条件查询 >
+    public static void gt() {
+        String hql = "from Card c where c.createDate >'2011-08-08'";
+        Query query = son.createQuery(hql);
+        List<Card> cards = query.list();
+        for (Card c : cards) {
+            System.out.println(c.getCardName());
+            System.out.println(c.getCreateDate());
+        }
+    }
+
+    // 逻辑条件查询 between and 此处用了别名，省略了as关键字
+    public static void between() {
+        String hql = "from Card c where c.createDate between '2011-08-08' and '2022-11-11'";
+        Query query = son.createQuery(hql);
+        List<Card> cards = query.list();
+        for (Card c : cards) {
+            System.out.println(c.getCardName());
+            System.out.println(c.getCreateDate());
+        }
+    }
+
+    // 逻辑多条件查询and
+    public static void and() {
+        String hql = "from Card c where c.createDate between '2011-01-08' and '2022-11-11' and c.cardName like '%世%'";
+        Query query = son.createQuery(hql);
+        List<Card> cards = query.list();
+        for (Card c : cards) {
+            System.out.println(c.getCardName());
+            System.out.println(c.getCreateDate());
+        }
+    }
+
+    // update 更新
+    public static void update() {
+        String hql = "update Card as c set c.createDate='2011-03-03' where c.cardType.cardTypeId=3";
+        Query query = son.createQuery(hql);
+        int num = query.executeUpdate();
+        System.out.println(num + "行被更新。。。");
+    }
+
+    // delete删除
+    public static void delete() {
+        String hql = "delete from  Card as c where c.createDate='2011-03-04'";
+        Query query = son.createQuery(hql);
+        int num = query.executeUpdate();
+        System.out.println(num + "行被删除。。。");
+    }
+
+    // 单个属性查询
+    public static void simpleProperty() {
+        String hql = "select c.cardName from  Card as c where c.cardType.cardTypeId=1";
+        Query query = son.createQuery(hql);
+        List<String> name = query.list();
+        for (String s : name) {
+            System.out.println(s);
+        }
+    }
+
+    // 多个属性查询 其中cardTypeName直接通过card对象的cardType对象获得，省去了使用普通的sql语句必须多表连接查询的麻烦
+    public static void mulProperty() {
+        String hql = "select c.cardName,c.cardType.cardTypeName,c.createDate from  Card as c where c.cardType.cardTypeId=1";
+        Query query = son.createQuery(hql);
+        List<Object[]> obj = query.list();
+        for (Object[] o : obj) {
+            System.out.println(o[0] + "\t" + o[1] + "\t" + o[2]);
+        }
+    }
+
+    // 多个属性查询 面向对象方式
+    public static void orientedObject() {
+        String hql = "select new Card(c.cardName,c.createDate) from  Card as c";
+        Query query = son.createQuery(hql);
+        List<Card> cards = query.list();
+        for (Card c : cards) {
+            System.out.println(c.getCardName() + "\t" + c.getCreateDate());
+        }
+    }
+
+    // 函数查询
+    public static void function() {
+        String hql = "select count(*),max(c.createDate) from  Card as c";
+        Query query = son.createQuery(hql);
+        List<Object[]> oo = query.list();
+        for (Object[] o : oo) {
+            System.out.println("总记录数：" + o[0] + "\t最新日期为：" + o[1]);
+        }
+    }
+
+    // 排序
+    public static void orderBy() {
+        String hql = "from  Card as c order by c.createDate desc";
+        Query query = son.createQuery(hql);
+        List<Card> cards = query.list();
+        for (Card c : cards) {
+            System.out.println(c.getCardName() + "\t" + c.getCreateDate());
+        }
+    }
+
+    // 分组
+    public static void groupBy() {
+        String hql = "from  Card as c group by c.cardType.cardTypeId";
+        Query query = son.createQuery(hql);
+        List<Card> cards = query.list();
+        for (Card c : cards) {
+            System.out.println(c.getCardName() + "\t" + c.getCreateDate());
+        }
+    }
+
+    // 单个对象查询 呵呵，奇怪吧，对象可以查询出来
+    public static void simpleObject() {
+        String hql = "select c.cardType from  Card as c";
+        Query query = son.createQuery(hql);
+        query.setMaxResults(1);// 必须在查询之前指定，使其返回单个对象
+        CardType cardType1 = (CardType) query.uniqueResult();
+        System.out.println(cardType1.getCardTypeName() + "\t"
+                + cardType1.getCreateDate());
+    }
+
+    // 按照命令行参数 格式为： :参数名
+    public static void parameter() {
+        String hql = "select c.cardType from  Card as c where c.cardType.cardTypeId=:id";
+        Query query = son.createQuery(hql);
+        query.setParameter("id", 1);
+        query.setMaxResults(1);// 必须在查询之前指定，使其返回单个对象
+        CardType cardType = (CardType) query.uniqueResult();
+        System.out.println(cardType.getCardTypeName() + "\t"
+                + cardType.getCreateDate());
+    }
+
+    // 按照参数位置 从0开始
+    public static void parameterPosition() {
+        String hql = "select c.cardType from  Card as c where c.cardType.cardTypeId=?";
+        Query query = son.createQuery(hql);
+        query.setParameter(0, 1);
+        query.setMaxResults(1);// 必须在查询之前指定，使其返回单个对象
+        CardType cardType = (CardType) query.uniqueResult();
+        System.out.println(cardType.getCardTypeName() + "\t"
+                + cardType.getCreateDate());
+    }
+
+    // 多个参数
+    public static void mulParameter() {
+        String hql = "from  Card as c where c.cardType.cardTypeId in (3,2)";
+        Query query = son.createQuery(hql);
+        // query.setParameterList("id", new Object[]{1,2});
+        List<Card> cards = query.list();
+        for (Card o : cards) {
+            System.out.println(o.getCardName());
+        }
+    }
+
+    // inner join 查询结果为多个对象的集合
+    public static void innerJoin() {
+        String hql = "from  Card as c inner join c.cardType";
+        Query query = son.createQuery(hql);
+        List<Object[]> cards = query.list();
+        for (Object[] o : cards) {
+            System.out.println(((Card) o[0]).getCardName() + "\t"
+                    + ((CardType) o[1]).getCreateDate());
+        }
+    }
+
+    // leftJoin 查询结果为多个对象的集合
+    public static void leftJoin() {
+        String hql = "from  CardType as c left join c.cards";
+        Query query = son.createQuery(hql);
+        List<Object[]> cards = query.list();
+        for (Object[] o : cards) {
+            // 由于保存卡片时在多的一方card进行操作，使用了级联。但手动插入的cardType可能没有相应的卡片
+            if (o[1] != null) {// 当卡片不为空时
+                System.out.println(((CardType) o[0]).getCardTypeName() + "\t"
+                        + ((Card) o[1]).getCardName());
+            } else {
+                System.out.println(((CardType) o[0]).getCardTypeName()
+                        + "\t没有相应的卡片");
+            }
+        }
+    }
+
+    // rightJoin 查询结果为多个对象的集合
+    public static void rightJoin() {
+        String hql = "from  CardType as c right join c.cards";
+        Query query = son.createQuery(hql);
+        List<Object[]> cards = query.list();
+        // 插入时保证了每张卡片的类型，所以此处不用判断卡片类型是否为空
+        for (Object[] o : cards) {
+            System.out.println(((CardType) o[0]).getCardTypeName() + "\t"
+                    + ((Card) o[1]).getCardName());
+        }
+    }
+
+    // 使用子查询
+    public static void childSelect() {
+        String hql = "from  CardType as c where (select count(*) from c.cards)>0";
+        Query query = son.createQuery(hql);
+        List<CardType> cards = query.list();
+        for (CardType c : cards) {
+            System.out.println(c.getCardTypeName() + "\t" + c.getCreateDate());
+        }
+    }
+
+    // 程序入口
+    public static void main(String[] args) {
+        // 测试方法
+        Transaction tr = son.beginTransaction();
+
+        // update();
+        mulParameter();
+        tr.commit();
+        son.close();
+        fac.close();
+    }
+}
