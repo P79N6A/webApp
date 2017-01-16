@@ -167,9 +167,105 @@ public class Singleton {
           接口
           |  |
 接口的实现<-----代理（Proxy）
+(1)    Subject
+package com.jackie.designpatterns.proxy;
+/**
+ * 抽象主题，定义主要功能
+ */
+publicinterface Subject {
+   publicvoid operate();
+}
+(2)    RealSubject
+package com.jackie.designpatterns.proxy;
+/**
+ * 具体主题
+ */
+publicclass RealSubject implements Subject{
 
-代理的应用场景:RPC远程调用
+   @Override
+   publicvoid operate() {
+        System.out.println("realsubject operatestarted......");
+   }
+}
+(3)     Proxy
+package com.jackie.designpatterns.proxy;
+/**
+ * 代理类
+ */
+public class Proxy implements Subject{
+
+   private Subject subject;
+
+   public Proxy(Subject subject) {
+        this.subject = subject;
+   }
+
+   @Override
+   publicvoid operate() {
+        System.out.println("before operate......");
+        subject.operate();
+        System.out.println("after operate......");
+   }
+}
+(4)     Client
+package com.jackie.designpatterns.proxy;
+/**
+ * 客户
+ */
+publicclass Client {
+   /**
+    * @param args
+    */
+   public static void main(String[] args) {
+        Subject subject = new RealSubject();
+        Proxy proxy = new Proxy(subject);
+        proxy.operate();
+   }
+}
+
 动态代理
+public interface Subject
+{
+  public void doSomething();
+}
+public class RealSubject implements Subject
+{
+  public void doSomething()
+  {
+    System.out.println( "call doSomething()" );
+  }
+}
+public class ProxyHandler implements InvocationHandler
+{
+  private Object proxied;
+
+  public ProxyHandler( Object proxied )
+  {
+    this.proxied = proxied;
+  }
+
+  public Object invoke( Object proxy, Method method, Object[] args ) throws Throwable
+  {
+    //在转调具体目标对象之前，可以执行一些功能处理
+
+    //转调具体目标对象的方法
+    return method.invoke( proxied, args);
+
+    //在转调具体目标对象之后，可以执行一些功能处理
+  }
+}
+
+ public static void main( String args[] )
+  {
+    RealSubject real = new RealSubject();
+    Subject proxySubject = (Subject)Proxy.newProxyInstance(Subject.class.getClassLoader(),
+     new Class[]{Subject.class},
+     new ProxyHandler(real));
+
+    proxySubject.doSomething();
+
+  }
+代理的应用场景:RPC远程调用
 1： 被代理类
 2： 代理处理器，将被代理器，通过构造方法，传入。这里被代理类可以任何类型，所以是动态的
 3： 代理类调用方法时，会由代理处理器接受，并通过反射机制调用被代理类的方法.
@@ -286,8 +382,75 @@ public class Adapter implements ITarget {
 9、桥接模式:
 当系统可能有多角度分类，每一种分类都有可能变化，那么就把这种多角度分离出来让他们独立变化，减少他们之间的耦合
 Abstraction -> Implementor
-|       |        |       |
+|       |       |       |
 Abstr1 Abstr2   impl1   impl2
+
+namespace CarRunOnRoad_Bridge_
+ 2{
+ 3
+ 4    //抽象路
+ 5    public abstract class AbstractRoad
+ 6    {
+ 7        protected AbstractCar car;
+ 8        public AbstractCar Car
+ 9        {
+10            set
+11            {
+12                car = value;
+13            }
+14        }
+15
+16        public abstract void Run();
+17    }
+18
+19    //高速公路
+20    public class SpeedWay : AbstractRoad
+21    {
+22        public override void Run()
+23        {
+24            car.Run();
+25            Console.WriteLine("高速公路上行驶");
+26        }
+27    }
+28
+29    //市区街道
+30    public class Street : AbstractRoad
+31    {
+32        public override void Run()
+33        {
+34            car.Run();
+35            Console.WriteLine("市区街道上行驶");
+36        }
+37    }
+38}
+
+namespace CarRunOnRoad_Bridge_
+ 2{
+ 3    //抽象汽车
+ 4    public abstract class AbstractCar
+ 5    {
+ 6        public abstract void Run();
+ 7    }
+ 8
+ 9    //小汽车;
+10    public class Car : AbstractCar
+11    {
+12        public override void Run()
+13        {
+14            Console.Write("小汽车在");
+15        }
+16    }
+17
+18    //公共汽车
+19    public class Bus : AbstractCar
+20    {
+21        public override void Run()
+22        {
+23            Console.Write("公共汽车在");
+24        }
+25    }
+26}
+
 
 10、命令模式
 请求者持有命令对象，调用命令对象的方法，命令对象持有接受者，进而调用接受者的执行方法。
@@ -575,6 +738,8 @@ public class Client {
         context.request("test");
     }
 }
+
+16
 
 
 
