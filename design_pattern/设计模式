@@ -736,7 +736,85 @@ public class Client {
     }
 }
 
-16
+16 生成器模式 : 对于复杂对象的创建。对工厂模式更复杂
+Builder ：生成器接口，定义创建一个Product各个部件的操作
+ConcreteBuilder：具体的生成器的实现类
+Product：产品，表示被生成器构建的复杂的对象，包含多个部件
+Director：主要用来使用Builder接口 ，已一个统一的接口创建Product对象
+
+Builder
+public interface PersonBuilder {
+    void buildHead();
+    void buildBody();
+    void buildFoot();
+    Person buildPerson();
+}
+//具体建造工具
+ConcreteBuilder
+public class ManBuilder implements PersonBuilder {
+    Person person;
+    public ManBuilder() {
+        person = new Person();
+    }
+    public void buildbody() {
+    person.setBody("建造男人的身体");
+    }
+    public void buildFoot() {
+    person.setFoot("建造男人的脚");
+    }
+    public void buildHead() {
+    person.setHead("建造男人的头");
+    }
+    public Person buildPerson() {
+    return person;
+}
+}
+//建造者
+Director
+public class PersonDirector {
+    public Person constructPerson(PersonBuilder pb) {
+        pb.buildHead();
+        pb.buildBody();
+        pb.buildFoot();
+        return pb.buildPerson();
+    }
+}
+Product
+public class Person {
+    private String head;
+    private String body;
+    private String foot;
+    public String getHead() {
+        return head;
+    }
+    public void setHead(String head) {
+        this.head = head;
+    }
+    public String getBody() {
+        return body;
+    }
+    public void setBody(String body) {
+        this.body = body;
+    }
+    public String getFoot() {
+        return foot;
+    }
+    public void setFoot(String foot) {
+        this.foot = foot;
+    }
+}
+
+Test
+public class Test{
+    public static void main(String[] args) {
+        PersonDirector pd = new PersonDirector();
+        Person person = pd.constructPerson(new ManBuilder());
+        System.out.println(person.getBody());
+        System.out.println(person.getFoot());
+        System.out.println(person.getHead());
+    }
+}
+
 
 
 
