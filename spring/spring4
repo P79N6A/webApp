@@ -19,3 +19,11 @@ public class SpringTest {
         ApplicationContext annotationContext = new AnnotationConfigApplicationContext("SpringStudy");
     }
 }
+
+条件注解@Conditional
+可以基于条件来创建Bean，即使用@Conditional注解
+可以通过实现Conditional接口，并重写其matches方法来构造判断条件
+
+
+
+

@@ -43,3 +43,7 @@
     </pluginRepository>
   </pluginRepositories>
 </project>
+
+二 Spring 自动配置原理
+1 运作原理:
+通过@EnableAutoConfiguration注解 ：
