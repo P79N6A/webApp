@@ -1,0 +1,25 @@
+一 docker镜像命令
+搜索 docker search 镜像名
+下载 docker pull 镜像名
+镜像列表 docker images
+镜像删除 docker rmi image-id
+删除所有镜像 docker rmi $(docker image -q)
+
+二 docker容器命令
+运行一个容器
+docker run --name container-name -d image-name
+容器列表
+docker ps
+停止和启动容器
+docker stop container-name/container-id
+docker start container-name/container-id
+端口映射
+docker 容器中运行的软件所使用的端口，是访问不到的，需要将docker容器的端口映射到当前主机的端口上
+docker run -d -p 6378:6379 --name port-redis redis
+
+删除容器
+docker rm container-id
+删除所有的容器
+docker rm ${docker ps -a -q}
+
+
