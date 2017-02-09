@@ -4,6 +4,9 @@ show index from looking_cartoon;
 查看见表语句：
 show create table dim_dept_saler
 
+查看表的所有字段
+SHOW FULL COLUMNS FROM  looking_cartoon
+
 创建表
 CREATE table dim_time_v3 as SELECT 。。
 
@@ -27,3 +30,7 @@ Call insert_test1(1);
 
 删除数据库中重复的信息，只保留一条
 delete from user where exists(select 1 from user a where a.name=user.name and a.tel=user.tel and a.id<user.id)
+
+mysql字符集
+utf8 只支持3个字节
+character-set-server = utf8mb4 可以支持4个字节
