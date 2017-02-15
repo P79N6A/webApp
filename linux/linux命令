@@ -45,6 +45,8 @@ sed  替换或删除文件内容
 5、sed -i '/bash/'d test.txt 删除test包含bash的行
 6、sed -i '1,5'd test.txt删除1到5行
 
+输出日志
+nohup /usr/local/jdk1.8.0_60/bin/java -jar microservice-register-1.0.0-SNAPSHOT.jar > /dev/null 2>&1 &
 
 awk 按分隔符输出
 less test.txt | awk -F ':' '{print $1}' 输出分段的第一个分段的内容
@@ -95,14 +97,15 @@ kill 杀死进程 :
 ifconfig 查看网络配置
 hostname 显示主机名
 ping 网络联通测试
-netstat -a 查看网络状态
+netstat -ap 查看网络状态
 scp 远程拷贝
 ssh-keygen
 ssh-keygen -t rsa -C "your_email@youremail.com"
 修改authorized_keys，设置ssh-keygen生产key的权限
 vi ~/.ssh/authorized_keys
 vim 可以通过set nu来设置显示行号
-wget
+wget 下载
+wget -q -O $WEBROOT/$WARFILE $URL_PREFIX/$WARFILE
 curl
 
 六、磁盘管理
@@ -118,7 +121,7 @@ grep MemTotal /proc/meminfo 查看内存
 
 mount /dev/hda2 / 挂载一个文件系统 在根目录下挂载文件系统
 umount /dev/hda2
-
+uname -a 查看linux系统，32位或64位
 
 
 七、文本操作

@@ -165,6 +165,12 @@ public class privateLock {
 2、并发容器 : 用于改进同步容器的性能。同步容器将所有对容器状态的访问串行化，代价是严重降低并发性，
 当多个线程竞争容器的锁时，吞吐量减低。
 (1) ConcurrentHashMap    用于代替同步且基于散列的Map
+ConcurrentHashMap采用了分段锁的设计，只有在同一个分段内才存在竞态关系，不同的分段锁之间没有锁竞争。
+Segment 分段锁的结构
+ConcurrentHashMap中的HashEntry相对于HashMap中的Entry有一定的差异性：
+HashEntry中的value以及next都被volatile修饰，这样在多线程读写过程中能够保持它们的可见性
+相比于对整个Map加锁的设计，分段锁大大的提高了高并发环境下的处理能力
+
 (2) CopyOnWriteArrayList 用于替代同步List
 队列 Queue和BlockingQueue
 Queue(非阻塞): ConcurrentLinkedQueue(并发) 和 PriorityQueue(非并发)
@@ -209,6 +215,8 @@ Thread提供了interrupt方法，用于中断线程或者查询线程是否已�
 当在一个方法中调用了一个将抛出InterruptedException异常的方法时，这个方法也会成为一个阻塞的方法,并且必须要处理对中断的响应
 方法1: 传递InterruptedException
 方法2: 捕获Thread.currentThread().interrupt();
+
+http://blog.csdn.net/sunxing007/article/details/9123363
 
 (5) 同步工具类 : 可以根据其自身的状态来协调线程的控制流
 阻塞队列、信号量、栅栏、闭锁 都可以同步工具类

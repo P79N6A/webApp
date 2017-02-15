@@ -1,0 +1,27 @@
+Spring 支持继承配置
+<bean id = a ... abstract="true">
+<bean id = b ... parent="a"> 继承a的所有属性
+
+Spring Prototype：
+spring容器启动时，不创建容器，而是在请求时，才创建实例
+
+SpringEl : 表达式语言
+
+Spring 生命周期 init-method destory-method
+BeanPostProcessor的使用，需要过滤bean
+
+通过静态工厂方法来配置bean
+<bean id = "car1" class="工厂类" factory-mehtod="静态工厂方法">
+    工厂方法的参数
+    <constructor-arg value="audi">
+    </constructor-arg>
+</bean>
+
+Autowired是按类型注入，如果有多个类型的相同的bean时候，需要对实例指定名字
+也可以使用Qualifier（name）
+
+Resource和Inject注解与Autowired类似
+
+spring 4 新特性
+泛型依赖注入
+
