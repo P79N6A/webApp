@@ -1,12 +1,69 @@
-@Transactional(propagation=Propagation.REQUIRED) ：
-如果有事务, 那么加入事务, 没有的话新建一个(默认情况下)
-@Transactional(propagation=Propagation.NOT_SUPPORTED) ：
-容器不为这个方法开启事务
-@Transactional(propagation=Propagation.REQUIRES_NEW) ：
-不管是否存在事务,都创建一个新的事务,原来的挂起,新的执行完毕,继续执行老的事务
-@Transactional(propagation=Propagation.MANDATORY) ：
-必须在一个已有的事务中执行,否则抛出异常
-@Transactional(propagation=Propagation.NEVER) ：
-必须在一个没有的事务中执行,否则抛出异常(与Propagation.MANDATORY相反)
-@Transactional(propagation=Propagation.SUPPORTS) ：
-如果其他bean调用这个方法,在其他bean中声明事务,那就用事务.如果其他bean没有声明事务,那就不用事务.
+Spring事务管理器： 统一管理事务，JDBC,Hibernate,Mybatis一致的
+是管理数据源的
+
+一 事务传播 : 当在一个事务中，调用另一个事务时
+@Transactional(propagation=Propagation.REQUIRED) ： 如果有事务, 那么加入事务, 没有的话新建一个(默认情况下)
+
+@Transactional(propagation=Propagation.REQUIRES_NEW) ： 不管是否存在事务,都创建一个新的事务,原来的挂起,新的执行完毕,继续执行老的事务
+
+@Transactional(propagation=Propagation.NOT_SUPPORTED) ： 容器不为这个方法开启事务
+
+@Transactional(propagation=Propagation.MANDATORY) ： 必须在一个已有的事务中执行,否则抛出异常
+
+@Transactional(propagation=Propagation.NEVER) ：必须在一个没有的事务中执行,否则抛出异常(与Propagation.MANDATORY相反)
+
+@Transactional(propagation=Propagation.SUPPORTS) ：如果其他bean调用这个方法,在其他bean中声明事务,那就用事务.如果其他bean没有声明事务,那就不用事务.
+
+具体事例
+@Service("bookShopService")
+public class BookShopServiceImpl implements BookShopService {
+	@Autowired
+	private BookShopDao bookShopDao;
+
+	//添加事务注解
+	//1.使用 propagation 指定事务的传播行为, 即当前的事务方法被另外一个事务方法调用时
+	//如何使用事务, 默认取值为 REQUIRED, 即使用调用方法的事务
+	//REQUIRES_NEW: 事务自己的事务, 调用的事务方法的事务被挂起.
+	//2.使用 isolation 指定事务的隔离级别, 最常用的取值为 READ_COMMITTED
+	//3.默认情况下 Spring 的声明式事务对所有的运行时异常进行回滚. 也可以通过对应的
+	//属性进行设置. 通常情况下去默认值即可.
+	//4.使用 readOnly 指定事务是否为只读. 表示这个事务只读取数据但不更新数据,
+	//这样可以帮助数据库引擎优化事务. 若真的事一个只读取数据库值的方法, 应设置 readOnly=true
+	//5.使用 timeout 指定强制回滚之前事务可以占用的时间.
+//	@Transactional(propagation=Propagation.REQUIRES_NEW,
+//			isolation=Isolation.READ_COMMITTED,
+//			noRollbackFor={UserAccountException.class})
+	@Transactional(propagation=Propagation.REQUIRES_NEW,
+			isolation=Isolation.READ_COMMITTED,
+			readOnly=false,
+			timeout=3)
+	@Override
+	public void purchase(String username, String isbn) {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {}
+
+		//1. 获取书的单价
+		int price = bookShopDao.findBookPriceByIsbn(isbn);
+
+		//2. 更新数的库存
+		bookShopDao.updateBookStock(isbn);
+
+		//3. 更新用户余额
+		bookShopDao.updateUserAccount(username, price);
+	}
+}
+
+二 事务隔离级别 : 在多个事务并发执行时，可能会脏读，不可重复读，幻读的问题
+
+三 事务回滚 : 默认Spring的声明式事务对所有的运行时异常进行回滚
+可以指定某些异常不进行回滚
+如果设置readOnly只读属性，一般是查询操作，数据库可以做一个优化，不进行加锁
+
+四 事务的执行时间: timeout
+如果事务执行时间过长，回滚
+
+
+
+
+

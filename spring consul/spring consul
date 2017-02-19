@@ -120,7 +120,6 @@ $ dig @127.0.0.1 -p 8600 rails.web.service.consul
     cd /opt/consul
     mkdir data
     consul agent -server -bootstrap -bind=0.0.0.0 -client=192.168.1.100 -data-dir=data -ui -node=192.168.1.100
-    这样，就启动了一个节点
 2：在192.168.1.101节点上面进行
     cd /opt/consul
     mkdir data

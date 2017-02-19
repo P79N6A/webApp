@@ -1,0 +1,93 @@
+主要的作用是：
+将与业务无关的逻辑，抽取出来。
+
+使用动态代理完成aop实现
+代理的代理，必须指明有个类加载器加载
+
+@Component
+@Aspect
+public class MessageAspectjAdvice {
+
+    private static final Logger logger = LoggerFactory.getLogger(MessageAspectjAdvice.class);
+
+
+    /**
+     * 拦截MessageService的send方法
+     */
+    @Pointcut(value = "execution(* com.iqiyi.kiwi.message.MessageService.send(..))")
+    private void sendMethod () {};
+
+
+    /**
+     * 消息发送前处理
+     * @param joinPoint
+     */
+    @Before(value = "sendMethod()")
+    public void beforeAdvice (JoinPoint joinPoint) {
+        Object args [] = joinPoint.getArgs();
+        Map<String, String> map = null;
+        String destination = "";
+        String logKey = UUID.randomUUID().toString();
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] instanceof Message) {
+                Message message = (Message) args[i];
+                map = message.getMap();
+            } else if (args[i] instanceof Map) {
+                map = (Map) args[i];
+            } else if (args[i] instanceof String) {
+                destination = (String) args[i];
+            }
+        }
+        if (map.get("logKey") == null) {1
+            map.put("logKey", logKey);
+        }
+        // 把消息目的地放入消息map中，方便发送重试消息
+//        map.put("destination", destination);
+    }
+
+
+    /**
+     * 消息发送完毕打印日志
+     * @param joinPoint
+     */
+    @After(value = "sendMethod()")
+    public void afterAdvice (JoinPoint joinPoint) {
+        Object args [] = joinPoint.getArgs();
+        Message message = null;
+        Map<String, String> map = null;
+        String destination = "";
+        int priority = 0;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] instanceof Message) {
+                message = (Message) args[i];
+            } else if (args[i] instanceof Map) {
+                map = (Map) args[i];
+            } else if (args[i] instanceof String) {
+                destination = (String) args[i];
+            } else if (args[i] instanceof Integer) {
+                priority = (Integer) args[i];
+            }
+        }
+        String msgDestination = "";
+        Map<String, String> msgMap = null;
+        int msgPriority = Destination.PRIORITY_NORMAL;
+        if (message != null) {
+            msgDestination = message.getDestination();
+            msgMap = message.getMap();
+            msgPriority = message.getPriority();
+        }
+        if (map != null)
+            msgMap = map;
+        if (!"".equals(destination))
+            msgDestination = destination;
+        if (priority != 0)
+            msgPriority = priority;
+        // 打印日志
+        logger.info("[info:send message][destination={}][content={}][priority={}]", msgDestination, JSON.toJSONString(msgMap), msgPriority);
+    }
+}
+
+二 切面的优先级
+@Order(1),@Order(2)
+1优先于2
+
