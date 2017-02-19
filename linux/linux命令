@@ -107,6 +107,7 @@ vim 可以通过set nu来设置显示行号
 wget 下载
 wget -q -O $WEBROOT/$WARFILE $URL_PREFIX/$WARFILE
 curl
+head -n 1 /etc/issue 查看主机配置
 
 六、磁盘管理
 df -h 查看磁盘使用情况
@@ -154,6 +155,8 @@ cat touch2.sh | grep adfa | tr -d 'a'
 /home:用户的主目录
 /root:超级管理员目录
 /usr:应用程序目录
+
+
 
 linux关机时应该先将内存数据同步到磁盘： sync -> shutdown
 

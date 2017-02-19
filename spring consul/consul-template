@@ -1,0 +1,19 @@
+Quick Example
+
+This short example assumes Consul is installed locally.
+
+Start a Consul cluster in dev mode:
+
+$ consul agent -dev
+Author a template in.tpl to query the kv store:
+
+{{ key "foo" }}
+Start Consul Template:
+
+$ consul-template -template "in.tpl:out.txt" -once
+Write data to the key in Consul:
+
+$ consul kv put foo bar
+Observe Consul Template has written the file out.txt:
+
+$ cat out.txt

@@ -1,0 +1,136 @@
+一、Consul 简化了分布式环境中的服务的注册和发现流程，通过 HTTP 或者 DNS 接口发现。支持外部 SaaS 提供者等。
+consul提供的一些关键特性：
+service discovery： consul通过DNS或者HTTP接口使服务注册和服务发现变的很容易，一些外部服务，例如saas提供的也可以一样注册。
+health checking：   健康检测使consul可以快速的告警在集群中的操作。和服务发现的集成，可以防止服务转发到故障的服务上面。
+key/value storage： 一个用来存储动态配置的系统。提供简单的HTTP接口，可以在任何地方操作。
+multi-datacenter：  无需复杂的配置，即可支持任意数量的区域(数据中心)。
+
+二、Consul是一个分布式，高度可用的系统
+1、Consul提供服务的每个节点都运行Consul代理。代理负责健康检查节点上的服务以及节点本身
+可以通过 consul agent 命令来启动。agent 可以运行在 server 状态或者 client 状态。
+自然的，运行在 server 状态的节点被称为 server 节点；运行在 client 状态的节点被称为 client 节点
+
+client 节点 : 负责转发所有的 RPC 到 server 节点。本身无状态，且轻量级，因此，可以部署大量的 client 节点。
+
+server 节点 : 负责组成 cluster 的复杂工作（选举、状态维护、转发请求到 lead），以及 consul 提供的服务（响应 RCP 请求）。
+考虑到容错和收敛，一般部署 3 ~ 5 个比较合适。
+
+client节点会与server节点进行通信
+
+
+三、启动代理
+
+1 : consul agent -dev
+
+从启动日志中，看出是以服务器方式运行的 Server: true (bootstrap: false),并且可以看出是集群群首 Cluster Addr: 127.0.0.1 (LAN: 8301, WAN: 8302)
+
+2 : consul members 查看集群成员
+
+3 :  本地代理看到的世界视图可能与服务器上的状态不完全匹配。为了获得对世界的强一致性视图,请在将请求转发到Consul服务器时使用HTTP API
+http://localhost:8500/v1/catalog/nodes
+
+四、注册服务
+配置文件 ： /etc/consul.d
+内容如下
+echo '{"service": {"name": "web", "tags": ["rails"], "port": 80}}' \
+    | sudo tee /etc/consul.d/web.json
+
+重新启动代理
+consul agent -dev -config-dir=/etc/consul.d
+启动代理后，日志中会 [INFO] agent: Synced service 'web' 说明完成注册
+
+
+查询服务: 一旦代理启动并且服务同步，我们可以使用DNS或HTTP API查询服务
+
+(补充信息)
+    方式一：DNS接口 ：
+        DNS接口允许应用程序使用服务发现，而无需与Consul进行任何高度集成
+        例如，不是向Consul发出HTTP API请求，主机可以通过名称查找直接使用DNS服务器redis.service.us-east-1.consul。
+        此查询自动转换为查找提供redis服务的节点，位于数据中心中us-east-1，并且没有失败的运行状况检查。就是这么简单！
+
+    默认情况下，Consul将在127.0.0.1:8600上侦听域中的DNS查询consul. ，而不支持进一步的DNS递归
+
+    有几种方法可以使用DNS接口。
+        ***一个选项是使用自定义DNS解析器库并指向Consul。
+        另一个选项是将Consul设置为节点的DNS服务器，并提供 recursors配置，以便还可以解析非Consul查询。
+        最后一个方法是转发“consul”的所有查询。域从现有DNS服务器到Consul代理。
+
+    注意：
+        为了解析名字，Consul依赖于非常特定的查询格式
+        两种类型的查询：
+        节点查找 <node>.node[.datacenter].<domain>
+
+    服务查找
+    1: 标准查询
+        [tag.]<service>.service[.datacenter].<domain>
+        它tag是可选的，与节点查找一样，datacenter也是如此。如果没有提供标签，则不对标签进行过滤。如果未提供数据中心，则假定此Consul代理的数据中心。
+        对于标准服务查询，支持A和SRV记录
+        SRV记录提供服务在其上注册的端口，使客户端能够避免依赖已知的端口
+
+(1)查询我们的服务 (DNS)
+
+dig @127.0.0.1 -p 8600 web.service.consul (web 是service的名称)
+;; QUESTION SECTION:
+;web.service.consul.        IN  A
+
+;; ANSWER SECTION:
+web.service.consul. 0   IN  A   172.20.20.11
+如您所见，A返回的记录具有可用服务的节点的IP地址。A记录只能保存IP地址。
+
+
+使用DNS API将整个地址/端口对检索为 SRV记录：
+$ dig @127.0.0.1 -p 8600 web.service.consul SRV
+...
+;; QUESTION SECTION:
+;web.service.consul.        IN  SRV
+
+;; ANSWER SECTION:
+web.service.consul. 0   IN  SRV 1 1 80 Armons-MacBook-Air.node.dc1.consul.
+
+;; ADDITIONAL SECTION:
+Armons-MacBook-Air.node.dc1.consul. 0 IN A  172.20.20.11
+
+该SRV记录表明Web服务正在端口80上运行，并且存在于节点上Armons-MacBook-Air.node.dc1.consul.。DNS返回的附加部分包含该A节点的记录。
+
+我们还可以使用DNS API通过标记过滤服务 ： 基于标签的服务查询的格式为TAG.NAME.service.consul (TAG=rails)
+$ dig @127.0.0.1 -p 8600 rails.web.service.consul
+    ...
+    ;; QUESTION SECTION:
+    ;rails.web.service.consul.      IN  A
+    ;; ANSWER SECTION:
+    rails.web.service.consul.   0   IN  A   172.20.20.11
+
+    (2) 查询我们的服务 (HTTP API)
+    $ curl http://localhost:8500/v1/catalog/service/web
+    [{"Node":"Armons-MacBook-Air","Address":"172.20.20.11","ServiceID":"web", \
+        "ServiceName":"web","ServiceTags":["rails"],"ServicePort":80}]
+
+更新服务:通过更新一个服务配置文件，并发送给代理，进行相应的更新。这允许您更新服务，而不会出现任何停机或不可用于服务查询
+
+五 Consul集群
+当Consul代理启动时，它不知道任何其他节点开始：它是一个孤立的集群。
+    要了解其他集群成员，代理必须加入现有集群。要加入现有群集，只需要知道一个单一的现有成员。
+    加入后，代理将与此成员闲谈，并快速发现集群中的其他成员。Consul代理可以加入任何其他Consul代理，而不仅仅是服务器模式下的代理
+
+我们这里以安装三个节点为例，环境配置如下
+192.168.1.100 以server模式运行
+192.168.1.101，192.168.1.102 以client模式运行
+运行
+1：在192.168.1.100节点上面进行
+    cd /opt/consul
+    mkdir data
+    consul agent -server -bootstrap -bind=0.0.0.0 -client=192.168.1.100 -data-dir=data -ui -node=192.168.1.100
+    这样，就启动了一个节点
+2：在192.168.1.101节点上面进行
+    cd /opt/consul
+    mkdir data
+    consul agent -bind=0.0.0.0 -client=192.168.1.101 -data-dir=data -node=192.168.1.101 -join=192.168.1.100
+3：在192.168.1.102节点上面进行
+    cd /opt/consul
+    mkdir data
+    consul agent -bind=0.0.0.0 -client=192.168.1.102 -data-dir=data -node=192.168.1.102 -join=192.168.1.100
+    全部节点启动完之后
+    访问http://192.168.1.100:8500/  即可查看consul集群的管理页面
+在任意节点执行consul members 即可查看集群节点信息
+
+
