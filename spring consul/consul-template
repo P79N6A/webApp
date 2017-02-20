@@ -17,3 +17,5 @@ $ consul kv put foo bar
 Observe Consul Template has written the file out.txt:
 
 $ cat out.txt
+
+consul-template.exe -consul 127.0.0.1:8500 -template "tmpltest.ctmpl:result.txt"

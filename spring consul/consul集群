@@ -1,0 +1,6 @@
+yi
+要想利用consul提供的服务实现服务的注册与发现，我们需要建立consul cluster。
+在consul方案中，每个提供服务的节点上都要部署和运行consul的agent，所有运行consul agent节点的集合构成consul cluster。
+consul agent有两种运行模式：server和client。这里的server和client只是consul集群层面的区分，与搭建在cluster之上的应用服务无关。
+以server模式运行的consul agent节点用于维护consul集群的状态，
+官方建议每个consul cluster至少有3个或以上的运行在server mode的agent，client节点不限。
