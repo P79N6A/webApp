@@ -1,7 +1,56 @@
-nginx作为文件服务器下载
+1、nginx作为文件服务器下载
 将要加载的文件发到html路径下
 location /{
    if ($request_filename ~* ^.*?\.(txt|doc|pdf|rar|gz|zip|docx|exe|xlsx|ppt|pptx)$){
       add_header Content-Disposition 'attachment';
    }
 }
+
+2、权限控制
+nginx-lua实现简单权限控制 :用户可以访问那个系统，那个接口服务
+1: 用户申请权限，需要将用户信息和用户相应的权限记录到Redis中（性能优于数据库）
+2：当用户请求时，Nginx加入Lua脚本，查询Redis，返回相应的权限信息。
+3: access_by_lua
+
+3、负载均衡
+upstream backend {
+             #ip_hash;
+
+             server 192.168.1.251;
+
+             server 192.168.1.252;
+
+             server 192.168.1.247;
+         }
+server {
+
+        listen       80;
+        server_name  trffweb;
+
+        location / {
+             #反向代理的地址
+             proxy_pass http://backend;
+
+        }
+}
+4、QPS流量限制
+   1、流量限制:目的是在大促或者流量突增期间，我们的后端服务假设某个接口能够扛住的的QPS为10k，这时候同时有20k个请求进来，经过限流模块，会先放10k个请求，其余的请求会阻塞一段时间。，让客户端重试，同时又能起到流量搓峰的作用。
+   可以由两个指令： limit_rate 和 limit_rate_after 共同完成
+
+   2、使用Nginx和Lua的方式：支持10kQPS的流量
+
+
+5、并发连接数限制
+   使用ngx_http_limit_zone_module模块
+
+   limit_conn_zone
+
+   limit_conn
+
+6、防止ddos
+使用Nginx两个模块配置，预防DDOS攻击
+   ngx_http_limit_conn_module
+   可以限制单个 IP 的连接数
+
+   ngx_http_limit_req_module
+   可以限制单个 IP 每秒请求数
