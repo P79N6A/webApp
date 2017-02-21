@@ -1,0 +1,134 @@
+Eureka
+一、依赖配置
+<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.3.RELEASE</version>
+</parent>
+
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>Camden.SR4</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+</dependencies>
+
+二、注册中心
+(1)application.properties属性配置文件
+    应用名称
+    spring.application.name=eureka-server-1.0.0
+    服务端口
+    server.port=9090
+    单机配置
+    eureka.client.register-with-eureka=false
+    eureka.client.fetch-registry=false
+    注册中心服务地址
+    eureka.client.serviceUrl.defaultZone=http://user:password123@localhost:${server.port}/eureka/
+    登陆安全认证
+    security.basic.enabled=true
+    security.user.name=user
+    security.user.password=password123
+
+(2) 应用
+    @SpringBootApplication
+    @EnableEurekaServer
+    public class MicroserviceRegisterApplication {
+
+        public static void main(String[] args) {
+            SpringApplication.run(MicroserviceRegisterApplication.class, args);
+        }
+    }
+
+(3)Eureka Server依赖配置
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-eureka-server</artifactId>
+    </dependency>
+    <dependency>
+    <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>Eureka Server 安全认证配置
+    </dependency>
+
+三、服务提供者
+(1) 属性配置文件
+spring.datasource.url=
+spring.datasource.username=mams_test
+spring.datasource.password=mams_test
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+应用名称
+spring.application.name=cartoon-service-provider
+server.port=8082
+注册中心服务地址
+eureka.client.serviceUrl.defaultZone=http://user:password123@localhost:9090/eureka/
+
+(2)启动类
+@SpringBootApplication
+@EnableEurekaClient
+public class MicroserviceProviderApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(MicroserviceProviderApplication.class, args);
+	}
+}
+(3)服务提供者依赖
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+
+四、服务消费者
+
+(1)属性配置文件
+server.port=8099
+eureka.client.serviceUrl.defaultZone=http://user:password123@localhost:9090/eureka/
+spring.application.name=cartoon-service-consumer
+
+(2)启动类
+@SpringBootApplication
+@EnableEurekaClient
+public class MicroserviceConsumerApplication {
+@Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate(); //远程调用使用
+    }
+    public static void main(String[] args) {
+        SpringApplication.run(MicroserviceConsumerApplication.class, args);
+    }
+}
+(3)服务消费者依赖
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+
+
+
+
+
+
+
+
