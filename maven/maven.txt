@@ -1,23 +1,23 @@
 一: 排除依赖
    <dependency>
-                <groupId>com.iqiyi.kiwi</groupId>
-                <artifactId>kiwi-thrift-new</artifactId>
-                <version>${kiwi.thrift.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-log4j12</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>protobuf-java</artifactId>
-                        <groupId>com.google.protobuf</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.hadoop</groupId>
-                        <artifactId>zookeeper</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+        <groupId>com.iqiyi.kiwi</groupId>
+        <artifactId>kiwi-thrift-new</artifactId>
+        <version>${kiwi.thrift.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+            </exclusion>
+            <exclusion>
+                <artifactId>protobuf-java</artifactId>
+                <groupId>com.google.protobuf</groupId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>zookeeper</artifactId>
+            </exclusion>
+        </exclusions>
+   </dependency>
 
 二:<dependencyManagement> 使用这个时，必须在别的项目中，使用到这里的<dependency>时，才生效
 
@@ -28,4 +28,18 @@
 四：依赖两个不同版本的问题
 当依赖一个高版本和一个低版本时，maven会优先使用低版本，所以高版本就不会使用加载，里面的方法就不会使用到，就会出现了熟悉的NoSuchMethodError异常
 解决方法： 通过mvn dependency:tree，找到依赖关系,将低版本的依赖去掉.
+
+五：Maven快照版本依赖
+<groupId>cc.mzone</groupId>
+    <artifactId>m1</artifactId>
+    <version>0.1-SNAPSHOT</version>
+<packaging>jar</packaging>
+maven2会依据模块的版本号号(pom文件里的version)中是否带有-SNAPSHOT来推断是快照版本号还是正式版本号。
+假设是快照版本号，那么在mvn deploy时会自己主动公布到快照版本号库中，而使用快照版本号的模块，在不更改版本号号的情况下。
+直接编译打包时，maven会自己主动从镜像server上下载最新的快照版本号。
+
+六：本地仓库里面有项目依赖，加入依赖后，没有正确的引入jar
+解决办法：排查本身项目中是否就包含这个模块
+
+
 
