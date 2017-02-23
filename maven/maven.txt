@@ -19,7 +19,9 @@
         </exclusions>
    </dependency>
 
-二:<dependencyManagement> 使用这个时，必须在别的项目中，使用到这里的<dependency>时，才生效
+二:<dependencyManagement> 使用这个时，必须在子项目中，使用到这里的<dependency>时，才生效
+一般在父项目中使用<dependencyManagement> ，统一管理子项目的版本
+
 
 三:plugins
 1、配置maven-complier-plugins插件：支持java编译
