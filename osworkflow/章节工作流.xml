@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE workflow PUBLIC "-//OpenSymphony Group//DTD OSWorkflow 2.6//EN"  "http://www.opensymphony.com/osworkflow/workflow_2_8.dtd">
+<!--OSWorkFlow工作流定义文件  http://blog.csdn.net/lifuxiangcaohui/article/details/6534335
+对比监控示例图片可以知道 xml中每个step都会生成一条记录工作模板(其实就是数据库中一条wf_task_info记录)
+每个step都会根据执行对应的action跳转到相应的result
+比如 获取待生产图书章节这步，结果会根据调到对应的split，然后并行进行生产
+    而图书章节分发这步结果则会跳到对应的join，组合判断决定是否进入结束步骤
+
+    可直接在界面工单链接中直接点搜索(其实就是查wf_task_info关联的所有wf_task_item条目)，用对应的任务id在工作流日志中跟踪 对应任务id的一个流转情况
+
+-->
+<workflow>
+    <meta name="displayName">图书章节生产流程</meta>
+    <meta name="description">实现图书章节生产的流程</meta>
+    <meta name="workflowDetail">启动——》 敏感词过滤——》 图书章节文件生产——》 图书章节文件分发——》 结束</meta>
+
+    <fail-functions>
+        <function type="spring" name="sendAlarmEmailFunction">
+            <arg name="bean.name">sendAlarmEmailFunction</arg>
+            <arg name="destination">${activemq_workflowmessage_prefix}queue_workflow_alarm_email</arg>
+            <arg name="mailContact">${mail_alarm_contact}</arg>
+        </function>
+    </fail-functions>
+
+    <resume-functions>
+        <function type="spring" name="sendResumeEmailFunction">
+            <!--指定函数的bean名 以及函数对应的Map args-->
+            <arg name="bean.name">sendResumeEmailFunction</arg>
+            <arg name="destination">${activemq_workflowmessage_prefix}queue_workflow_resumeTask_email</arg>
+            <arg name="mailContact">${mail_alarm_contact}</arg>
+        </function>
+    </resume-functions>
+
+    <initial-actions>
+        <action id="100" name="启动">
+            <pre-functions>
+                <!-- oswork自带函数  实现caller注入-->
+                <function type="class">
+                    <arg name="class.name">com.opensymphony.workflow.util.Caller</arg>
+                </function>
+            </pre-functions>
+            <results>
+                <!--转到111进行中-->
+                <unconditional-result old-status="Finished" status="Underway" step="111" owner="${caller}">
+                </unconditional-result>
+            </results>
+        </action>
+    </initial-actions>
+    <global-actions>
+        <action id="800" name="步骤重启">
+            <pre-functions>
+                <function type="beanshell">
+                    <arg name="script">
+                        System.out.println("此步骤被重启！");
+                    </arg>
+                </function>
+            </pre-functions>
+            <results>
+                <unconditional-result old-status="Killed"  status="Underway" step="-1">
+                </unconditional-result>
+            </results>
+        </action>
+        <action id="900" name="强制终止流程" finish="true" remark="流程终止" >
+            <pre-functions>
+                <function type="spring">
+                    <arg name="bean.name">superCommonFunction</arg>
+                    <arg name="task_rpc_method_code">wf_thrift_setChapterProduceStatus</arg>
+                    <arg name="task_rpc_param_list">chapterId,version,status</arg>
+                    <arg name="chapterId">${ps_chapterId}</arg>
+                    <arg name="version">${ps_version}</arg>
+                    <arg name="status">KILL</arg>
+                </function>
+                <function type="beanshell">
+                    <arg name="script">
+                        System.out.println("工作流被强制结束");
+                    </arg>
+                </function>
+            </pre-functions>
+            <results>
+                <unconditional-result old-status="Killed" status="Killed" step="999">
+
+                </unconditional-result>
+            </results>
+        </action>
+    </global-actions>
+    <steps>
+        <step id="111" name="初始阅读章节状态进行中">
+            <tasks>
+                <task classtype="spring" classname="superCommonGenerateTaskFunction">
+                    <arg name="task_name">初始化</arg>
+                    <arg name="task_desc">初始化</arg>
+                    <arg name="task_actionId">119</arg>
+                    <arg name="task_stepId">110</arg>
+                    <arg name="task_type">KS</arg>
+                    <arg name="task_status">Queued</arg>
+                    <arg name="task_ownerId">2</arg>
+                    <arg name="task_ownerType">user</arg>
+                    <arg name="task_destination">${activemq_workflowmessage_prefix}queue_supercommon_task_reading</arg><!--SuperCommonMessageProcessor-->
+                    <arg name="task_msg_plist">task_rpc_method_code,task_rpc_param_list,opinion</arg>
+                    <arg name="opinion">初始化</arg>
+                </task>
+            </tasks>
+            <actions>
+                <action id="119" name="完成初始化">
+                    <pre-functions>
+                        <function type="class">
+                            <arg name="class.name">com.opensymphony.workflow.util.Caller</arg>
+                        </function>
+                        <function type="spring">
+                            <arg name="bean.name">superCommonFunction</arg>
+                            <arg name="task_rpc_method_code">wf_thrift_setChapterProduceStatus</arg>
+                            <arg name="task_rpc_param_list">chapterId,version,status</arg>
+                            <arg name="chapterId">${ps_chapterId}</arg>
+                            <arg name="version">${ps_version}</arg>
+                            <arg name="status">PROCESSING</arg>
+                        </function>
+                    </pre-functions>
+                    <results>
+                        <unconditional-result old-status="Finished" status="Underway" step="2000" owner="${caller}">
+                        </unconditional-result>
+                    </results>
+                    <post-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("step111:初始化完成");
+                            </arg>
+                        </function>
+                    </post-functions>
+                </action>
+            </actions>
+        </step>
+        <step id="1000" name="敏感词过滤">
+            <meta name="tipCode">reading-chapter-produce</meta>
+            <tasks>
+                <task classtype="spring" classname="superCommonGenerateTaskFunction">
+                    <arg name="task_name">敏感词过滤</arg>
+                    <arg name="task_desc">敏感词过滤</arg>
+                    <arg name="task_actionId">10001</arg>
+                    <arg name="task_stepId">1000</arg>
+                    <arg name="task_type">ZM_SP_CP</arg>
+                    <arg name="task_status">Queued</arg>
+                    <arg name="task_ownerId">2</arg>
+                    <arg name="task_ownerType">user</arg>
+                    <arg name="task_destination">${activemq_workflowmessage_prefix}queue_sendSensitiveWordFiltering_task</arg>
+                    <arg name="task_msg_plist">task_rpc_method_code,task_rpc_param_list,chapterId,version</arg>
+                    <arg name="task_transcodetype">1</arg>
+                    <arg name="task_encodetype">1</arg>
+                    <arg name="task_rpc_method_code">wf_thrift_getSensitiveWordFilteringParam</arg>
+                    <arg name="task_rpc_param_list">chapterId,version</arg>
+                    <arg name="chapterId">${ps_chapterId}</arg>
+                    <arg name="version">${ps_version}</arg>
+                </task>
+            </tasks>
+            <actions>
+                <action id="10001" name="完成敏感词过滤">
+                    <fail-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("step1000:敏感词过滤失败");
+                            </arg>
+                        </function>
+                        <function type="spring">
+                            <arg name="bean.name">failCommonFunction</arg>
+                            <arg name="task_rpc_method_code">wf_thrift_setChapterProduceStatus</arg>
+                            <arg name="task_rpc_param_list">chapterId,version,status</arg>
+                            <arg name="chapterId">${ps_chapterId}</arg>
+                            <arg name="version">${ps_version}</arg>
+                            <arg name="status">FAIL</arg>
+                            <arg name="opinion">初始化</arg>
+                            <arg name="task_stepId">1000</arg>
+                        </function>
+                    </fail-functions>
+                    <pre-functions>
+                        <function type="class">
+                            <arg name="class.name">com.opensymphony.workflow.util.Caller</arg>
+                        </function>
+                    </pre-functions>
+                    <results>
+                        <unconditional-result status="Underway" step="2000" owner="${caller}">
+                            <pre-functions>
+                                <function type="spring">
+                                    <arg name="bean.name">superCommonFunction</arg>
+                                    <arg name="task_rpc_method_code">wf_thrift_dealSensitiveWordFilteringResult</arg>
+                                    <arg name="task_rpc_param_list">chapterId,version,sensitiveWordFilteringResult</arg>
+                                    <arg name="chapterId">${ps_chapterId}</arg>
+                                    <arg name="version">${ps_version}</arg>
+                                    <arg name="sensitiveWordFilteringResult">${tsOperateResult}</arg>
+                                    <arg name="task_stepId">1000</arg>
+                                </function>
+                            </pre-functions>
+                        </unconditional-result>
+                    </results>
+                    <post-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("step1000:敏感词过滤完成");
+                            </arg>
+                        </function>
+                    </post-functions>
+                </action>
+            </actions>
+        </step>
+        <step id="2000" name="获取待生产图书章节">
+            <tasks>
+                <task classtype="spring" classname="superCommonGenerateTaskFunction">
+                    <arg name="task_name">获取待生产图书章节</arg>
+                    <arg name="task_desc">获取待生产图书章节</arg>
+                    <arg name="task_actionId">20001</arg>
+                    <arg name="task_stepId">2000</arg>
+                    <arg name="task_type">TF</arg>
+                    <arg name="task_status">Queued</arg>
+                    <arg name="task_ownerId">2</arg>
+                    <arg name="task_ownerType">user</arg>
+                    <arg name="task_destination">${activemq_workflowmessage_prefix}queue_sendGetChapterWaitProduce_task</arg><!--SuperCommonSetParameterMessageProcessor-->
+                    <arg name="task_msg_plist">task_rpc_method_code,task_rpc_param_list,chapterId,version,task_rpc_result_param_list</arg>
+                    <arg name="task_rpc_method_code">wf_thrift_getMakeParam</arg>
+                    <arg name="task_rpc_param_list">chapterId,version</arg>
+                    <arg name="chapterId">${ps_chapterId}</arg>
+                    <arg name="version">${ps_version}</arg>
+                    <arg name="task_rpc_result_param_list">fileIdArray,needToDo</arg>
+                </task>
+            </tasks>
+            <actions>
+                <action id="20001" name="获取待生产图书章节">
+                    <fail-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("step2000:获取待生产图书章节失败");
+                            </arg>
+                        </function>
+                        <function type="spring" name="sendAlarmEmailFunction">
+                            <arg name="bean.name">sendAlarmEmailFunction</arg>
+                            <arg name="destination">${activemq_workflowmessage_prefix}queue_workflow_alarm_email</arg>
+                            <arg name="mailContact">${mail_transcode_alarm_contact}</arg>
+                        </function>
+                    </fail-functions>
+                    <pre-functions>
+                        <function type="class">
+                            <arg name="class.name">com.opensymphony.workflow.util.Caller</arg>
+                        </function>
+                    </pre-functions>
+
+                    <!--根据返回值 进行流转-->
+                    <results>
+                        <result old-status="Finished" status="Underway" step="999" owner="${caller}" display-name="无待生产图书章节">
+                            <conditions type="AND">
+                                <condition type="class">
+                                    <arg name="class.name">com.iqiyi.workflow.core.service.workflow.utils.IsParamEqual</arg>
+                                    <arg name="param">${needToDo}</arg>
+                                    <arg name="paramValue">0</arg>
+                                </condition>
+                            </conditions>
+                        </result>
+                        <unconditional-result old-status="Finished" split="1" owner="${caller}" display-name="有待生产图书章节">
+                            <pre-functions>
+                                <function type="spring">
+                                    <arg name="bean.name">createDynamicInstanceFunction</arg>
+                                    <arg name="bean.desc">创建动态节点</arg>
+                                    <arg name="workflowName">reading-chapter-produce</arg>
+                                    <arg name="nodeId">1</arg>
+                                    <arg name="nodeType">split</arg>
+                                    <arg name="param_from_names">fileIdArray</arg>
+                                    <arg name="fileIdArray">${fileIdArray}</arg>
+                                    <arg name="param_to_names">fileId</arg>
+                                </function></pre-functions>
+                        </unconditional-result>
+                    </results>
+                    <post-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("step2000:获取待生产图书章节完成");
+                            </arg>
+                        </function>
+                    </post-functions>
+                </action>
+            </actions>
+        </step>
+
+        <step id="2100" name="图书章节生产">
+            <meta name="tipCode">reading-chapter-produce</meta>
+            <tasks>
+                <task classtype="spring" classname="superCommonGenerateTaskFunction">
+                    <arg name="task_name">图书章节生产</arg>
+                    <arg name="task_desc">图书章节生产</arg>
+                    <arg name="task_actionId">21001</arg>
+                    <arg name="task_stepId">2100</arg>
+                    <arg name="task_type">ZM_SP_YY</arg>
+                    <arg name="task_status">Queued</arg>
+                    <arg name="task_ownerId">2</arg>
+                    <arg name="task_ownerType">user</arg>
+                    <arg name="task_destination">${activemq_workflowmessage_prefix}queue_sendChapterProduce_task</arg><!--SuperCommonSendTaskMessageProcessor-->
+                    <arg name="task_msg_plist">task_rpc_method_code,task_rpc_param_list,task_callback_key,chapterId,version,fileId</arg>
+                    <arg name="task_rpc_method_code">wf_thrift_makeFile</arg>
+                    <arg name="task_callback_key">reading.callback.url</arg>
+                    <arg name="task_rpc_param_list">chapterId,version,fileId</arg>
+                    <arg name="chapterId">${ps_chapterId}</arg>
+                    <arg name="version">${ps_version}</arg>
+                    <arg name="fileId">${fileId}</arg>
+                </task>
+            </tasks>
+            <actions>
+                <action id="21001" name="完成图书章节生产">
+                    <restrict-to>
+                        <conditions type="AND">
+                            <condition type="class">
+                                <arg name="class.name">com.opensymphony.workflow.util.StatusCondition</arg>
+                                <arg name="status">Underway</arg>
+                            </condition>
+                        </conditions>
+                    </restrict-to>
+                    <fail-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("step2100:通知图书章节生产失败");
+                            </arg>
+                        </function>
+                        <function type="spring">
+                            <arg name="bean.name">failCommonFunction</arg>
+                            <arg name="task_rpc_method_code">wf_thrift_setChapterProduceStatus</arg>
+                            <arg name="task_rpc_param_list">chapterId,version,fileId,status</arg>
+                            <arg name="chapterId">${ps_chapterId}</arg>
+                            <arg name="version">${ps_version}</arg>
+                            <arg name="fileId">${fileId}</arg>
+                            <arg name="status">FAIL</arg>
+                            <arg name="task_stepId">2100</arg>
+                        </function>
+                        <function type="spring" name="sendAlarmEmailFunction">
+                            <arg name="bean.name">sendAlarmEmailFunction</arg>
+                            <arg name="destination">${activemq_workflowmessage_prefix}queue_workflow_alarm_email</arg>
+                            <arg name="mailContact">${mail_transcode_alarm_contact}</arg>
+                        </function>
+                    </fail-functions>
+                    <resume-functions>
+                        <function type="spring" name="sendResumeEmailFunction">
+                            <arg name="bean.name">sendResumeEmailFunction</arg>
+                            <arg name="destination">${activemq_workflowmessage_prefix}queue_workflow_resumeTask_email</arg>
+                            <arg name="mailContact">${mail_transcode_alarm_contact}</arg>
+                        </function>
+                    </resume-functions>
+                    <results>
+                        <unconditional-result old-status="Finished" status="Underway" step="2200"></unconditional-result>
+                    </results>
+                    <post-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("step2100:图书章节生产完成");
+                            </arg>
+                        </function>
+                    </post-functions>
+                </action>
+                <action id="2100800" name="步骤重启">
+                    <pre-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("2100：步骤被重启！");
+                            </arg>
+                        </function>
+                    </pre-functions>
+                    <results>
+                        <unconditional-result old-status="Killed" status="Underway" step="2100">
+                        </unconditional-result>
+                    </results>
+                </action>
+            </actions>
+        </step>
+
+        <step id="2200" name="图书章节分发">
+            <tasks>
+                <task classtype="spring" classname="superCommonGenerateTaskFunction">
+                    <arg name="task_name">图书章节分发</arg>
+                    <arg name="task_desc">图书章节分发</arg>
+                    <arg name="task_actionId">22001</arg>
+                    <arg name="task_stepId">2200</arg>
+                    <arg name="task_type">FF_ZM</arg>
+                    <arg name="task_status">Queued</arg>
+                    <arg name="task_ownerId">2</arg>
+                    <arg name="task_ownerType">user</arg>
+                    <arg name="task_destination">${activemq_workflowmessage_prefix}queue_sendChapterPublish_task</arg><!--PublishTaskMessageProcessor-->
+                    <arg name="task_msg_plist">task_rpc_method_code,task_rpc_param_list,task_callback_key,chapterId,version,fileId</arg>
+                    <arg name="task_rpc_method_code">wf_thrift_getIntranetReleaseParam</arg>
+                    <arg name="task_rpc_param_list">chapterId,version,fileId</arg>
+                    <arg name="task_callback_key">reading.callback.url</arg>
+                    <arg name="chapterId">${ps_chapterId}</arg>
+                    <arg name="version">${ps_version}</arg>
+                    <arg name="fileId">${fileId}</arg>
+                </task>
+            </tasks>
+            <actions>
+                <action id="22001" name="图书章节分发">
+                    <restrict-to>
+                        <conditions type="AND">
+                            <condition type="class">
+                                <arg name="class.name">com.opensymphony.workflow.util.StatusCondition</arg>
+                                <arg name="status">Underway</arg>
+                            </condition>
+                        </conditions>
+                    </restrict-to>
+                    <fail-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("step2200:图书章节分发失败");
+                            </arg>
+                        </function>
+                        <function type="spring">
+                            <arg name="bean.name">failCommonFunction</arg>
+                            <arg name="task_rpc_method_code">wf_thrift_setChapterProduceStatus</arg>
+                            <arg name="task_rpc_param_list">chapterId,version,fileId,status</arg>
+                            <arg name="chapterId">${ps_chapterId}</arg>
+                            <arg name="version">${ps_version}</arg>
+                            <arg name="fileId">${fileId}</arg>
+                            <arg name="status">FAIL</arg>
+                            <arg name="task_stepId">2200</arg>
+                        </function>
+                        <function type="spring" name="sendAlarmEmailFunction">
+                            <arg name="bean.name">sendAlarmEmailFunction</arg>
+                            <arg name="destination">${activemq_workflowmessage_prefix}queue_workflow_alarm_email</arg>
+                            <arg name="mailContact">${mail_delivery_alarm_contact}</arg>
+                        </function>
+                    </fail-functions>
+                    <resume-functions>
+                        <function type="spring" name="sendResumeEmailFunction">
+                            <arg name="bean.name">sendResumeEmailFunction</arg>
+                            <arg name="destination">${activemq_workflowmessage_prefix}queue_workflow_resumeTask_email</arg>
+                            <arg name="mailContact">${mail_delivery_alarm_contact}</arg>
+                        </function>
+                    </resume-functions>
+                    <results>
+                        <unconditional-result old-status="Finished" join="1">
+                            <pre-functions>
+                                <function type="spring">
+                                    <arg name="bean.name">superCommonFunction</arg>
+                                    <arg name="task_rpc_method_code">wf_thrift_dealIntranetReleaseResult</arg>
+                                    <arg name="task_rpc_param_list">chapterId,version,fileId,status</arg>
+                                    <arg name="chapterId">${ps_chapterId}</arg>
+                                    <arg name="version">${ps_version}</arg>
+                                    <arg name="fileId">${fileId}</arg>
+                                    <arg name="status">FINISH</arg>
+                                    <arg name="task_stepId">2200</arg>
+                                </function>
+                            </pre-functions>
+                        </unconditional-result>
+                    </results>
+                    <post-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("2200. 图书章节分发完成");
+                            </arg>
+                        </function>
+                    </post-functions>
+                </action>
+                <action id="2200800" name="步骤重启">
+                    <pre-functions>
+                        <function type="beanshell">
+                            <arg name="script">
+                                System.out.println("2200：步骤被重启！");
+                            </arg>
+                        </function>
+                    </pre-functions>
+                    <results>
+                        <unconditional-result old-status="Killed" status="Underway" step="2200">
+                        </unconditional-result>
+                    </results>
+                </action>
+            </actions>
+        </step>
+
+        <step id="999" name="结束">
+            <pre-functions>
+                <function type="spring">
+                    <arg name="bean.name">superCommonFunction</arg>
+                    <arg name="task_rpc_method_code">wf_thrift_setChapterProduceStatus</arg>
+                    <arg name="task_rpc_param_list">chapterId,version,status</arg>
+                    <arg name="chapterId">${ps_chapterId}</arg>
+                    <arg name="version">${ps_version}</arg>
+                    <arg name="status">FINISH</arg>
+                    <arg name="task_stepId">999</arg>
+                </function>
+                <function type="beanshell">
+                    <arg name="script">
+                        System.out.println("step999:图书章节生产流程结束");
+                    </arg>
+                </function>
+            </pre-functions>
+        </step>
+    </steps>
+
+    <splits>
+        <split id="1" name="图书章节生产分支" is-dynamic="true">
+            <unconditional-result old-status="Finished" step="2100" status="Underway"/>
+        </split>
+    </splits>
+    <joins>
+        <join id="1" is-dynamic="true" name="jt">
+            <conditions type="AND">
+                <condition type="class">
+                    <arg name="class.name">com.opensymphony.workflow.util.DynamicJoinCondition</arg>
+                    <arg name="split_id">1</arg>
+                </condition>
+            </conditions>
+            <unconditional-result old-status="Finished" status="Underway" step="999"></unconditional-result>
+        </join>
+    </joins>
+</workflow>
