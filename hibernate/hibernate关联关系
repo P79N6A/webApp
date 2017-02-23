@@ -1,0 +1,17 @@
+1：一对多映射
+mappedBy是 one 对应的一方
+@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "entry", targetEntity = CurrentStep.class)
+    public Set<CurrentStep> getCurrentSteps() {
+        return currentSteps;
+}
+
+2: 多对多映射
+@ManyToMany(fetch = FetchType.EAGER)
+@Cascade( { org.hibernate.annotations.CascadeType.MERGE })
+@JoinTable(name = "WORKFLOW_AUTH_AUTHORITY_RESOURCE", joinColumns = { @JoinColumn(name = "RESOURCE_ID") }, inverseJoinColumns = { @JoinColumn(name = "AUTHORITY_ID") })
+@Fetch(FetchMode.SUBSELECT)
+@OrderBy("id")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public Set<Authority> getAuthorities() {
+    return authorities;
+}
