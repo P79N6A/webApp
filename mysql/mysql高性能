@@ -236,14 +236,14 @@ explain select * from looking_cartoon_chapter where chapter_sequence > 1 不会�
 
 哈希索引
 只能精确匹配索引所有列的查询才有效
-哈希索引将所有的哈希吗存储在索引中,同时在哈希表中保存指向每个数据行的指针
-Memory引擎表的默认索引类型,并且只有Memory支持
+只有memory引擎显式支持哈希索引，这也是memory引擎表的默认索引类型
+
 哈希索引限制
-哈希索引只包括哈希值和行指针,而不存储字段值,所以必须读行
-不支持排序
-多个字段的索引,必须全部匹配
-只支持等值比较
-哈希冲突
+    哈希索引只包括哈希值和行指针,而不存储字段值,所以必须读行
+    不支持排序
+    多个字段的索引,必须全部匹配
+    只支持等值比较
+    哈希冲突
 注意当创建自定义哈希索引时 : 必须在where条件中带上哈希值和对应列值
 
 空间数据索引
@@ -255,45 +255,62 @@ MyISAM表支持空间索引,不需要前缀查询,空间索引会从所有维度
 2 高性能的索引策略
 
 (1) 独立的列 : 是指索引列不能是表达表的一部分,也不能是函数的参数
-select actor_id from sakila.actor where actor_id + 1 = 5
+    select actor_id from sakila.actor where actor_id + 1 = 5
 
 (2) 前缀索引和索引选择性
-索引选择性是指,不重复的索引指和数据表的记录总数的比指,索引的选择性越高查询效率越高,因为选择性高的索引可以让MYSQL在查找时过滤更多的行
+    索引选择性是指,不重复的索引指和数据表的记录总数的比指,索引的选择性越高查询效率越高,因为选择性高的索引可以让MYSQL在查找时过滤更多的行
 唯一索引的选择性是1(比如主键),这是最好的索引选择性,性能也是最好的
 
-对于BLOB,TEXT列,必须使用前缀索引,MYSQL不允许索引这些列的完整长度
+    对于BLOB,TEXT列,必须使用前缀索引,MYSQL不允许索引这些列的完整长度
 前缀索引: ALTER TABLE city add key (city_name(7)) 使用city_name 前7列创建索引
 
 (3) 多列索引
-当处理多列索引不得当时:
+    当处理多列索引不得当时:
 MYSQL新的版本引入一种叫"索引合并"的策略,可以使用表上的多个单列索引来定位指定的行
 
 当对多个索引好的处理方式
-对多个索引做相交(AND)时,通常意味着一个(包含所有相关列)的多列索引,而不是多个独立的单列索引
-对多个索引做联合(OR)时,通常会消耗大量内存
+    对多个索引做相交(AND)时,通常意味着一个(包含所有相关列)的多列索引,而不是多个独立的单列索引
+    对多个索引做联合(OR)时,通常会消耗大量内存
 
 (4) 选择合适的索引列顺序
-正确的顺序依赖于使用该索引的查询,并且同时需要考虑如何更好地满足排序和分组的需要
-设置索引顺利经验法制 : 将选择性最高的列放到索引最前列
+    正确的顺序依赖于使用该索引的查询,并且同时需要考虑如何更好地满足排序和分组的需要
+    设置索引顺利经验法制 : 将选择性最高的列放到索引最前列
 
 (5) 聚簇索引(Innodb支持聚簇索引)
-是一种数据存储方式,但InnoDB的聚簇索引实际上在同一个结构中保存了B-TREE索引和数据行
-当表有聚簇索引时,它的数据行实际上存放在索引的叶子页中.聚簇索引只能有一个聚簇索引
-InnoDB将通过主键聚集数据
+特点
+MySQL InnoDB一定会建立聚簇索引，把实际数据行和相关的键值保存在一块，这也决定了一个表只能有一个聚簇索引，即MySQL不会一次把数据行保存在二个地方
+
+聚簇索引创建规则
+    1)  有主键时，根据主键创建聚簇索引
+    2)  没有主键时，会用一个唯一且不为空的索引列做为主键，成为此表的聚簇索引
+    3)  如果以上两个都不满足那innodb自己创建一个虚拟的聚集索引
+    create table blog_user
+    (
+        user_Name char(15) not null check(user_Name !=''),
+        user_Password char(15) not null,
+        user_emial varchar(20) not null unique,
+        primary key(user_Name)
+        //聚簇索引
+    )engine=innodb default charset=utf8 auto_increment=1;
+
+与非聚簇索引的区别：
+        聚簇索引的叶节点就是数据节点，而非聚簇索引的叶节点仍然是索引节点
+        聚簇索引主键的插入速度要比非聚簇索引主键的插入速度慢很多
+
 聚簇索引的优点
-可以把相关数据保存在一起,数据访问更快,使用覆盖索引扫描的查询可以直接使用页节点的主键值
-缺点
-插入和更新时候,性能有所影响
-非聚簇索引(二级索引),要有两次查询.因为是先通过二级索引找到主键索引,然后再由主键索引找到对应行
-OPTIMIZE TABLE 优化表
+        可以把相关数据保存在一起,数据访问更快,使用覆盖索引扫描的查询可以直接使用页节点的主键值
+    缺点
+        插入和更新时候,性能有所影响
+        非聚簇索引(二级索引),要有两次查询.因为是先通过二级索引找到主键索引,然后再由主键索引找到对应行
+    OPTIMIZE TABLE 优化表
 
 Innodb和myisam的数据对比
 
-在InnoD表中按主键顺序插入行
-最简单的方法是使用AUTO_INCREMENT自增列.这样可以保证数据行是按顺序写入.避免使用UUID来作为聚簇索引,插入不保证顺序
+    在InnoD表中按主键顺序插入行
+    最简单的方法是使用AUTO_INCREMENT自增列.这样可以保证数据行是按顺序写入.避免使用UUID来作为聚簇索引,插入不保证顺序
 
 (6) 覆盖索引 索引包含所有需要查询的字段的值
-索引条目通常远小于数据行大小,所有如果只需要读取索引,那么MYSQL就会极大地减少数据访问量
+    索引条目通常远小于数据行大小,所有如果只需要读取索引,那么MYSQL就会极大地减少数据访问量
 MYSQL只能使用B-Tree索引做覆盖索引.不同的存储引擎实现覆盖索引的方式不同,而且不是所有的引擎都支持覆盖索引
 
 当select col1,col2 两个字段时,如果建立一个多列(col1,col2)索引,就会使用索引覆盖查询,可以看到Using index
@@ -336,38 +353,25 @@ InnoDB仅对需要访问的元组加锁，而索引能够减少InnoDB访问的�
 一旦索引不允许InnoDB那样做（即达不到过滤的目的），MySQL服务器只能对InnoDB返回的数据进行WHERE操作，此时，已经无法避免对那些元组加锁了：InnoDB已经锁住那些元组，服务器无法解锁了。
 
 create table actor(
-
-actor_id int unsigned NOT NULL AUTO_INCREMENT,
-
-name            varchar(16) NOT NULL DEFAULT '',
-
-password        varchar(16) NOT NULL DEFAULT '',
-
-PRIMARY KEY(actor_id),
-
- KEY     (name)
-
+    actor_id int unsigned NOT NULL AUTO_INCREMENT,
+    name            varchar(16) NOT NULL DEFAULT '',
+    password        varchar(16) NOT NULL DEFAULT '',
+    PRIMARY KEY(actor_id),
+    KEY (name)
 ) ENGINE=InnoDB
 
 insert into actor(name,password) values('cat01','1234567');
-
 insert into actor(name,password) values('cat02','1234567');
-
 insert into actor(name,password) values('ddddd','1234567');
-
 insert into actor(name,password) values('aaaaa','1234567');
 
 SET AUTOCOMMIT=0;
 
 BEGIN;
+    SELECT actor_id FROM actor WHERE actor_id < 4 AND actor_id <> 1 FOR UPDATE;
 
-SELECT actor_id FROM actor WHERE actor_id < 4
-
-AND actor_id <> 1 FOR UPDATE;
-
-该查询仅仅返回2---3的数据，实际已经对1---3的数据加上排它锁了。InnoDB锁住元组1是因为MySQL的查询计划仅使用索引进行范围查询（而没有进行过滤操作，WHERE中第二个条件已经无法使用索引了）：
-
-
+该查询仅仅返回2---3的数据，实际已经对1---3的数据加上排它锁了。
+InnoDB锁住元组1是因为MySQL的查询计划仅使用索引进行范围查询（而没有进行过滤操作，WHERE中第二个条件已经无法使用索引了）：
 
 mysql> EXPLAIN SELECT actor_id FROM test.actor
 
