@@ -124,8 +124,11 @@ mount /dev/hda2 / 挂载一个文件系统 在根目录下挂载文件系统
 umount /dev/hda2
 uname -a 查看linux系统，32位或64位
 
+七、查看CPU使用
+cat /proc/cpuinfo
 
-七、文本操作
+
+八、文本操作
 sort 文件 | uniq 排序后去重
 sort 文件 | uniq -c 排序后去重，并获得重复的文本数
 sort 文件 | uniq -d 仅显示重复的记录
@@ -142,30 +145,26 @@ cat touch2.sh | grep adfa | tr -d 'a'
 "||" 只能执行一个命令，前面或后面
 
 
-八、用户环境 ： 定义用户登录账号的基本环境 , 包含下面三个文件，查找顺序是.bash_profile -> .bash_logout ->.bashrc
+九、用户环境 ： 定义用户登录账号的基本环境 , 包含下面三个文件，查找顺序是.bash_profile -> .bash_logout ->.bashrc
 1、.bash_profile
 2、.bash_logout
 3、.bashrc
 需要执行source .bash_profile使用户环境生效
 
-九、linux操作系统各个目录
+十、linux操作系统各个目录
 /bin: 存放常用命令
 /boot: 启动linux
 /etc:系统管理配置文件和目录
 /home:用户的主目录
 /root:超级管理员目录
 /usr:应用程序目录
-
-
-
 linux关机时应该先将内存数据同步到磁盘： sync -> shutdown
 
-十、字符设置和文件格式转换
-
-将一个文本文件的格式从MSDOS转换成UNIX
-dos2unix filedos.txt fileunix.txt
-将一个文本文件的格式从UNIX转换成MSDOS
-unix2dos fileunix.txt filedos.txt
+十一、字符设置和文件格式转换
+    将一个文本文件的格式从MSDOS转换成UNIX
+    dos2unix filedos.txt fileunix.txt
+    将一个文本文件的格式从UNIX转换成MSDOS
+    unix2dos fileunix.txt filedos.txt
 
 
 
