@@ -10,13 +10,9 @@
         Tablespace -> Segment段 -> Extent区 -> Page页 -> Row 行
         共享表空间可以存放：回滚信息，插入缓冲索引页，系统事务信息，二次写缓冲等还是存放在原来的共享表空间内。
         用户表空间只能存放：数据、索引、插入缓冲Bitmap页.
-
     (2) 段：数据段，索引段，回滚段
-
     (3) 区：区是由连续也组成的空间，每个区的大小都为1MB
-
     (4) 页：InnoDB磁盘管理的最小单位
-
     (5) 行: 每个页存放的行记录也是有硬性定义的，最多8KB记录
 
 3、InnoDB行记录格式
@@ -29,6 +25,71 @@
              varchar类型：长度小于8098时，插入两行记录，是数据都是在数据页中。但是大于的话就会BLOB页中
              结论，若一个数据页可存储两条记录，则不会发现行溢出.
    (3) Compressed和Dynamic 行记录格式(row_format)
+
+   (4)CHAR的行结构存储
+       通常理解varchar是存储变长长度的字符类型，char是存储固定长度的字符类型。
+       CHAR(N)中的N指的是字符长度，而不是之前版本的字节长度。也就说在不同的字符集下，CHAR类型列内部存储的可能不是定长的数据。
+
+4、InnoDB数据页结构 : 页是InnoDB存储引擎管理数据库的最小磁盘单位。
+   页类型为B-tree Node的页存放的是表中行的实际数据了。
+
+    InnoDB数据页由以下7个部分组成
+    File Header（文件头）、Page Header（页头）、Infimun、User Record（用户记录）、Free Space（空闲空间）
+    Page Directory（页目录）、File Trailer（文件结尾信息）
+    (1) File Header,Page Header,File Trailer : 这些空间用来记录该页的一些信息。
+    (2) User Record,Free Space,Page Directory : 这些部分为实际的行记录存储空间。
+
+5、Named File Formats机制 ： 解决不同版本页结构兼容性的问题。
+
+6、约束
+(1) 数据完整性 : 关系型数据库系统和文件系统的不同点是，关系数据库本身能保证存储数据的完整性，不需要应用程序的控制。
+    而文件系统一般需要在程序段进行控制。数据完整性有以下三种形式：
+    （a）实体完整性保证表中有一个主键。
+         在InnoDB存储引擎表中，用户可以通过定义Primary Key 或 Unique Key约束来保证实体的完整性。
+    （b）域完整性保证数据每列的值满足特定的条件。以下几种方式可以保证
+         选择合适的数据类型确保一个数据值满足特定条件。
+         外键约束
+         编写触发器
+         用DEFAULT约束作为强制域完整性的一个方面
+     (c) 参照完整性保证两张表之间的关系。InnoDB存储引擎支持外键，因此允许用户定义外键以强制参照完整性，也可以通过编写触发器以强制执行。
+
+(2) 约束的创建和查找
+    约束的创建可以采用以下两张方式：表建立时就进行约束定义，利用ALTER TABLE命令来进行创建约束
+    查看表的约束：
+    select constraint_name , constraint_type from information_schema.TABLE_CONSTRAINTS
+    where table_name = 'reading_book'
+
+(3) 约束和索引的区别
+    注意 当用户创建了一个唯一索引就创建了一个唯一的约束。但是约束和索引的概念还是不同的，约束更是一个逻辑的概念，用来保证数据的完整性
+    而索引是一个数据结构，既有逻辑上的概念，在数据库中还代表物理存储的方式。
+
+(4) 对错误数据的约束 : MYSQL数据库允许非法的或不正确的数据的插入或更新，又或者可以在数据库内部将其转化为一个合法的值
+
+(5) Enum 和 Set约束 : MYSQL数据库不支持传统的CHECK约束，但是通过ENUM和SET类型可以解决部分这样的约束需求。
+    例如：
+    CREATE TABLE a(
+        id int,
+        sex enum('male','female');
+    )
+    并且 SET sql_mode = 'STRICT_TRANS_TABLES'
+    通过这样的方式可以保证：只能插入'male','female'
+
+(6) 触发器与约束
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
