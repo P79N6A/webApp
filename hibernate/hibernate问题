@@ -1,2 +1,7 @@
 1、问题 org.hibernate.HibernateException: No Hibernate Session bound to thread, and configuration does not allow creation of non-transactional one here
 hibernate的操作，必须在事务里面提交
+
+2、问题 No identifier specified for entity: com.iqiyi.mams.cartoon.core.model.cartoon.Cp
+表示：entity类没有定义对
+
+
