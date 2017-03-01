@@ -73,6 +73,19 @@
     4、与用户管理有关的系统文件 : 这些文件包括/etc/passwd, /etc/shadow,/etc/group
 
 三、网络管理
+    ifconfig:查看、配置网卡信息
+    ping:
+    netstat:netstat -nptl 查看网络状态
+    route:
+    *tcpdump: 抓取数据包
+    nslookup:
+    tracerout:
+    arp:
+    ssh:
+    scp: 远程拷贝
+    ftp:
+    telnet:
+    iptables
 
 四、磁盘管理
 

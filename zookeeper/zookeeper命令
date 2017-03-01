@@ -8,3 +8,6 @@
 6. 删除文件： delete /zk 将刚才创建的 znode 删除
 7. 退出客户端： quit
 8. 帮助命令： help
+
+连接zookeeper集群
+zkCli -server cloudsvc-zookeeper-online011-bjdx.qiyi.virtual:2181
