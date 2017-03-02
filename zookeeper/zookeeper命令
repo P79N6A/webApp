@@ -10,4 +10,5 @@
 8. 帮助命令： help
 
 连接zookeeper集群
+在bin目录下执行
 zkCli -server cloudsvc-zookeeper-online011-bjdx.qiyi.virtual:2181
