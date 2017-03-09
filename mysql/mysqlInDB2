@@ -118,9 +118,7 @@ B+Ê÷Ë÷Òý : B+Ê÷Ë÷ÒýÄÜÕÒµ½µÄÖ»ÊÇ±»²éÕÒÊý¾ÝÐÐËùÔÚµÄÒ³£¬È»ºóÊý¾Ý¿âÍ¨¹ý°ÑÒ³¶ÁÈëµ½ÄÚ´
 
 (3) ²é¿´Ë÷Òý£º
     show INDEX from reading_book
-
     °üº¬Ò»¸öÖØÒª×Ö¶Î£ºÍ¨¹ýCardinalityÖµ²é¿´Ë÷ÒýÊÇ·ñ¾ßÓÐ¸ßÑ¡ÔñÐÔ
-
     alter table t add key idx(a,c); ´´½¨ÁªºÏË÷Òý
 
 (4) B+Ê÷Ë÷ÒýµÄÊ¹ÓÃ
@@ -133,21 +131,26 @@ B+Ê÷Ë÷Òý : B+Ê÷Ë÷ÒýÄÜÕÒµ½µÄÖ»ÊÇ±»²éÕÒÊý¾ÝÐÐËùÔÚµÄÒ³£¬È»ºóÊý¾Ý¿âÍ¨¹ý°ÑÒ³¶ÁÈëµ½ÄÚ´
 
     Ë÷ÒýÌáÊ¾£º¿ÉÒÔÏÔÊ¾ÈÃÓÅ»¯Æ÷Ê¹ÓÃÄÄ¸öË÷Òý¡£
     Àý×Ó
-    Create table t(
+    create table t(
         a int,
         b int,
         key (a),
         key (b)
     )engine = innodb;
 
-    select  * from t where a = 1 and b = 2  ExtraÌáÊ¾£ºUsing intersect(b,a) ±íÊ¾¸ù¾ÝÁ½¸öË÷ÒýµÃµ½µÄ½á¹û½øÐÐÇó½»ÔËËã
-    Ç¿ÖÆÊ¹ÓÃÒ»¸öË÷Òý£º select * from force index(a) where a = 1 and b =2
+    select  * from t where a = 1 and b = 2
+    ExtraÌáÊ¾£ºUsing intersect(b,a) ±íÊ¾¸ù¾ÝÁ½¸öË÷ÒýµÃµ½µÄ½á¹û½øÐÐÇó½»ÔËËã
+    ¿ÉÒÔÇ¿ÖÆÊ¹ÓÃÒ»¸öË÷Òý£º select * from force index(a) where a = 1 and b =2
 
 È«ÎÄ¼ì²é£ºµ¹ÅÅË÷ÒýÀ´ÊµÏÖ (´æ´¢ÁËµ¥´ÊÓëµ¥´Ê×ÔÉíÔÚÒ»¸ö»ò¶à¸öÎÄµµËùÔÚÎ»ÖÃÖ®¼äµÄÓ³Éä)
 
-¹þÏ£Ë÷Òý : ÊÇ×ÔÊÊÓ¦µÄ£¬InnoDB´æ´¢ÒýÇæ»á¸ù¾Ý±íµÄÊ¹ÓÃÇé¿ö×Ô¶¯Îª±íÉú³É¹þÏ£Ë÷Òý£¬²»ÄÜÈËÎª¸ÉÔ¤ÊÇ·ñÔÚÒ»ÕÅ±íÖÐÉú³É¹þÏ£Ë÷Òý
+¹þÏ£Ë÷Òý : ¹þÏ£Ë÷ÒýÖ»ÄÜÓÃÀ´ËÑË÷µÈÖµµÄ²éÑ¯
 ¹þÏ£Ëã·¨ :
-×ÔÊÊÓ¦¹þÏ£Ë÷Òý£ºÊÇmysqlÊý¾Ý¿â×Ô¼º´´½¨µÄ
+×ÔÊÊÓ¦¹þÏ£Ë÷Òý£º
+    InnoDB´æ´¢ÒýÇæ»á¼à¿Ø¶Ô±íÉÏË÷ÒýµÄ²éÕÒ£¬Èç¹û¹Û²ìµ½½¨Á¢¹þÏ£Ë÷Òý¿ÉÒÔ´øÀ´ËÙ¶ÈµÄÌáÉý£¬Ôò½¨Á¢¹þÏ£Ë÷Òý£¬ËùÒÔ³ÆÖ®Îª×ÔÊÊÓ¦£¨adaptive£© µÄ¡£
+    ×ÔÊÊÓ¦¹þÏ£Ë÷ÒýÍ¨¹ý»º³å³ØµÄB+Ê÷¹¹Ôì¶øÀ´£¬Òò´Ë½¨Á¢µÄËÙ¶ÈºÜ¿ì¡£
+    ¶øÇÒ²»ÐèÒª½«Õû¸ö±í¶¼½¨¹þÏ£Ë÷Òý£¬InnoDB´æ´¢ÒýÇæ»á×Ô¶¯¸ù¾Ý·ÃÎÊµÄÆµÂÊºÍÄ£Ê½ À´ÎªÄ³Ð©Ò³½¨Á¢¹þÏ£Ë÷Òý
+
 ²éÑ¯¹þÏ£Ë÷Òý show engine innodb status
 
 
