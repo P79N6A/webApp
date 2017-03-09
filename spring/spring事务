@@ -2,17 +2,22 @@ Spring事务管理器： 统一管理事务，JDBC,Hibernate,Mybatis一致的
 是管理数据源的
 
 一 事务传播 : 当在一个事务中，调用另一个事务时
-@Transactional(propagation=Propagation.REQUIRED) ： 如果有事务, 那么加入事务, 没有的话新建一个(默认情况下)
 
-@Transactional(propagation=Propagation.REQUIRES_NEW) ： 不管是否存在事务,都创建一个新的事务,原来的挂起,新的执行完毕,继续执行老的事务
-
-@Transactional(propagation=Propagation.NOT_SUPPORTED) ： 容器不为这个方法开启事务
-
-@Transactional(propagation=Propagation.MANDATORY) ： 必须在一个已有的事务中执行,否则抛出异常
-
-@Transactional(propagation=Propagation.NEVER) ：必须在一个没有的事务中执行,否则抛出异常(与Propagation.MANDATORY相反)
-
-@Transactional(propagation=Propagation.SUPPORTS) ：如果其他bean调用这个方法,在其他bean中声明事务,那就用事务.如果其他bean没有声明事务,那就不用事务.
+Propagation.MANDATORY 。
+	当前方法必须在已经定义的Transaction中运行，如果没有已定义的Transaction则抛出异常。
+Propagation.NESTED 。
+	如果没有已定义的Transaction，当前方法新开一个Transaction并在该Transaction中运行。如果存在已定义的Transaction，当前方法在嵌套事务(Nested Transaction)中运行 — 嵌套事务中可以定义储存点，
+	因此可以独立于外部的Transaction而进行rollback。
+Propagation.NEVER 。
+	当前方法不应在Transaction中运行，如果存在已经定义的Transaction则抛出异常。
+Propagation.NOT_SUPPORTED 。
+	当前方法不应在Transaction中运行，如果存在已经定义的Transaction，则该Transaction暂停(挂起)直至该方法运行完毕。
+Propagation.REQUIRED 。
+	默认值 。当前方法必须在Transaction中运行。如果存在已经定义的Transaction，则该方法在已定义的Transaction中运行；如果不存在已经定义的Transaction，则该方法新开一个Transaction并在其中运行。
+Propagation.REQUIRES_NEW 。
+	当前方法必须在新开的Transaction中运行。如果存在已经定义的Transaction，则该已定义的Transaction暂停直至新开的Transaction执行完毕。
+Propagation.SUPPORTS 。
+	当前方法不需要在Transaction中运行，但如果存在已经定义的Transaction，则该方法也可以在Transaction中正常执行。
 
 具体事例
 @Service("bookShopService")
