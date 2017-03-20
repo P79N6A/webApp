@@ -5,3 +5,5 @@
 
 1、Hibernate乐观锁
 使用@Version 注解，实现乐观锁
+或者使用 optimistic-lock 配置文件中的属性来配置。
+
