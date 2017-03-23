@@ -15,3 +15,6 @@ Setting->Inspections->Serialization issues->Serializable class without ’serial
 
 6、java.lang.OutOfMemoryError: PermGen space
 配置jvm参数 :-Xms256m -Xmx1024m -XX:MaxNewSize=256m -XX:PermSize=64M -XX:MaxPermSize=128M
+
+7、错误: 编码UTF8的不可映射字符
+右键: 修改File-encoding
