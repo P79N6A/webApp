@@ -11,35 +11,51 @@
 (5)分布式事务： 操作两个数据库，B数据库，A数据库
 
 2、事务的实现
+    当事务提交时，必须先将该事务的所有日志写入到重做日志文件进行持久化，待事务的commit操作完成才算完成。
+    这里的日志是指重做日志，在innodb存储引擎中由两部分组成，redo log和undo log。
+
     事务隔离性由锁来实现
     原子性，一致性，持久性通过数据库的redo log和undo log来完成
     redo log 称为重做日志，用来保证事务的原子性和持久性
-    undo log 用来保证事务的一致性 （帮助事务回滚以及MVCC的功能）
+    是将数数据备份,在事务提交前，只要将redo log持久化，不需要将数据持久化，当系统宕机时，虽然虽然数据没有持久化，但是redo log已经
+    持久化。系统可以根据Redo log的内容，将所有数据恢复到最新的状态。
 
-当事务提交时，必须先将该事务的所有日志写入到重做日志文件进行持久化，待事务的commit操作完成才算完成。
-这里的日志是指重做日志，在innodb存储引擎中由两部分组成，redo log和undo log。
+    undo log 用来保证事务的一致性 （帮助事务回滚以及MVCC的功能）
+    在操作任何数据之前，首先将将老数据备份到一个地方。然后进行数据的修改。如果出现了错误或者用户执行了Rollback语句，可以
+    利用Undo Log中的备份数据恢复到事务开始的状态
+    - Undo + Redo事务的简化过程
+      假设有A、B两个数据，值分别为1,2.
+      A.事务开始.
+      B.记录A=1到undo log.
+      C.修改A=3.
+      D.记录A=3到redo log.
+      E.记录B=2到undo log.
+      F.修改B=4.
+      G.记录B=4到redo log.
+      H.将redo log写入磁盘。
+      I.事务提交
 
 3 事务控制语句
-Mysql 命令行的默认设置 ： 事务都是自动提交的
-可以执行命令SET AUTOCOMMIT = 0,禁用当前会话的自动提交
-START TRANSACTION | BEGIN : 显式开启一个事务
-COMMIT : 提交事务
-ROLLBACK : 回滚事务
-SAVEPOINT : 创建一个保存点
-RELEASE SAVEPOINT: 删除一个事务保存点
-ROLLBACK TO: 这个语句与SAVEPOINT一起使用
-SET TRANSACTION : 设置事务隔离级别
+    Mysql 命令行的默认设置 ： 事务都是自动提交的
+    可以执行命令SET AUTOCOMMIT = 0,禁用当前会话的自动提交
+    START TRANSACTION | BEGIN : 显式开启一个事务
+    COMMIT : 提交事务
+    ROLLBACK : 回滚事务
+    SAVEPOINT : 创建一个保存点
+    RELEASE SAVEPOINT: 删除一个事务保存点
+    ROLLBACK TO: 这个语句与SAVEPOINT一起使用
+    SET TRANSACTION : 设置事务隔离级别
 
 4 对于事务操作的统计
-InnoDB存储引擎的应用需要考虑每秒请求数（QPS）
-每秒事务处理的能力（TPS）
+    InnoDB存储引擎的应用需要考虑每秒请求数（QPS）
+    每秒事务处理的能力（TPS）
 
 5 事务的隔离级别
-(1) 未提交读
-(2) 提交读: 不会使用gap lock的锁算法
-(3) 重复读 ： innodb存储引擎在repeatable read事务隔离级别下，使用next-key lock锁的算法,因此避免幻读产生。
-(4) 可串行化 : 一般在分布式事务下会用到，会对每个select语句自动加上lock in share mode，即为每个读取操作加一个共享锁。因此在这个事务隔离级别下，
-读占用了锁，对一致性的非锁定读不再支持（不在支持MVCC）
+    (1) 未提交读
+    (2) 提交读: 不会使用gap lock的锁算法
+    (3) 重复读 ： innodb存储引擎在repeatable read事务隔离级别下，使用next-key lock锁的算法,因此避免幻读产生。
+    (4) 可串行化 : 一般在分布式事务下会用到，会对每个select语句自动加上lock in share mode，即为每个读取操作加一个共享锁。因此在这个事务隔离级别下，
+    读占用了锁，对一致性的非锁定读不再支持（不在支持MVCC）
 
 6 分布式事务： 事务隔离级别（可串行化）
     （外部分布式事务）innoDB存储引擎提供对XA事务的支持，分布式事务指的是允许多个独立的事务资源参与到一个全局的事务中。
