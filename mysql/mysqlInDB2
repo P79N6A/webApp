@@ -122,12 +122,19 @@
         NO ACTION : 不操作
         RESTRICT : 不让对父表修改，抛出错误
 
-7 视图： 视图是一个命名的虚表，不存储数据的 。作用：它是一个抽象的模型，不需要关系基表的结构，按照视图的定义就可以获取/更新数据
-  Mysql实现物化视图：
-  (1) ON DEMAND 物化视图：定义一个表_MV表
-      Insert into Orders_MV
-            select product_name,sum(price),sum(amount),avg(price) from orders group by product_name
+7 视图：不关系基本的结构，只需要按照视图定义来取数据或更新数据。
+
+  视图是一个命名的虚表，不存储数据的 。作用：它是一个抽象的模型，不需要关系基表的结构，按照视图的定义就可以获取/更新数据
+
+  Mysql实现物化视图：本身并不支持物化视图，Mysql数据库中的视图总是虚拟的。可以通过一些机制实现物化视图
+  (1) ON DEMAND 物化视图：用户只需定时把数据导入到另一个表
+      定义一个表_MV表
+      create table Orders_MV
+
+      Insert into Orders_MV select product_name,sum(price),sum(amount),avg(price) from orders group by product_name
+
       然后每次使用时，都把表清空，重新导入数据即可。
+
   (2) ON COMMIT 物化视图
       必须创建触发器 ; 对表进行操作
 
