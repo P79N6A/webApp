@@ -44,9 +44,9 @@ sed  替换或删除文件内容
     3、sed -n '3,10'p test.txt 打印test.txt的3到10行
     4、sed -n 'root'p test.txt 打印test.txt包含root的行
     5、sed -i '/bash/'d test.txt 删除test包含bash的行
-6、sed -i '1,5'd test.txt删除1到5行
+    6、sed -i '1,5'd test.txt删除1到5行
 
-输出日志
+输出日志 : 后端执行命令，并且将输出的内存放入 “/dev/null 2>&1” 回收站
 nohup /usr/local/jdk1.8.0_60/bin/java -jar microservice-register-1.0.0-SNAPSHOT.jar > /dev/null 2>&1 &
 
 awk 按分隔符输出
