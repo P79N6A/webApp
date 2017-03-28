@@ -8,8 +8,9 @@ find、ln、mkdir
 find / -name 'jenkins' -type d 查找目录
 find .|xargs grep -ri "IBM"  linux查找目录下的所有文件中是否含有某个字符串
 ln (s) 没有参数(s)硬连接，否则是软连接
-硬连接: 不能对目录建硬连接，必须管理员才能建硬连接
-软连接: 不空占用空间，删除原文件时，软连接找不到
+    硬连接: 不能对目录建硬连接，必须管理员才能建硬连接
+    软连接: 不空占用空间，删除原文件时，软连接找不到 ln -s 源文件 连接地址
+
 which 查看命令的地址
 file 查看文件类型
 touch 修改文件的时间，或新建一个空文件
@@ -23,26 +24,26 @@ linux文件类型
 二、文件过滤和处理
 cat、more、less 查看文件内容
 cut 截取某一个字段
-cut -d ":" -f  1,2 (按照":"字符分隔，并截取第一部分和第二部分)
-cut -c 1-10 (输出1到10字符)
+    cut -d ":" -f  1,2 (按照":"字符分隔，并截取第一部分和第二部分)
+    cut -c 1-10 (输出1到10字符)
 grep 过滤文件内容，并显示
-语法
-0、-v 反选
-1、grep '[^chen]qian' test.sh 查看sh文件中，包含qian，不包含chen的
-2、grep '^'root,查看以root开头的行，grep '^'
-3、grep root'$',查看以root结尾的
-4、过滤非空行，grep -v '^$' test.sh
-5、'*' 配置零个或多个字符
-6、egrep '111|aaa' test.txt 查看包含111或aaa的行
-7、grep 'text' －c 查看匹配字符的计数。
-8、grep dddadfa -r /data 查看data目录下，包含dddadfa文件
+    语法
+    0、-v 反选
+    1、grep '[^chen]qian' test.sh 查看sh文件中，包含qian，不包含chen的
+    2、grep '^'root,查看以root开头的行，grep '^'
+    3、grep root'$',查看以root结尾的
+    4、过滤非空行，grep -v '^$' test.sh
+    5、'*' 配置零个或多个字符
+    6、egrep '111|aaa' test.txt 查看包含111或aaa的行
+    7、grep 'text' －c 查看匹配字符的计数。
+    8、grep dddadfa -r /data 查看data目录下，包含dddadfa文件
 
 sed  替换或删除文件内容
-1、sed -i 's/name/name1/g' test.txt 替换name为name1\
-2、sed -i 's/name//g' test.txt 删除name单词
-3、sed -n '3,10'p test.txt 打印test.txt的3到10行
-4、sed -n 'root'p test.txt 打印test.txt包含root的行
-5、sed -i '/bash/'d test.txt 删除test包含bash的行
+    1、sed -i 's/name/name1/g' test.txt 替换name为name1\
+    2、sed -i 's/name//g' test.txt 删除name单词
+    3、sed -n '3,10'p test.txt 打印test.txt的3到10行
+    4、sed -n 'root'p test.txt 打印test.txt包含root的行
+    5、sed -i '/bash/'d test.txt 删除test包含bash的行
 6、sed -i '1,5'd test.txt删除1到5行
 
 输出日志
