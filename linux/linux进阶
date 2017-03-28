@@ -90,14 +90,40 @@
     telnet:
 
 四、磁盘管理
+    查看硬盘和分区的详细信息 ：fdisk -l
 
-五、系统和日志维护管理
+
+五、系统和日志维护管理 : cd /var/log目录下
+        常见日志文件:
+        /var/log/boot.log	开启或重启日志。
+        /var/log/cron	    计划任务日志
+        /var/log/maillog	邮件日志。
+        /var/log/messages	该日志文件是许多进程日志文件的汇总，从该文件可以看出任何入侵企图或成功的入侵。
+        /var/log/httpd 目录	Apache HTTP 服务日志。
+        /var/log/samba 目录	samba 软件日志
+
+        类型	        说明
+        auth	        用户认证时产生的日志，如login命令、su命令。
+        authpriv	    与 auth 类似，但是只能被特定用户查看。
+        console	        针对系统控制台的消息。
+        cron	        系统定期执行计划任务时产生的日志。
+        daemon	        某些守护进程产生的日志。
+        ftp             FTP服务。
+        kern	        系统内核消息。
+        local0.local7	由自定义程序使用。
+        lpr	            与打印机活动有关。
+        mail	        邮件日志。
+        mark	        产生时间戳。系统每隔一段时间向日志文件中输出当前时间，每行的格式类似于 May 26 11:17:09 rs2 -- MARK --，可以由此推断系统发生故障的大概时间。
+        news	        网络新闻传输协议(nntp)产生的消息。
+        ntp	            网络时间协议(ntp)产生的消息。
+        user	        用户进程。
+        uucp	        UUCP子系统。
 
 六、安全优化
 
+
 七、系统备份和恢复
 
-八、shell编程
 
 
 
