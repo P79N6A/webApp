@@ -64,7 +64,18 @@ passwd: 修改用户密码
 groupadd 创建用户组
 groupdel 删除用户组
 whoami、logname 当前登录用户名
-linux系统的重要文件： /etc/passwd 和 /etc/shadow 维护用户相关信息
+linux系统的重要文件：
+    /etc/passwd    存储用户账号
+    /etc/group       存储组账号
+    /etc/shadow    存储用户账的密码
+    /etc/gshadow  存储用户组账号的密码
+
+环境变量 :
+/etc/profile 系统环境变量
+bash_profile  用户环境变量
+.bashrc       用户环境变量
+su user              切换用户，加载配置文件.bashrc
+su - user            切换用户，加载配置文件/etc/profile ，加载bash_profile
 
 su [-] :
 su命令和su -命令最大的本质区别就是：前者只是切换了root身份，但Shell环境仍然是普通用户的Shell；
@@ -79,12 +90,24 @@ tar -zxvf  将etc.tar.gz解压 /etc目录
 
 tar -jcvf /etc 将/etc目录压缩 etc.tar.bz2
 tar -jxvf  将etc.tar.bz2压缩 /etc目录
+
+tar -cvf /home/abc.tar /home/abc              只打包，不压缩
+tar -zcvf /home/abc.tar.gz /home/abc        打包，并用gzip压缩
+tar -jcvf /home/abc.tar.bz2 /home/abc      打包，并用bzip2压缩
+当然，如果想解压缩，就直接替换上面的命令
+    tar -cvf  /
+    tar -zcvf  /
+    tar -jcvf
+中的“c” 换成“x” 就可以了。
+
 2、zip
 zip root.zip /root/ 将目录压缩zip文件
 unzip  unzip -v root.zip 将zip文件进行解压
+
 3、gzip
 gzip text.txt (压缩完text.txt.gz)
 gzip -d text.txt.gz(解压)
+
 
 4、bzip
 bzip -z 压缩
@@ -93,6 +116,7 @@ bzip -d 解压
 五、进程和网络
 ps -aux/-ef 显示所有进程状态 、和grep、egrep 一起来使用
 kill 杀死进程 :
+top  查看当前消耗资源最多的进程
 
 ifconfig 查看网络配置
 hostname 显示主机名
@@ -103,7 +127,10 @@ ssh-keygen
 ssh-keygen -t rsa -C "your_email@youremail.com"
 修改authorized_keys，设置ssh-keygen生产key的权限
 vi ~/.ssh/authorized_keys
-vim 可以通过set nu来设置显示行号
+vim 命令
+可以通过set number来设置显示行号
+/apache： 在文档中查找apache，按n跳到下一个，shift+n上一个
+
 wget 下载
 wget -q -O $WEBROOT/$WARFILE $URL_PREFIX/$WARFILE
 curl
