@@ -109,7 +109,6 @@ unzip  unzip -v root.zip 将zip文件进行解压
 gzip text.txt (压缩完text.txt.gz)
 gzip -d text.txt.gz(解压)
 
-
 4、bzip
 bzip -z 压缩
 bzip -d 解压
@@ -128,20 +127,21 @@ ssh-keygen
 ssh-keygen -t rsa -C "your_email@youremail.com"
 修改authorized_keys，设置ssh-keygen生产key的权限
 vi ~/.ssh/authorized_keys
-vim 命令
-可以通过set number来设置显示行号
-/apache： 在文档中查找apache，按n跳到下一个，shift+n上一个
+vim 命令:
+    可以通过set number来设置显示行号
+    /apache： 在文档中查找apache，按n跳到下一个，shift+n上一个
 
 wget 下载
-wget -q -O $WEBROOT/$WARFILE $URL_PREFIX/$WARFILE
+    wget -q -O $WEBROOT/$WARFILE $URL_PREFIX/$WARFILE
 curl
+
 head -n 1 /etc/issue 查看主机配置
 
 六、磁盘管理
 df -h 查看磁盘使用情况
 du 用来查看目录所占空间大小
 du -sh ./*
-free 查看内存使用
+free -m 查看内存使用
 history 查看历史执行的命令
 !num 可以执行历史执行的命令
 more /proc/cpuinfo | grep "model name" 查看cpu信息
@@ -154,7 +154,6 @@ uname -a 查看linux系统，32位或64位
 
 七、查看CPU使用
 cat /proc/cpuinfo
-
 
 八、文本操作
 sort 文件 | uniq 排序后去重
