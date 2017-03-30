@@ -1,0 +1,40 @@
+一、java虚拟机的基本结构
+1、局部变量表
+   局部变量表对垃圾回收器的影响
+public void localvarGc1(){
+    byte[] a = new byte[6*1024*1024];
+    system.gc(); 无法回收
+}
+
+public void localvarGC2(){
+    byte[] a = new byte[6*1024*1024];
+    a = null;
+    system.gc();可以回收
+}
+
+public void localvarGC3(){
+    {
+        byte[] a = new byte[6*1024*1024];
+    }
+    system.gc();a失效，但局部变量表还有，不能回收
+}
+
+public void localvarGC4(){
+    {
+        byte[] a = new byte[6*1024*1024];
+    }
+    int c = 10;
+    System.gc();a失效，c将a在局部变量表中的内容替代，不能回收
+}
+
+public void localvarGC5(){
+    localvarGC1();
+    System.gc(); 方法完成后，局部变量表没有，可以回收
+}
+
+2、操作数栈
+   操作数栈也是栈帧中重要的内容之一，主要用于保存计算过程的中间结果，同时作为计算过程中变量临时的存储空间。
+
+3、方法区
+   通过CGLIB生产大量的动态类，会保存在方法区
+   jdk1.8 永久区已经被移除，取而代之的是元数据区。是一块堆外的直接内存。
