@@ -26,6 +26,17 @@ public static String stampToDate(String s){
     return res;
 }
 
+三、时间减一天
+public static void modifyTime(){
+    SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
+    Date beginDate = new Date();
+    Calendar date = Calendar.getInstance();
+    date.setTime(beginDate);
+    date.set(Calendar.DATE, date.get(Calendar.DATE) - 1);
+    Date endDate = dft.parse(dft.format(date.getTime()));
+
+    return
+}
 
 
 
