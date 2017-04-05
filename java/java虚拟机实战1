@@ -94,6 +94,56 @@ public void localvarGC5(){
         虚引用: 随时都可能被回收
 
 
+四、垃圾收集器和内存分配
+    (1)、串行回收器：单线程进行垃圾回收的回收器。每次回收时，串行回收器只有一个工作线程。
+         串行回收器可以在新生代和老年代使用，分为新生代串行回收器和老年代串行回收器。
+
+         1、新生代串行回收器(标示 DefNew) : 仅仅使用单线程进行垃圾回收 和 它是独占式的垃圾回收(其他工作线程都要停下来进行垃圾回收)。使用复制算法
+            使用-XX:+UseSerialGC参数可以指定使用新生代串行收集器和老年代串行收集器。
+
+         2、老年代串行回收器(标示 Tenured) : 使用标记压缩算法。
+            使用-XX:+UseSerialGC : 新生代、老年代都使用串行回收器
+                -XX:+UseParNewGC : 新生代ParNew回收器、老年代使用串行回收器
+                -XX:+UseParallelGC : 新生代Parallel回收器、老年代使用串行回收器
+
+    (2)、并行回收器： 它使用多个线程同时进行，独占式，垃圾回收。使用复制算法
+         1、新生代ParNew回收器（标示 Parnew） ： 多线程进行垃圾回收，是独占式的回收器
+            使用-XX:+UseParNewGC： 新生代使用ParNew回收器，老年代使用串行回收器
+                -XX:+UseConcMarkSweepGC： 新生代使用ParNew回收器，老年代使用CMS
+            使用-XX:ParallelGCThreads参数指定工作时线程数量，最好与CPU数量相当。
+
+         2、新生代ParallelGC回收器（标示 PSYoungGen） ： 使用复制算法，多个线程同时进行，独占式。 但非常关注系统的吞吐量。
+            使用-XX:UseParallelGC: 新生代使用Parallel回收器，老年代使用串行回收器
+                -XX:UseParallelOldGC:新生代使用Parallel回收器，老年代使用ParallelOld回收器
+            使用
+                -XX:MaxGCPauseMillis:设置最大垃圾收集停顿时间。
+                -XX:GCTimeRatio:设置吞吐量大小
+
+            支持"自适应的GC调节策略"：使用-XX:+UseAdaptiveSizePolicy
+
+         3、老年代ParallelOldGC回收器（标示 PSYoungGen）: 同新生代ParallelOldGC
+            使用-XX:+UseParallelOldGC 可以在新生代使用ParallelGC回收器，老年代使用ParallelOldGC回收器
+
+     (3)、CMS回收器 ：并发标记清除 STW标示独占
+          1: 初始标记 (STW :标记根对象）
+          2: 并发标记（标记所有对象）
+          3: 重新标记（STW :修正并发标记数据）
+          4: 并发清除（清理垃圾）
+
+          CMS主要的设置参数：
+            启用CMS回收器的参数是：-XX:+UseConcMarkSweepGC
+            并发线程数量：通过-XX:ConcGCThreads 或者 -XX:ParallelCMSThreads参数设置
+
+          CMS是老年代的垃圾回收器：
+            使用-XX:CMSInitiatingOccupancyFraction来指定，默认68 , 当老年代的空间使用率达到68%时，会执行一次CMS回收。
+            当老年达内存回收不及时，虚拟机会切换老年代串行收集器进行垃圾回收。
+
+          CMS是标记清除算法：
+            使用-XX:+UseCMSCompacAtFullCollection 开关可以使CMS在垃圾收集完成后，进行一次内存碎片整理。内存碎片整理不是并发的。
+
+
+
+
 
 
 
