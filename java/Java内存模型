@@ -52,24 +52,22 @@ Java内存模型的抽象
 
 六 重排序
     1、数据依赖性 : 只有在单线程中可以保证执行顺序
-       如果两个操作访问同一个变量，且这两个操作中有一个写操作，此时这两个操作之间就存在数据依赖性
+       如果两个操作访问同一个变量，且这两个操作中有一个写操作，此时这两个操作之间就存在数据依赖性，不会重排序
 
-    2、as-if-serial语义: 使单线程无需担心重排序会干扰他们，也无需担心内存可见性问题
+    2、as-if-serial语义: 编译器和处理器不会对存在数据依赖关系的操作做重排序，因为这种重排序会改变执行结果。但是不存在数据依赖关系，可能被重排序
+        double pi = 3.14 //A
+        double r = 1.0 //B
+        double area = pi * r * r //C
+        实际的执行顺序：A->B->C 或者 B->A->C，因为A和B没有相互依赖性关系,重排序不非法
 
     3、程序顺序规则
-    double pi = 3.14 //A
-    double r = 1.0 //B
-    double area = pi * r * r //C
-    实际的执行顺序：A->B->C 或者 B->A->C，因为A和B没有相互依赖性关系,重排序不非法
-
-    根据happens-before的程序顺序规则，上面代码存在三个happens-before关系
-        1 A happens-before B
-        2 B happens-before C
-        3 A happens-before C
-    这里的第3个 happens-before关系，是根据happens-before的传递性得来的
-    这里A happens-before B，但实际执行时B却可以排在A之前执行。
-    因为A happens-before B，JMM并不要求A一定要在B之前执行，JMM仅仅要求前一个操作对后一个操作可见，且前一个操作
-    按顺序排在第二个操作之前。
+        根据happens-before的程序顺序规则，上面代码存在三个happens-before关系
+            1 A happens-before B
+            2 B happens-before C
+            3 A happens-before C
+        这里的第3个 happens-before关系，是根据happens-before的传递性得来的
+        这里A happens-before B，但实际执行时B却可以排在A之前执行。
+        备注：JMM并不要求A一定要在B之前执行，JMM仅仅要求前一个操作对后一个操作可见，且前一个操作按顺序排在第二个操作之前。
 
 七、重排序对多线程的影响 :
     public class Reorder {
