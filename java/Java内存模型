@@ -243,35 +243,39 @@ Java内存模型的抽象
 
 十 final关键字：对final域的读和写更像是普通的变量访问
 
-   对于final，编译器和处理器要遵守重排序规则 :
+  1、对于final，编译器和处理器要遵守重排序规则 :
        1、在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序。
        2、初次读一个包含final域的对象引用，与随后初次读这个final域，这两个操作之间不能重排序。
-   public class FinalExample{
-        int i; //普通变量
-        final j; // final 变量
-        static FinalExample obj;
 
-        public void FinalExample(){ //构造函数
-            i = 1; // 写普通变量
-            j = 2; // 写final域
-        }
+       public class FinalExample{
+            int i; //普通变量
+            final j; // final 变量
+            static FinalExample obj;
 
-        public static void writer(){  //写线程A执行
-            obj = new FinalExample();
-        }
-        public static void reader(){// 读线程B执行
-            FinalExample object = obj ;//读对象引用
-            int a = object.i //读普通域
-            int b = object.j //读final域
-        }
-   }
+            public void FinalExample(){ //构造函数
+                i = 1; // 写普通变量
+                j = 2; // 写final域
+            }
 
-1 写final域的重排序规则
-    禁止把final域的写重排序到构造方法之外。
+            public static void writer(){  //写线程A执行
+                obj = new FinalExample();
+            }
+            public static void reader(){// 读线程B执行
+                FinalExample object = obj ;//读对象引用
+                int a = object.i //读普通域
+                int b = object.j //读final域
+            }
+       }
+       写final域的重排序规则:禁止把final域的写重排序到构造函数之外
 
-2 读final域的重排序规则
-    在一个线程中，首次读对象引用与初次读该对象的fianl域，JMM禁止处理器重排序这两个操作。
+       读final域的重排序规则:在一个线程中，首次读对象引用与初次读该对象的fianl域，JMM禁止处理器重排序这两个操作。
 
+  2、为什么final引用不能从构造函数内“逸出”
+     在构造函数返回前，被构造对象的引用不能为其他线程可见，因为此时的final域可能还没有被初始化。在构造函数返回后，任意线程都将保证能看到final域正确初始化之后的值
+
+  3、final语义具体实现:
+     写final域的重排序规则:
+     会要求译编器在final域的写之后，构造函数return之前，插入一个StoreStore障屏。读final域的重排序规则要求编译器在读final域的操作前面插入一个LoadLoad屏障
 
 
 
