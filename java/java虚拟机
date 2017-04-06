@@ -233,6 +233,7 @@ http://www.open-open.com/lib/view/open1429883238291.html
 -class 监视类装载、卸载数量、总空间以及类装载所耗费的时间
 -gc 监视java堆状况，包括Eden区，两个surivor区，老年代，永久代等的容量，已用空间，GC时间合计等信息
 -gcutil 监视内容与-gc基本相同，但输出主要关注已使用空间占总空间的百分比
+-t 加上-t，表示添加时间戳
  S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT
 0.00  50.00   2.31  41.19  42.50    871   24.682     1    0.087   24.768
 

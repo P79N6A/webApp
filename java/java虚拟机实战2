@@ -1,0 +1,5 @@
+五、JDK性能监控工具
+    1、jps -lm 命令:列出java进程信息
+    2、jstat是一个可以用于观察java应用程序运行时相关信息的工具
+       jstat -gcutil -t 2972
+    
