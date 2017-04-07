@@ -3,7 +3,7 @@
     2、jstat是一个可以用于观察java应用程序运行时相关信息的工具
        jstat -gcutil -t 2972
     3、jmap -dump:format=b,file= 2972 导出dump文件快照
-       -Xmx10m -Xms10m -XX:+PrintGCDetail -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="f.dump" 发生内存溢出是导出dump文件.
+       -Xmx10m -Xms10m -XX:+PrintGCDetail -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="f.dump" 发生内存溢出是导出dump文件。
 
 
 
