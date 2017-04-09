@@ -4,6 +4,68 @@
        jstat -gcutil -t 2972
     3、jmap -dump:format=b,file= 2972 导出dump文件快照
        -Xmx10m -Xms10m -XX:+PrintGCDetail -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="f.dump" 发生内存溢出是导出dump文件。
+    4、jstack
+       jstack -l 2348 > a.txt 可以打印线程堆栈信息。
+
+
+六、锁和并发
+(1) 锁的基本概念和实现
+1、对象头和锁：用于保存对象的系统信息。对象头中有一个称为Mark word的部分，它实现锁的关键。
+
+(2) 锁在java虚拟机中的实现和优化
+虚拟机操作系统层面挂起线程前，会先尽一切可能在虚拟机层面上解决竞争关系。进行优化
+    1、偏向锁 ：在少竞争的场景下，对系统性能有一定帮助
+    如果程序没有竞争，则取消之前已经取得锁的线程同步操作。
+    也就是说 : 若某一个锁被线程获取后，便进入偏向模式，当线程再次请求这个锁是，无需再进行相关的同步操作。如果在此之间有其他
+    线程进行了锁请求，则锁退出偏向模式。
+    使用-XX：+UseBiaseLocking可以设置启用偏向锁。
+
+    2、轻量级锁：偏向锁失败时
+    使用一个BasicObjectLock对象实现
+    这个对象内部由一个BasicLock对象和一个持有该锁的Java对象指针组成。
+
+    3、锁膨胀：轻量级锁失败时
+
+    4、自旋锁：
+    5、锁消除：
+
+(3)锁在应用层面的优化思路
+    1、减少锁的持有时间
+        可以将synchronized范围缩小
+    2、减小锁粒度
+        可以使用ConcurrentHashMap，ConcurrentHashMap拥有16个段。ConcurrentHashMap可以同时16个线程同时插入。
+    3、锁分离：将一个独占锁分成多个锁
+        LinkedBlockingQueue实现: take()函数和put()函数分别实现了从队列中取得数据和往队列中增加数据的功能。
+        插入数据和取得数据，是用两个不同的锁分别实现的。
+    4、锁粗化
+       在循环体外部使用，synchronized关键字。
+
+(4)无锁 ： 使用一种称为非阻塞同步的方式。
+    ThreadLocal是一种非阻塞同步方式：每个线程拥有各自独立的变量副本，并行处理时，无需相互等待
+    1、理解CAS(比较并交换)
+        非阻塞性，它对死锁问题天生免疫，并且，线程间的相互影响远远比基于锁的方式小。
+        算法：包含3个参数CAS(V,E,N):
+            V表示更新的变量，E表示预期值，N表示新值。只有当V值等于E值时，才会将V的值设为N,如果V值和E值不同，
+            则说明已经由其他线程做了更新，则当前线程什么都不做。
+            当多个线程同时使用CA     m8S操作一个变量时，只有一个会胜出并成功更新，其余均失败。失败的线程不会被挂起，仅是被告知失败，
+            并且允许重试。
+
+     2、原子操作：
+               AtomicInteger、AtomicIntegerArray、AtomicLong、AtomicLongArray和AtomicReference
+
+     3、jdk1.8 LongArr类 性能优于AtomicLong
+        将AtomicLong的内部数据value分离成一个数组，每个线程访问时，通过哈希等算法映射到其中一个数字进行计算,最后把所有数求和。
+
+
+
+
+
+
+
+
+
+
+
 
 
 
