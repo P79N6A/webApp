@@ -1,0 +1,14 @@
+第2章 spring ioc容器的实现
+1、Ioc容器和依赖反转模式
+   通过使用Ioc容器，对象之间的相互依赖关系由IoC容器进行管理，并由Ioc容器完成对象的注入。
+
+2、spring ioc应用场景
+    提供了一个基本的javabean容器，通过ioc模式管理依赖关系，并通过ioc模式管理依赖关系，并通过依赖注入和aop切面增强了为javabean这样的
+pojo对象赋予事务管理等功能。
+
+3、ioc容器实现：BeanFactory和ApplicationContext
+    BeanFactory : 接口只实现了容器的基本功能
+
+    ApplicationContext : 增加了一些功能
+
+
