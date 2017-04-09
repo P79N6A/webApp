@@ -1,14 +1,56 @@
 第2章 spring ioc容器的实现
-1、Ioc容器和依赖反转模式
-   通过使用Ioc容器，对象之间的相互依赖关系由IoC容器进行管理，并由Ioc容器完成对象的注入。
+    1、Ioc容器和依赖反转模式
+       通过使用Ioc容器，对象之间的相互依赖关系由IoC容器进行管理，并由Ioc容器完成对象的注入。
 
-2、spring ioc应用场景
-    提供了一个基本的javabean容器，通过ioc模式管理依赖关系，并通过ioc模式管理依赖关系，并通过依赖注入和aop切面增强了为javabean这样的
-pojo对象赋予事务管理等功能。
+    2、spring ioc应用场景
+        提供了一个基本的javabean容器，通过ioc模式管理依赖关系，并通过ioc模式管理依赖关系，并通过依赖注入和aop切面增强了为javabean这样的
+        pojo对象赋予事务管理等功能。
 
-3、ioc容器实现：BeanFactory和ApplicationContext
-    BeanFactory : 接口只实现了容器的基本功能
+    3、ioc容器实现：BeanFactory和ApplicationContext
+        BeanFactory : 接口只实现了容器的基本功能
+        ApplicationContext : 增加了一些功能
 
-    ApplicationContext : 增加了一些功能
+    4、ioc容器的初始化过程
+       (1)、Resource： 使用FileSystemResource 或者 使用ClassPathResource
+       (2)、BeanDefinition载入 : 把用户定义好的Bean表示成ioc容器的数据结构
+       (3)、BeanDefinitionRegistry : ioc容器将BeanDefinition注入到1个HashMap中，Ioc容器通过HashMap持有BeanDefinition
+
+    5、Ioc的依赖注入
+       (1) AbstractBeanFactory实现类的getBean方法，会调用doGetBean方法，从而触发依赖注入
+        注意:这里会循环调用getBean方法，注册所依赖的bean，直到取到一个没有任何依赖的Bean为止。
+
+    6、容器其他相关特性
+       (1) ApplicationContext和Bean的初始化和销毁
+            prepareBeanFactory 方法初始化
+            doclose 方法关闭容器
+
+       (2) Ioc容器中的Bean生命周期
+           Bean实例的创建
+           为Bean实例设置属性
+           调用Bean的初始化方法
+           应用可以通过Ioc容器使用Bean
+           当容器关闭时，调用Bean的销毁方法
+
+       (3) lazy-init属性和预实例化
+           用户可以通过设置Bean的lazy-init属性来控制预实例化的过程。
+
+       (4)FactoryBean的实现
+          它是实现了FactoryBean<T>接口的Bean，根据该Bean的Id从BeanFactory中获取的实际上是FactoryBean的getObject()返回的对象，而不是FactoryBean本身，
+          如果要获取FactoryBean对象，可以在id前面加一个&符号来获取
+
+       (5)BeanPostProcessor的实现
+
+       (6)autowiring(自动依赖装配)
+
+
+
+
+
+
+
+
+
+
+
 
 
