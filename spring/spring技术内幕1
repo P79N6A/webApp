@@ -38,7 +38,7 @@
           它是实现了FactoryBean<T>接口的Bean，根据该Bean的Id从BeanFactory中获取的实际上是FactoryBean的getObject()返回的对象，而不是FactoryBean本身，
           如果要获取FactoryBean对象，可以在id前面加一个&符号来获取
 
-       (5)BeanPostProcessor的实现
+       (5)BeanPostProcessor的实现: 实现了BeanPostProcessor接口定制我们自己的Bean处理器可以在Spring容器初始化Bean的时候做我们想做的很多事
 
        (6)autowiring(自动依赖装配)
 
