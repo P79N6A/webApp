@@ -164,7 +164,11 @@
 (3) 查看索引：
     show INDEX from reading_book
     包含一个重要字段：通过Cardinality值查看索引是否具有高选择性
-    alter table t add key idx(a,c); 创建联合索引
+        alter table t add key idx(a,c); 创建联合索引
+    修改列
+        ALTER table looking_cartoon_chapter change cpId cp_id bigint(20);
+        ALTER TABLE looking_cartoon_chapter DROP INDEX cp_union_index;
+        alter table looking_cartoon_chapter add key cp_union_index(cp_id,cp_comic_id,cp_chapter_id)
 
 (4) B+树索引的使用
     1、联合索引，要从最左匹配，因为构建的B+树种叶子节点的数据排序都是从最左开始的
