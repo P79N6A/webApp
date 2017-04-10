@@ -1,0 +1,7 @@
+1、hibernate与mysql字段类型对应关系
+映射类型    Java类型                                Mysql类型
+timestamp	java.util.Date or java.sql.Timestamp	TIMESTAMP
+integer	    int or java.lang.Integer	            INTEGER
+long	    long or java.lang.Long	                BIGINT
+string	    java.lang.String	                    VARCHAR
+double	    double or java.lang.Double	            DOUBLE
