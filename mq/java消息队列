@@ -32,15 +32,18 @@ PERSISTENT持久保存信息，NON_PERSISTENT非持久保存信息
 
 五、集群支持
 1、 Consumer clusters(消费者集群)
-一个队列有多个消费者
-如果一个consumer失效，那么所有末被确认的消息都会被发送到这个queue上的其他Consumer
+    一个队列有多个消费者
+    如果一个consumer失效，那么所有末被确认的消息都会被发送到这个queue上的其他Consumer
 
 2、Broker clusters
-有多个JMS broker
-如果一个客户端连接到其中一个broker，如果这个broker失败，那么会自动连接到其他broker。在ActiveMQ中使用failover:// 协议来实现这个功能。
+    有多个JMS broker
+    如果一个客户端连接到其中一个broker，如果这个broker失败，那么会自动连接到其他broker。在ActiveMQ中使用failover:// 协议来实现这个功能。
 
 3、Master Slave
-将消息复制到slave broker，当master broker遇到故障，可以立即切换slave broker而不丢失任何消息
+    将消息复制到slave broker，当master broker遇到故障，可以立即切换slave broker而不丢失任何消息
+
+4、jms bridge.html
+    桥的功能是消耗来自源队列或主题的消息，并将其发送到目标队列或主题，通常在不同的服务器上
 
 六、ActiveMQ特性
 
