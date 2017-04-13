@@ -68,14 +68,18 @@ public class BookShopServiceImpl implements BookShopService {
 四 事务的执行时间: timeout
 如果事务执行时间过长，回滚
 
-使用时注意：
-在一个类中:
-	方法A是不开启事务的
-	方法B是开启事务
-	方法A调用方法B时：A直接调用B时，不会开启事务
-解决办法：可以将B开启的事务，单独方法另一个类中。
-	JDBCTransaction : 是Hibernate事务的处理类，可以begin方法事务。在调用@Transaction方法前，会先进入这个方法。
+五、使用时注意：
+	在一个类中:
+		方法A是不开启事务的
+		方法B是开启事务
+		方法A调用方法B时：A直接调用B时，不会开启事务
+	解决办法：可以将B开启的事务，单独方法另一个类中。
+		JDBCTransaction : 是Hibernate事务的处理类，可以begin方法事务。在调用@Transaction方法前，会先进入这个方法。
 
+六、在一个事务中要想事务回滚，必须抛出一个运行时异常。
+	TransactionAspectSupport  类
+		invokeWithinTransaction 方法
+	
 
 
 
