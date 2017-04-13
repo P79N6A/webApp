@@ -16,3 +16,6 @@ search = es.search(index='chapter', body={
 按时间id查询
 search = es.search(index='chapter', q='id:115962804')
 
+按多个条件查询：
+{"EQL_id":"2197328","EQL_status":"1"}
+

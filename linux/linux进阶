@@ -79,7 +79,9 @@
     route:
     *重点tcpdump:
         抓取数据包
-
+        tcpdump -i any port 65111 -X
+        tcpdump host 210.27.48.1 -X 监听主机的包信息
+        http://blog.chinaunix.net/uid-11242066-id-4084382.html
     arp:
         ARP，即地址解析协议，实现通过IP地址得知其物理地址。在TCP/IP网络环境下，每个主机都分配了一个32位的IP地址，
         这种互联网地址是在网际范围标识主机的一种逻辑地址。
@@ -88,6 +90,8 @@
     scp: 远程拷贝
     ftp:
     telnet:
+    ss: ss -s -t
+
 
 四、磁盘管理
     查看硬盘和分区的详细信息 ：fdisk -l
