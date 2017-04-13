@@ -79,7 +79,7 @@ public class BookShopServiceImpl implements BookShopService {
 六、在一个事务中要想事务回滚，必须抛出一个运行时异常。
 	TransactionAspectSupport  类
 		invokeWithinTransaction 方法
-	
+
 
 
 
