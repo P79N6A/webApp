@@ -20,3 +20,13 @@ MySql的简单语法，常用，却不容易记住。当然，这些Sql语法在各数据库中基本通用。下面
         mysql> alter table tablename add unique emp_name2(cardnumber);
     8.删除某个索引
         mysql>alter table tablename drop index emp_name;
+    9.批量怎加字段
+        bagin;//事务开始
+        alter table em_day_data add f_day_house7 int(11);
+        alter table em_day_data add f_day_house8 int(11);
+        alter table em_day_data add f_day_house9 int(11);
+        alter table em_day_data add f_day_house10 int(11);
+        commit;//提交事务，事务结束
+
+    10.在某个字段后，添加字段
+       alter table table表名 add address varchar(110) after stu_id;
