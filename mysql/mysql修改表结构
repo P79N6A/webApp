@@ -12,7 +12,6 @@ MySql的简单语法，常用，却不容易记住。当然，这些Sql语法在各数据库中基本通用。下面
     4.重命名表
        alter table t1 rename t2;
     5.加索引
-        mysql> alter table tablename change depno depno int(5) not null;
         mysql> alter table tablename add index 索引名 (字段名1[，字段名2 …]);
         mysql> alter table tablename add index emp_name (name);
     6.加主关键字的索引
