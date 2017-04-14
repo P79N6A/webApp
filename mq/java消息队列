@@ -11,6 +11,8 @@
 每个消息可以有多个消费者，生产者和消费者之间有时间上的相关性，订阅一个主题的消费者只能消费自它订阅之后发布的消息
 但：jms规范允许客户创建持久订阅，这在一个程度上放松了时间上的相关性要求。
 
+
+
 二、JMS可靠性机制
 1、消息的成功消费通常包含三个阶段：客户接收消息、客户处理消息和消息被确认
 2、持久性
@@ -18,6 +20,12 @@ PERSISTENT持久保存信息，NON_PERSISTENT非持久保存信息
 3、消息优先级： 可以设置优先级
 4、消息过期： 可以设置消息在一定时间后过期
 5、在一个JMS客户端，可以使用本地事务来组合消息的发送和接受(提交和回滚)
+6、消息确认：
+    Session.AUTO_ACKNOWLEDGE : 当客户成功的从receive方法返回的时候，或者从MessageListener.onMessage 方法成功返回的时候，会话自动确认。
+    Session.CLIENT_ACKNOWLEDGE : 客户通过消息的acknowledge 方法确认消息
+    Session.DUPS_ACKNOWLEDGE : 该选择只是会话迟钝的确认消息的提交
+
+
 
 三、ActiveMQ的Transport协议
 1、VM transport在VM内部通信，从而避免了网络传输的开销，采用的连接不是socket连接，而是直接地方法调用
@@ -27,7 +35,8 @@ PERSISTENT持久保存信息，NON_PERSISTENT非持久保存信息
 3、FailOver Transport是一种重新连接的机制,是基于其他Transport的上层,可以配置多个URL，并自动选择其中的一个URL来尝试建立连接。
 
 四、持久化:
-1、AMQ Message Store是ActiveMQ默认的持久化方式,Messages保存在data logs,如果data log文件中所有的消息被消费了，data log文件会被标记，然后被清楚
+1、AMQ Message Store是ActiveMQ默认的持久化方式
+    Messages保存在data logs,如果data log文件中所有的消息被消费了，data log文件会被标记，然后被清除。
 2、JDBC Persistence 将Messages持久化到数据库中
 
 http://blog.csdn.net/boonya/article/details/51074478
