@@ -30,6 +30,7 @@ PERSISTENT持久保存信息，NON_PERSISTENT非持久保存信息
 1、AMQ Message Store是ActiveMQ默认的持久化方式,Messages保存在data logs,如果data log文件中所有的消息被消费了，data log文件会被标记，然后被清楚
 2、JDBC Persistence 将Messages持久化到数据库中
 
+http://blog.csdn.net/boonya/article/details/51074478
 五、集群支持
 1、 Consumer clusters(消费者集群)
     一个队列有多个消费者
