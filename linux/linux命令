@@ -6,6 +6,7 @@ groupadd、chgrp、useradd、chown、chmod （增加组、切换组、增加用�
 chattr 修改文件的特殊属性
 find、ln、mkdir
 find / -name 'jenkins' -type d 查找目录
+find . -name 'file' 查找目录
 find .|xargs grep -ri "IBM"  linux查找目录下的所有文件中是否含有某个字符串
 ln (s) 没有参数(s)硬连接，否则是软连接
     硬连接: 不能对目录建硬连接，必须管理员才能建硬连接
