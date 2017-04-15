@@ -1,6 +1,5 @@
-信号量：是对锁的扩展，无论是内部锁synchronized 还是重入锁ReentrantLock。
+1、信号量：是对锁的扩展，无论是内部锁synchronized 还是重入锁ReentrantLock。
     一次只允许线程访问一个资源，信号量可以指定多个线程，同时访问某一个资源。
-
 public class SemapDemo implements Runnable{
     final Semaphore semp = new Semaphore(5); //可以同时5个线程进入
     public void run{
@@ -20,3 +19,11 @@ public static void main(String[] args){
     }
     }
 }
+
+2、读写锁 ReadWriteLock
+对于：读读操作，不需要加锁,是非阻塞的。
+
+
+
+
+
