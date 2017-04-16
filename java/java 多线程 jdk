@@ -107,6 +107,8 @@ public class SemapDemo implements Runnable{
 
 9、新框架实现(Disruptor)：无锁内存队列
 
+10、Future模式
+
 
 
 
