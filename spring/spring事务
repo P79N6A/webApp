@@ -74,6 +74,7 @@ public class BookShopServiceImpl implements BookShopService {
 		方法B是开启事务
 		方法A调用方法B时：A直接调用B时，不会开启事务
 	解决办法：可以将B开启的事务，单独方法另一个类中。
+		HibernateTransactionManager doBegin方法 进入事务
 		JDBCTransaction : 是Hibernate事务的处理类，可以begin方法事务。在调用@Transaction方法前，会先进入这个方法。
 
 六、在一个事务中要想事务回滚，必须抛出一个运行时异常。
