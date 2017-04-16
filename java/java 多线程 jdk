@@ -109,6 +109,12 @@ public class SemapDemo implements Runnable{
 
 10、Future模式
 
+11、CompletableFuture:增强了Future
+    http://blog.csdn.net/salonzhou/article/details/50777443
+
+
+
+
 
 
 
