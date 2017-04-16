@@ -10,7 +10,6 @@ public class SemapDemo implements Runnable{
         }catch(Exception e){
         }
     }
-
     public static void main(String[] args){
         ExecutorService exec = Executors.newFixedThteadpool(20)
         final SemapDemo demo = new SemapDemo();
@@ -44,7 +43,8 @@ public class SemapDemo implements Runnable{
            keepAliveTime： 线程池维护线程所允许的空闲时间
            unit： 线程池维护线程所允许的空闲时间的单位
            workQueue： 线程池所使用的缓冲队列
-                SynchronousQueue : 是一个特殊的BlockingQueue。
+                SynchronousQueue : 可以理解他是一个数据交换通道
+                    是一个特殊的BlockingQueue。
                     没有容量，每个插入操作都要等待一个相应的删除操作。相反，每个删除操作都要等到相应的插入操作。
                     如果没有空闲进程，则尝试创建新的进程，如果进程数量已经达到最大值，则执行拒绝操作。
 
@@ -95,7 +95,17 @@ public class SemapDemo implements Runnable{
 
         5、ConcurrentSkipListMap ：跳表的实现。这是一个Map，使用跳表的数据结构进行快速查找。
 
+7、ThreadLoacl(不需要加锁)
+        1、当前线程的局部变量，只有当前线程可以访问
+           ThreadLocal<SimpleDateFormat> 可以保证每个线程都只有一个SimpleDateFormat对象.
+        2、内部通过ThreadLocalMap来保证
 
+8、CAS比较交换
+        CAS(v,e,n)
+        V表示要更新的变量，E表示预期值，N表示新值。
+        仅当V值等于E值时，才会将V的值设为N，如果V值和E值不同，则说明已经有其他线程做了更新，则当前线程什么都不做。
+
+9、新框架实现(Disruptor)：无锁内存队列
 
 
 
