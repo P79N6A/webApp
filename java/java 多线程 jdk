@@ -10,18 +10,76 @@ public class SemapDemo implements Runnable{
         }catch(Exception e){
         }
     }
-}
-public static void main(String[] args){
-    ExecutorService exec = Executors.newFixedThteadpool(20)
-    final SemapDemo demo = new SemapDemo();
-    for(int i = 0 ; i < 20 ;i++){
-     exec.submit(demo)
-    }
+
+    public static void main(String[] args){
+        ExecutorService exec = Executors.newFixedThteadpool(20)
+        final SemapDemo demo = new SemapDemo();
+            for(int i = 0 ; i < 20 ;i++){
+             exec.submit(demo)
+        }
     }
 }
 
 2、读写锁 ReadWriteLock
-对于：读读操作，不需要加锁,是非阻塞的。
+   对于：读读操作，不需要加锁,是非阻塞的。
+
+3、CountDownLatch: 只有当计数器降为0，才会继续执行。
+
+4、CyclicBarrier 循环栅栏
+
+5、LockSupport 用于在线程内任意位置让线程阻塞。
+
+6、Executor框架：
+   Eexcutors线程工厂类
+       (1) newSingleThreadScheduledExecutor() :
+       (2) newScheduledThreadPool(): 返回ScheduleExecutorService对象。
+           都可以在某个固定时间的延时之后执行，或者周期性执行某个任务。
+           与其他线程池不同的时，返回的是一个ScheduledExecutorService
+
+   ThreadPoolExecutor 构造方法
+       ThreadPoolExecutor(int corePoolSize, int maximumPoolSize,long keepAliveTime, TimeUnit unit,BlockingQueue<Runnable> workQueue,RejectedExecutionHandler handler)
+       参数含义
+           corePoolSize： 线程池维护线程的最少数量
+           maximumPoolSize：线程池维护线程的最大数量
+           keepAliveTime： 线程池维护线程所允许的空闲时间
+           unit： 线程池维护线程所允许的空闲时间的单位
+           workQueue： 线程池所使用的缓冲队列
+                SynchronousQueue : 是一个特殊的BlockingQueue。
+                    没有容量，每个插入操作都要等待一个相应的删除操作。相反，每个删除操作都要等到相应的插入操作。
+                    如果没有空闲进程，则尝试创建新的进程，如果进程数量已经达到最大值，则执行拒绝操作。
+
+                ArrayBlockingQueue: 有界队列
+                    当使用有界的队列时
+                    若有新的任务需要执行，如果线程池的实现线程数小于corePoolSize，则会优先创建新的线程
+                    若大于corePoolSize，则会将新任务加入等待队列。
+                    若等待队列已满，无法加入，则在总线程不大于maximumPoolSize的前提下，创建新的进程执行任务。
+                    若大于maximumPoolSize,则执行拒绝策略。
+                    综上：只有当有界队列满时，才可能线程数提升到corePoolSize以上。
+
+                LinkedBlockingQueue: 无界队列
+                    当有新的人到来，系统的线程数小于corePoolSize时，线程池会生产新的线程执行任务，
+                    但当系统的线程数达到corePoolSize时，线程池会生成新的线程执行任务，但当系统的线程数达到corePoolSize，就不会继续增加。
+                    随后的任务一直会加入队列中。如果处理任务的速度小于加入队列的任务速度，就会内存溢出。
+
+                PriorityBlockingQueue: 优先级队列
+                    优先任务队列时带执行优先级的队列，它PriorityBlockingQueue实现，可以控制任务的执行顺序。
+
+           handler： 线程池对拒绝任务的处理策略
+                当任务数量超过系统实际承载能力时，就是线程池中的线程已经用完，无法继续为新任务服务，同时等待队列已经排满，再也塞不下新任务。
+                1、AbortPolicy：该策略会直接抛出异常
+                2、CallerRunsPolicy：在调用者线程中，运行当前被丢弃的任务
+                3、DiscardOledestPolicy:丢弃最老的任务，提交当前任务
+                4、DiscardPolicy：如果这个任务允许丢弃，就会丢弃
+
+           ThreadFactory: newThread方法，要新建线程时，就会调用这个方法。
+
+           线程池的大小：公式
+                    cpu 数量
+                    ucpu 目标cpu使用率
+                    w/c 等待时间与计算时间的比
+                    nthread = cpu * ucpu * （1+w/c）
+
+
 
 
 
