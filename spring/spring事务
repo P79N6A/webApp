@@ -1,23 +1,23 @@
-Spring事务管理器： 统一管理事务，JDBC,Hibernate,Mybatis一致的
-是管理数据源的
+Spring事务管理器：
+	统一管理事务，JDBC,Hibernate,Mybatis一致的是管理数据源的
 
-一 事务传播 : 当在一个事务中，调用另一个事务时
-
-Propagation.MANDATORY 。
-	当前方法必须在已经定义的Transaction中运行，如果没有已定义的Transaction则抛出异常。
-Propagation.NESTED 。
-	如果没有已定义的Transaction，当前方法新开一个Transaction并在该Transaction中运行。如果存在已定义的Transaction，当前方法在嵌套事务(Nested Transaction)中运行 — 嵌套事务中可以定义储存点，
-	因此可以独立于外部的Transaction而进行rollback。
-Propagation.NEVER 。
-	当前方法不应在Transaction中运行，如果存在已经定义的Transaction则抛出异常。
-Propagation.NOT_SUPPORTED 。
-	当前方法不应在Transaction中运行，如果存在已经定义的Transaction，则该Transaction暂停(挂起)直至该方法运行完毕。
-Propagation.REQUIRED 。
-	默认值 。当前方法必须在Transaction中运行。如果存在已经定义的Transaction，则该方法在已定义的Transaction中运行；如果不存在已经定义的Transaction，则该方法新开一个Transaction并在其中运行。
-Propagation.REQUIRES_NEW 。
-	当前方法必须在新开的Transaction中运行。如果存在已经定义的Transaction，则该已定义的Transaction暂停直至新开的Transaction执行完毕。
-Propagation.SUPPORTS 。
-	当前方法不需要在Transaction中运行，但如果存在已经定义的Transaction，则该方法也可以在Transaction中正常执行。
+一 事务传播 :
+	当在一个事务中，调用另一个事务时
+	Propagation.MANDATORY 。
+		当前方法必须在已经定义的Transaction中运行，如果没有已定义的Transaction则抛出异常。
+	Propagation.NESTED 。
+		如果没有已定义的Transaction，当前方法新开一个Transaction并在该Transaction中运行。如果存在已定义的Transaction，当前方法在嵌套事务(Nested Transaction)中运行 — 嵌套事务中可以定义储存点，
+		因此可以独立于外部的Transaction而进行rollback。
+	Propagation.NEVER 。
+		当前方法不应在Transaction中运行，如果存在已经定义的Transaction则抛出异常。
+	Propagation.NOT_SUPPORTED 。
+		当前方法不应在Transaction中运行，如果存在已经定义的Transaction，则该Transaction暂停(挂起)直至该方法运行完毕。
+	Propagation.REQUIRED 。
+		默认值 。当前方法必须在Transaction中运行。如果存在已经定义的Transaction，则该方法在已定义的Transaction中运行；如果不存在已经定义的Transaction，则该方法新开一个Transaction并在其中运行。
+	Propagation.REQUIRES_NEW 。
+		当前方法必须在新开的Transaction中运行。如果存在已经定义的Transaction，则该已定义的Transaction暂停直至新开的Transaction执行完毕。
+	Propagation.SUPPORTS 。
+		当前方法不需要在Transaction中运行，但如果存在已经定义的Transaction，则该方法也可以在Transaction中正常执行。
 
 具体事例
 @Service("bookShopService")
@@ -42,6 +42,7 @@ public class BookShopServiceImpl implements BookShopService {
 			isolation=Isolation.READ_COMMITTED,
 			readOnly=false,
 			timeout=3)
+
 	@Override
 	public void purchase(String username, String isbn) {
 		try {
@@ -59,14 +60,16 @@ public class BookShopServiceImpl implements BookShopService {
 	}
 }
 
-二 事务隔离级别 : 在多个事务并发执行时，可能会脏读，不可重复读，幻读的问题
+二 事务隔离级别 :
+	在多个事务并发执行时，可能会脏读，不可重复读，幻读的问题
 
-三 事务回滚 : 默认Spring的声明式事务对所有的运行时异常进行回滚
-可以指定某些异常不进行回滚
-如果设置readOnly只读属性，一般是查询操作，数据库可以做一个优化，不进行加锁
+三 事务回滚 :
+	默认Spring的声明式事务对所有的运行时异常进行回滚
+	可以指定某些异常不进行回滚: 注意异常回滚一定是运行时异常
+	如果设置readOnly只读属性，一般是查询操作，数据库可以做一个优化，不进行加锁
 
 四 事务的执行时间: timeout
-如果事务执行时间过长，回滚
+	如果事务执行时间过长，回滚
 
 五、使用时注意：
 	在一个类中:
