@@ -1,26 +1,41 @@
 （1）基础
 一、运行索引
 1、./bin/elasticsearch
+    curl命令是一个利用URL规则在命令行下工作的文件传输工具
 2、curl 'http://localhost:9200/?pretty'(查看索引状态)
 3、curl -XPOST 'http://localhost:9200/_shutdown'（停止服务）
+   curl -X<VERB> '<PROTOCOL>://<HOST>:<PORT>/<PATH>?<QUERY_STRING>' -d '<BODY>'
+   具体列子：
+   curl -XGET 'http://localhost:9200/_count?pretty' -d '
+   {
+       "query": {
+           "match_all": {}
+       }
+   }'
 
 二、Elastic客户端
-1、节点客户端:节点客户端以无数据节点身份加入集群，换言之，它自己不存储任何数据，但是它知道在集群中的具体位置，并且能够直接转发请求到对应的节点上
-2、传输客户端:它自己不加入集群，只是简单转发请求给集群中的节点。
-3、基于java客户端9300
+1、节点客户端:
+    节点客户端以无数据节点身份加入集群，换言之，它自己不存储任何数据，但是它知道在集群中的具体位置，并且能够直接转发请求到对应的节点上
+2、传输客户端:
+    它自己不加入集群，只是简单转发请求给集群中的节点。
+3、两种java客户端都是:
+   基于9300端口与集群交互。
 
-三、基于http协议: 端口9200
+三、基于http协议: 以JSON为数据交互格式的RESTful API 端口9200
 
-四、ES是面向文档: 能够执行复杂的全文搜索
+四、ES是面向文档: 可以存储整个对象或文档(document)。然而它不仅仅是存储，还会索引(index)每个文档的内容使之可以被搜索
+   在Elasticsearch中，你可以对文档（而非成行成列的数据）进行索引、搜索、排序、过滤。这种理解数据的方式与以往完全不同，这也是Elasticsearch能够执行复杂的全文搜索的原因之一。
+
 1、ES使用json，作为文档序列化格式
 2、ES与关系型数据库对比
-Relational DB -> Databases -> Tables -> Rows -> Columns
-Elasticsearch -> Indices   -> Types  -> Documents -> Fields
-3、ES使用倒排索
+    Relational DB -> Databases -> Tables -> Rows -> Columns
+    Elasticsearch -> Indices   -> Types  -> Documents -> Fields
+3、ES使用倒排索引
+
 4、检索文档:
-curl -XGET 'http://localhost:9200/megacorp/employee/1'
+    curl -XGET 'http://localhost:9200/megacorp/employee/1'
 5、简单搜索: 注意_all表示所有的索引,q=qipuId:750767441'是查询条件
-curl -XGET 'http://10.15.226.153:9200/_all/chapter/_search?q=qipuId:750767441'
+    curl -XGET 'http://10.15.226.153:9200/_all/chapter/_search?q=qipuId:750767441'
 6、聚合功能 : ES同样具有聚合功能
 
 五、分布式
