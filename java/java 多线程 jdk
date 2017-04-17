@@ -114,7 +114,7 @@ public class SemapDemo implements Runnable{
     可以直接通过thenAccept、thenApply、thenCompose等方式将前面异步处理的结果交给另外一个异步事件处理线程来处理。
 
     参考文档：http://www.tuicool.com/articles/FFziqm
-        
+
 
 
 
