@@ -109,8 +109,14 @@ public class SemapDemo implements Runnable{
 
 10、Future模式
 
-11、CompletableFuture:增强了Future
-    http://blog.csdn.net/salonzhou/article/details/50777443
+11、jdk1.8 CompletableFuture:增强了Future
+    这个API有Future的优点，并且弥补了其缺点。即异步的任务完成后，需要用其结果继续操作时，无需等待。
+    可以直接通过thenAccept、thenApply、thenCompose等方式将前面异步处理的结果交给另外一个异步事件处理线程来处理。
+
+    参考文档：http://www.tuicool.com/articles/FFziqm
+        
+
+
 
 
 
