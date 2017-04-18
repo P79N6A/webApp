@@ -329,7 +329,6 @@ public class SelectSort {
         int min = -1;
 
         for (int i=0; i< a.length;i++){
-
             min = i;//最次都选小
 
             for (int j = i ; j<a.length;j++){
@@ -337,7 +336,6 @@ public class SelectSort {
                     min = j;
                 }
             }
-
             if (i!= min){
                 int temp = a[i];
                 a[i] = a[min];
