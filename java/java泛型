@@ -53,9 +53,9 @@ class Gin<T> implements GenInter<T>{
 }
 
 public class GrenericDemo05{
-        public static void main(String[] args){
-                  Gin<String> g = new   Gin<String>();
-         }
+    public static void main(String[] args){
+              Gin<String> g = new   Gin<String>();
+     }
 }
 
 三、泛型方法：使得该方法能够独立于类而产生变化。
