@@ -27,6 +27,7 @@ public class SemapDemo implements Runnable{
 4、CyclicBarrier 循环栅栏
 
 5、LockSupport 用于在线程内任意位置让线程阻塞。
+   不需要先获得某个对象的锁，也不会抛出InterruptedException异常。
 
 6、Executor框架：
    Eexcutors线程工厂类
@@ -45,7 +46,8 @@ public class SemapDemo implements Runnable{
            workQueue： 线程池所使用的缓冲队列
                 SynchronousQueue : 可以理解他是一个数据交换通道
                     是一个特殊的BlockingQueue。
-                    没有容量，每个插入操作都要等待一个相应的删除操作。相反，每个删除操作都要等到相应的插入操作。
+                    没有实际容量
+                    每个插入操作都要等待一个相应的删除操作。相反，每个删除操作都要等到相应的插入操作。
                     如果没有空闲进程，则尝试创建新的进程，如果进程数量已经达到最大值，则执行拒绝操作。
 
                 ArrayBlockingQueue: 有界队列
