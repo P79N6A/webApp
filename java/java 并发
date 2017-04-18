@@ -166,52 +166,53 @@ public class privateLock {
 2、并发容器 : 用于改进同步容器的性能。同步容器将所有对容器状态的访问串行化，代价是严重降低并发性，
 当多个线程竞争容器的锁时，吞吐量减低。
 (1) ConcurrentHashMap    用于代替同步且基于散列的Map
-ConcurrentHashMap采用了分段锁的设计，只有在同一个分段内才存在竞态关系，不同的分段锁之间没有锁竞争。
-Segment 分段锁的结构
-ConcurrentHashMap中的HashEntry相对于HashMap中的Entry有一定的差异性：
-HashEntry中的value以及next都被volatile修饰，这样在多线程读写过程中能够保持它们的可见性
-相比于对整个Map加锁的设计，分段锁大大的提高了高并发环境下的处理能力
+    ConcurrentHashMap采用了分段锁的设计，只有在同一个分段内才存在竞态关系，不同的分段锁之间没有锁竞争。
+    Segment 分段锁的结构
+    ConcurrentHashMap中的HashEntry相对于HashMap中的Entry有一定的差异性：
+    HashEntry中的value以及next都被volatile修饰，这样在多线程读写过程中能够保持它们的可见性
+    相比于对整个Map加锁的设计，分段锁大大的提高了高并发环境下的处理能力
+
+    1 提供的迭代器不会抛出ConcurrentModificationException
+        ConcurrentHashMap返回的迭代器具有弱一致性，而非"及时失败"。弱一致性的迭代器可以容忍并发的修改
+    2 ConcurrentHashMap没有实现对Map加锁以提供独占访问。
+        在Hashtable和synchronizedMap中，获得Map的锁能防止其他线程访问这个Map
+    3 额外的原子Map操作,已经支持
 
 (2) CopyOnWriteArrayList 用于替代同步List
-队列 Queue和BlockingQueue
-Queue(非阻塞): ConcurrentLinkedQueue(并发) 和 PriorityQueue(非并发)
-BlockingQueue(阻塞)
-使用ConcurrentSkipListMap 和 ConcurrentSkipListSet 分别用SortedMap 和 SortedSet
-
-3、ConcurrentHashMap 增加了同步容器类，
-1 提供的迭代器不会抛出ConcurrentModificationException
-ConcurrentHashMap返回的迭代器具有弱一致性，而非"及时失败"。弱一致性的迭代器可以容忍并发的修改
-2 ConcurrentHashMap没有实现对Map加锁以提供独占访问。
-在Hashtable和synchronizedMap中，获得Map的锁能防止其他线程访问这个Map
-3 额外的原子Map操作,已经支持
+    队列 Queue和BlockingQueue
+    Queue(非阻塞): ConcurrentLinkedQueue(并发) 和 PriorityQueue(非并发)
+    BlockingQueue(阻塞)
+    使用ConcurrentSkipListMap 和 ConcurrentSkipListSet 分别用SortedMap 和 SortedSet
 
 4、CopyOnWriteArrayList
 Copy-On-Write 容器的线程安全性
-每次修改是，都会创建并重新发布一个新的容器副本，从而实现可变性。
+每次修改是，都会创建并重新发布一个新的容器副本，然后再将写好的数据，合到原来的版本上。
 迭代器不会抛出ConcurrentModificationException
 
 5、阻塞队列 (生产者-消费者模式）
 (1)阻塞队列提供了可阻塞的put和take方法，以及支持定时的offer和poll方法
-如果队列已经满了，那么put方法将阻塞直到有空间可用;如果队列为空，那么take方法将会阻塞直到有元素可用
-BlockingQueue 实现LinkedBlockingQueue和ArrayBlockingQueue是FIFO队列,比同步List拥有更好的并发性能
-SynchronusQueue 不会为队列中元素维护存储空间，它维护一组线程，这些线程在等待着把元素加入或移出
-只有当有足够多的消费者，并且总是有一个消费者准备好获取交付的工作时，才适合使用同步队列
+   如果队列已经满了，那么put方法将阻塞直到有空间可用;如果队列为空，那么take方法将会阻塞直到有元素可用
+   BlockingQueue 实现LinkedBlockingQueue和ArrayBlockingQueue是FIFO队列,比同步List拥有更好的并发性能SynchronusQueue 不会为队列中元素维护存储空间，
+   它维护一组线程，这些线程在等待着把元素加入或移出
+   只有当有足够多的消费者，并且总是有一个消费者准备好获取交付的工作时，才适合使用同步队列
 
 (2)串行线程封闭 : 生产者-消费者这种设计与阻塞队列一起，促使了串行线程封闭
 (3)双端队列
-Deque和BlockingDeque
+    Deque和BlockingDeque
+
 工作密取模式:
-传统的生产者-消费者模式：所有消费者有一个共享队列
-而工作密取，每个消费者都有自己的各自的双端队列，如果一个消费者完成了自己双端队列中的工作，那么他可以从其他消费者双端队列中获取工作
+    传统的生产者-消费者模式：所有消费者有一个共享队列
+    而工作密取，每个消费者都有自己的各自的双端队列，如果一个消费者完成了自己双端队列中的工作，那么他可以从其他消费者双端队列中获取工作
+
 (4) 阻塞方法与中断方法
-阻塞或暂停原因有多种:等待I/O操作结束，等待获得一个锁，等待从Thread.sleep方法中醒来，或是等待另一个线程的计算结果
-阻塞线程必须等待不受它控制的事件完成后，才能继续执行
-当某方法抛出InterruptedException时，表示该方法是一个阻塞方法，如果这个方法被中断，那么它将努力提前结束阻塞状态
+    阻塞或暂停原因有多种:等待I/O操作结束，等待获得一个锁，等待从Thread.sleep方法中醒来，wait 或是等待另一个线程的计算结果
+    阻塞线程必须等待不受它控制的事件完成后，才能继续执行
+    当某方法抛出InterruptedException时，表示该方法是一个阻塞方法，如果这个方法被中断，那么它将努力提前结束阻塞状态
 
-Thread提供了interrupt方法，用于中断线程或者查询线程是否已经被中断
-每个线程都有一个布尔类型的属性，表示线程的中断状态，当中断线程时将设置这个状态
-
-中断是一种协作机制。一个线程不能强制其他线程停止正在执行的操作而去执行其他的操作。
+    Thread提供了interrupt方法，用于中断线程或者查询线程是否已经被中断
+        每个线程都有一个布尔类型的属性，表示线程的中断状态，当中断线程时将设置这个状态
+        中断是一种协作机制。
+        一个线程不能强制其他线程停止正在执行的操作而去执行其他的操作。
 
 当在一个方法中调用了一个将抛出InterruptedException异常的方法时，这个方法也会成为一个阻塞的方法,并且必须要处理对中断的响应
 方法1: 传递InterruptedException
@@ -220,7 +221,7 @@ Thread提供了interrupt方法，用于中断线程或者查询线程是否已�
 http://blog.csdn.net/sunxing007/article/details/9123363
 
 (5) 同步工具类 : 可以根据其自身的状态来协调线程的控制流
-阻塞队列、信号量、栅栏、闭锁 都可以同步工具类
+    阻塞队列、信号量、栅栏、闭锁 都可以同步工具类
 这些都封装了一些状态，这些状态将决定执行同步工具类的线程是继续执行还是等待，此外还提供了一些方法对状态进行操作
 
 1: 闭锁(CountDownLatch) : 用来确保某些活动直到其他活动都完成后才继续执行
