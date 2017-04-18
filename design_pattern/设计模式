@@ -228,7 +228,7 @@ package com.jackie.designpatterns.proxy;
 /**
  * 客户
  */
-publicclass Client {
+public class Client {
    /**
     * @param args
     */
