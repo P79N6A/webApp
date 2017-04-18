@@ -82,7 +82,8 @@
 2.3 JMM如何实现锁
     公平锁
         公平锁是通过“volatile”实现同步的。公平锁在释放锁的最后写volatile变量state；在获取锁时首先读这个volatile变量。
-        根据volatile的happens-before规则，释放锁的线程在写volatile变量之前可见的共享变量，在获取锁的线程读取同一个volatile变量后将立即变的对获取锁的线程可见。
+        根据volatile的happens-before规则，释放锁的线程在写volatile变量之前可见的共享变量，
+        在获取锁的线程读取同一个volatile变量后将立即变的对获取锁的线程可见。
     非公平锁
         通过CAS实现的，CAS就是compare and swap。CAS实际上调用的JNI函数，也就是CAS依赖于本地实现。
         以Intel来说，对于CAS的JNI实现函数，它保证：(1)禁止该CAS之前和之后的读和写指令重排序。(2)把写缓冲区中的所有数据刷新到内存中。
