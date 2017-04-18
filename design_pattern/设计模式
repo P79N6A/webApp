@@ -52,14 +52,14 @@ class BicycleStrategy implements TravelStrategy {
 类图
 Subject --------->Oberver
 |                   |
-SubjectImp <------ OberverImp
+SubjectImp        OberverImp
 
 
 3、装饰者模式
-动态给一个对象添加一些额外的职责
-一个对象:代表着被装饰者
-额外的职责:代表着装饰者
-由于装饰者是继承被装饰者，所以"装饰"后，还可以多次在装饰
+    动态给一个对象添加一些额外的职责
+    一个对象:代表着被装饰者
+    额外的职责:代表着装饰者
+    由于装饰者是继承被装饰者，所以"装饰"后，还可以多次在装饰
 Java api中 流就是使用这种模式
 
 类图
@@ -134,9 +134,9 @@ public class EggplantBean extends Decorator
 }
 
 4、单列模式
-保证一个类仅有一个实例，并提供一个访问它的全局访问点（public方法）
-必须提供一个private 构造方法，保证这个实例不可以被其他类单独实例化，但要提供一个public方法，保证实例化在类内部完成，并且其他内可以访问这个方法。
-注意多线程时的单列
+    保证一个类仅有一个实例，并提供一个访问它的全局访问点（public方法）
+    必须提供一个private 构造方法，保证这个实例不可以被其他类单独实例化，但要提供一个public方法，保证实例化在类内部完成，并且其他内可以访问这个方法。
+    注意多线程时的单列
 1: 双重锁定(懒汉)
 在加锁前，先判定是否已经存在实例
 public class Singleton {
@@ -162,20 +162,37 @@ public class Singleton {
     }
 }
 
-5、代理模式:接口的实现和代理都实现了接口的方法，代理Proxy类，保存一个引用使得代理访问实体
+3: 静态内部类实现
+public class Singleton
+{
+    private Singleton(){ }
+    public static Singleton getInstance()
+    {
+        return Nested.instance;
+    }
+
+    //在第一次被引用时被加载
+    static class Nested
+    {
+        private static Singleton instance = new Singleton();
+    }
+}
+
+5、代理模式: 接口的实现和代理都实现了接口的方法，代理Proxy类，保存一个引用使得代理访问实体
 类图
           接口
           |  |
-接口的实现<-----代理（Proxy）
-(1)    Subject
+接口的实现<-----代理(Proxy)
+
+(1)Subject
 package com.jackie.designpatterns.proxy;
 /**
  * 抽象主题，定义主要功能
  */
-publicinterface Subject {
-   publicvoid operate();
+public interface Subject {
+   public void operate();
 }
-(2)    RealSubject
+(2)RealSubject
 package com.jackie.designpatterns.proxy;
 /**
  * 具体主题
