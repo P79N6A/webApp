@@ -153,7 +153,7 @@
                     throw new ClassNotFoundException（name）；
                 }
             }
-        }；
+        };
         Object obj=myLoader.loadClass（"org.fenixsoft.classloading.ClassLoaderTest"）.newInstance（）；
         System.out.println（obj.getClass（））；
         System.out.println（obj instanceof org.fenixsoft.classloading.ClassLoaderTest）；//有自己定义的类加载器加载的类和系统类加载器是不相等的
