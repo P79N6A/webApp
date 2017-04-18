@@ -286,9 +286,9 @@ public class ProxyHandler implements InvocationHandler
 6、工厂模式
 提供一个创建对象的Factory接口，由具体的工厂实现来确定所有创建具体对象的实现
 类图
-Object接口         Factory接口
+Object接口<--------Factory接口
 |                        |
-Object实现<--------Factory实现
+Object实现         Factory实现
 (1) 简单工厂
 public class McChicken implements Food{
     /*
@@ -320,18 +320,19 @@ public class FoodFactory {
     }
 }
 (2) 抽象工厂模式 : 将工厂也设计也抽象，有不同的工厂实现
-public interface AbsFactory(){
-    public Pizza getFood(String type);
-}
+    public interface AbsFactory(){
+        public Pizza getFood(String type);
+    }
 
 7、责任链模式 : 定义一个处理请求的接口，使多个对象继承这个处理接口，并将这些对象连成一条链，沿着这条链传递该请求，直到有一个对象处理它为止。
-用于多分支的处理场景，将每个分支做为一个处理对象，并且必须前一个对象要设置后一个对象,这样就会进入一个分支（处理对象）来处理
+   用于多分支的处理场景，将每个分支做为一个处理对象，并且必须前一个对象要设置后一个对象,这样就会进入一个分支（处理对象）来处理
 类图
-Handler ->Handler
-| | |
-H1H2H3
+    Handler ->Handler
+    | | |
+    H1H2H3
 
-8、适配器模式 : 将一个类的接口转换成客户需要的另外一种接口，在不改变现有的类实现前提，使它能够应用于新的目标接口
+8、适配器模式 :
+将一个类的接口转换成客户需要的另外一种接口，在不改变现有的类实现前提，使它能够应用于新的目标接口
 主要目的扩展功能
 类图
 Target 目标接口
@@ -340,11 +341,7 @@ Adapter—>Adaptee(被适配类)
 适配器
 
 package adapter;
-/**
- *
- * DOC 源对象，只有跑的功能
- *
- */
+//DOC 源对象，只有跑的功能
 public class Animal {
     public void run() {
         System.out.println("run");
@@ -352,10 +349,8 @@ public class Animal {
 }
 
 package adapter;
-/**
- * DOC 目标接口，既能跑，又能飞
- *
- */
+
+* DOC 目标接口，既能跑，又能飞
 public interface ITarget {
     public void run();
     public void fly();
@@ -368,10 +363,7 @@ package adapter;
  *
  */
 public class Adapter implements ITarget {
-
     private Animal animal;
-
-    // private animal animal2....可以适配多个对象
 
     public Adapter(Animal animal) {
         this.animal = animal;
