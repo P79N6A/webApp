@@ -3,17 +3,15 @@
 客户端通过Servlet容器实现的请求/应答模型与Servlet交互。
 
 2、Servlet容器
-Servlet 容器是web server或application server 的一部分，提供基于请求/响应发送模型的网络服务，解码基于 MIME 的请求，并且格式化基于 MIME 的响应。
-Servlet 容器也包含了管理 Servlet 生命周期
-Servlet容器必须支持基于 HTTP 协议的请求/响应模型
+      Servlet 容器是web server或application server 的一部分，提供基于请求/响应发送模型的网络服务，解码基于 MIME 的请求，并且格式化基于 MIME 的响应。
+      Servlet 容器也包含了管理 Servlet 生命周期
+      Servlet 容器必须支持基于 HTTP 协议的请求/响应模型
 
-(1)、客户端（如 web 浏览器）发送一个 HTTP 请求到 web 服务器；
-(2)、 Web 服务器接收到请求并且交给 servlet 容器处理， servlet 容器可以运行在与宿主 web 服务器同一个进
-程中，也可以是同一主机的不同进程，或者位于不同的主机的 web 服务器中，对请求进行处理。
+(1)、客户端（如 web 浏览器）发送一个 HTTP 请求到 web 服务器
+(2)、 web 服务器接收到请求并且交给 servlet 容器处理， servlet 容器可以运行在与宿主 web 服务器同一个进程中，也可以是同一主机的不同进程，或者位于不同的主机的 web 服务器中，对请求进行处理。
 (3)、 servlet 容器根据 servlet 配置选择相应的 servlet，并使用代表请求和响应对象的参数进行调用。
-(4)、 servlet 通过请求对象得到远程用户， HTTP POST 参数和其他有关数据可能作为请求的一部分随请求一
-起发送过来。 Servlet 执行我们编写的任意的逻辑，然后动态产生响应内容发送回客户端。发送数据到客户
-端是通过响应对象完成的。
+(4)、 servlet 通过请求对象得到远程用户， HTTP POST 参数和其他有关数据可能作为请求的一部分随请求一起发送过来。
+      servlet 执行我们编写的任意的逻辑，然后动态产生响应内容发送回客户端。发送数据到客户端是通过响应对象完成的。
 (5)、一旦 servlet 完成请求的处理， servlet 容器必须确保响应正确的刷出，并且将控制权还给宿主 Web 服务器
 
 二、Servlet接口
@@ -93,12 +91,10 @@ getRealPath 方法需要一个字符串参数，并返回一个字符串形式�
 servlet容器的非阻塞 IO 允许开发人员在数据可用时读取数据或在数据可写时写数据
 
 8 Cookies
-HttpServletRequest 接口提供了 getCookies 方法来获得请求中的 cookie 的一个数组。这些 cookie 是从客户端
-发送到服务器端的客户端发出的每个请求上的数据
+HttpServletRequest 接口提供了 getCookies 方法来获得请求中的 cookie 的一个数组。这些 cookie 是从客户端发送到服务器端的客户端发出的每个请求上的数据
 
 9 SSL属性
-如果请求已经通过一个安全协议发送过，如 HTTPS，必须通过 ServletRequest 接口的 isSecure 方法公开该信
-息
+如果请求已经通过一个安全协议发送过，如 HTTPS，必须通过 ServletRequest 接口的 isSecure 方法公开该信息
 
 10 国际化
 客户端可以选择希望 Web 服务器用什么语言来响应。该信息可以和使用 Accept-Language 头与 HTTP/1.1 规范
@@ -111,8 +107,8 @@ getLocale和getLocales
 四 Servlet Context
 1 servletContext接口
 servletContext接口定义了servlet运行在的web应用的视图
-ServletContext 是 Web 服务器中已知路径的根。例如， Servlet 上下文可以从 http://www.mycorp.com/catalog
-找出， /catalog 请求路径称为上下文路径，所有以它开头的请求都会被路由到与 ServletContext 相关联的Web 应用
+ServletContext 是 Web 服务器中已知路径的根。
+例如， Servlet 上下文可以从 http://www.mycorp.com/catalog找出， /catalog 请求路径称为上下文路径，所有以它开头的请求都会被路由到与 ServletContext 相关联的Web 应用
 
 2 servletContext接口作用范围
 每一个部署到容器的web应用都有一个servlet接口的实例与之关联
@@ -125,11 +121,9 @@ getInitParameterNames
 4 配置方式：web.xml或编程方式定义
 
 5 上下文属性
-Servlet 可以使用指定的名字将对象属性绑定到上下文。同一个 Web 应用内的其他任何 Servlet 都可以使用绑定到上下文的任意属性
-分布式容器中的上下文属性
-在 JVM 中创建的上下文属性是本地的，这可以防止从一个分布式容器的共享内存存储中获取 ServletContext
-属性。当需要在运行在分布式环境的 Servlet 之间共享信息时，该信息应该被放到 session（请看第 7 章，“会
-话”），或存储到数据库，或者设置到企业级 JavaBean 组件（ Enterprise JavaBeans™）。
+Servlet 可以使用指定的名字将对象属性绑定到上下文。同一个 Web 应用内的其他任何 Servlet 都可以使用绑定到上下文的任意属性分布式容器中的上下文属性
+在 JVM 中创建的上下文属性是本地的，这可以防止从一个分布式容器的共享内存存储中获取 ServletContext属性。
+当需要在运行在分布式环境的 Servlet 之间共享信息时，该信息应该被放到 session（请看第 7 章，“会话”），或存储到数据库，或者设置到企业级 JavaBean 组件（ Enterprise JavaBeans™）。
 
 6 资源 :ServletContext 接口提供了直接访问 Web 应用中静态内容层次结构的文件的方法
 getResource
@@ -141,8 +135,7 @@ Web 服务器可以支持多个逻辑主机共享一个服务器 IP 地址,每�
 8 Reload 重新加载
 
 五、Response响应
-响应（ response）对象封装了从服务器返回到客户端的所有信息。在 HTTP 协议中，从服务器传输到客户端的信息通过 HTTP 头信息或响应的消息体
-
+响应（response）对象封装了从服务器返回到客户端的所有信息。在 HTTP 协议中，从服务器传输到客户端的信息通过 HTTP 头信息或响应的消息体
 Servlet容器允许但不必为了提高效率而缓冲到客户端的输出。
 
 5.1 缓冲
@@ -178,8 +171,8 @@ Filter 在部署描述符中通过<filter>元素声明。一个过滤器或一�
 可以使用 servlet 的逻辑视图名把过滤器映射到一个特定的 servlet，或者使用 URL 模式把一组 Servlet 和静态内容资源映射到过滤器
 
 2、过滤器的生命周期在
-Web 应用部署之后，在请求导致容器访问 Web 资源之前，容器必须找到过滤器列表并按照如上所述的应用到 Web 资源。
-容器必须确保它为过滤器列表中的每一个都实例化了一个适当类的过滤器,并调用其init(FilterConfig config)方法
+   Web 应用部署之后，在请求导致容器访问 Web 资源之前，容器必须找到过滤器列表并按照如上所述的应用到 Web 资源。
+   容器必须确保它为过滤器列表中的每一个都实例化了一个适当类的过滤器,并调用其init(FilterConfig config)方法
 
 在部署描述符中声明的每个<filter>在每个 JVM 的容器中仅实例化一个实例。容器提供了声明在过滤器的部署描述符的过滤器 config（译者注： FilterConfig），
 对 Web 应用的 ServletContext 的引用，和一组初始化参数。
@@ -244,7 +237,7 @@ servlet 可调用 RequestDispatcher 接口的 include 或 forward 方法
 RequestDispatcher 接口的 include 方法可能随时被调用
 
 4 forward方法
-RequestDispatcher接口的 forward 方法，只有在没有输出提交到向客户端时，通过正在被调用的servlet调用
+RequestDispatcher 接口的 forward 方法，只有在没有输出提交到向客户端时，通过正在被调用的servlet调用
 
 5 异步上下文对象
 实现了 AsyncContext 接口的对象可从 ServletRequest 的一个 startAsync 方法中获得，一旦有了 AsyncContext78
