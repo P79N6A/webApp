@@ -85,33 +85,33 @@
     ]
 }
 1、文档的元数据 : 最基本的三个要素
-           _index 文档存储的地方
-           _type 文档代表的对象的类
-           _id 文档的唯一标识
+       _index 文档存储的地方
+       _type 文档代表的对象的类型
+       _id 文档的唯一标识
 2、创建索引，自增id
-POST /website/blog/
-{
-  "title": "My second blog entry",
-  "text":  "Still trying this out...",
-  "date":  "2014/01/01"
-}
+    POST /website/blog/
+    {
+      "title": "My second blog entry",
+      "text":  "Still trying this out...",
+      "date":  "2014/01/01"
+    }
 3、检索文档
-curl -i -XGET http://localhost:9200/website/blog/124?pretty
+    curl -i -XGET http://localhost:9200/website/blog/124?pretty
 
-//带查询匹配条件
-curl -XGET  'http://localhost:9200/website/blog/_search' -d '{ "query" : {"match" : {"last_name" : "Smith"}}}'
+   带查询匹配条件
+    curl -XGET  'http://localhost:9200/website/blog/_search' -d '{ "query" : {"match" : {"last_name" : "Smith"}}}'
 
 4、检索文档的一部分
-GET /website/blog/123?_source=title,text
+    GET /website/blog/123?_source=title,text
 
 5、检查文档是否存在
-curl -i -XHEAD http://localhost:9200/website/blog/123
-如果文档存在，返回200状态码,不存在返回404
+    curl -i -XHEAD http://localhost:9200/website/blog/123
+    如果文档存在，返回200状态码,不存在返回404
 
 6、更新整个文档
-方式一、更新整个文档时，会新增一个文档把_version增加，并标记旧文档
-方式二、update API修改文档的局部时，步骤如下
-1、从旧文档中检索JSON 2、修改它 3、删除旧文档 4、索引新文档
+    方式一、更新整个文档时，会新增一个文档把_version增加，并标记旧文档
+    方式二、update API修改文档的局部时，步骤如下
+    1、从旧文档中检索JSON 2、修改它 3、删除旧文档 4、索引新文档
 
 7、创建一个新文档
 如果想使用自定义的_id，我们必须告诉Elasticsearch应该在_index、_type、_id三者都不同时才接受请求
