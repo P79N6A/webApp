@@ -1,142 +1,140 @@
 一  Nginx的功能特性
 1 : http代理和反向代理
-2 : 负载均衡,主要是对大量前端访问和流量进行分流,来保证前端用户访问效率
-3 : web缓存: 支持Squid类似的缓存功能
-
+2 : 负载均衡: 主要是对大量前端访问和流量进行分流,来保证前端用户访问效率
+3 : web缓存:  支持Squid类似的缓存功能
 
 二 nginx的安装部署
 1 安装window和linux
 
 2 启动,重启,停止nginx服务
-(1)nginx服务在运行时,会保持一个主进程和一个或多个worker process工作进程,通过给nginx服务的主进程发送信号就可以控制服务的启停
-(2)/sbin目录下,运行下面命令
-./nginx -t 检查nginx服务器配置文件是否有语法错误
-./nginx 启动nginx
-./nginx -g TERM|INT|QUIT
-./nginx -g HUP
-./nginx -s reload 重启
-./nginx -t 查看配置是否正确
+(1) nginx服务在运行时,会保持一个主进程和一个或多个worker process工作进程,通过给nginx服务的主进程发送信号就可以控制服务的启停
+(2) /sbin 目录下,运行下面命令
+    ./nginx -t 检查nginx服务器配置文件是否有语法错误
+    ./nginx 启动nginx
+    ./nginx -g TERM|INT|QUIT
+    ./nginx -g HUP
+    ./nginx -s reload 重启
+    ./nginx -t 查看配置是否正确
 
 3 主配置文件nginx.conf
-nginx.conf分为三个部分: 全局块,events块,http块,server块,location块
+  nginx.conf分为三个部分:
+  全局块,events块,http块,server块,location块
 
 三 Nginx服务器架构
-1 分为核心模块,标准http模块,可选http模块,邮件服务模块以及第三方模块
+    1 分为核心模块,标准http模块,可选http模块,邮件服务模块以及第三方模块
 
-2 nginx服务器的web请求处理机制
-并行处理请求工作有三种方式: 多进程方式,多线程方式和异步方式
+    2 nginx服务器的web请求处理机制
+      并行处理请求工作有三种方式: 多进程方式,多线程方式和异步方式
+ww
+      (apache 多进程方式): 服务器每当接受到一个客户端是,就有服务器主进程生成一个子进程出来和该客户端建立连接进行交互,缺点生成一个子进程需要进行内存复制,在资源和时间上会产生一定的额外开销
+      (IIS 服务器) : 使用了多线程,开销比进程小
 
-(apache 多进程方式): 服务器每当接受到一个客户端是,就有服务器主进程生成一个子进程出来和该客户端建立连接进行交互,缺点生成一个子进程需要进行内存复制,在资源和时间上会产生一定的额外开销
-(IIS 服务器) : 使用了多线程,开销比进程小
+    3 异步方式
+        描述通信模式
+        同步机制: 指发送方发送请求后,需要等待收到响应后,才接着发送下一个请求.
+        异步机制: 发送方发送请求后,不等待收到响应,就继续发送下个请求
 
-3 异步方式
-描述通信模式
-同步机制: 指发送方发送请求后,需要等待收到响应后,才接着发送下一个请求.
-异步机制: 发送方发送请求后,不等待收到响应,就继续发送下个请求
+        描述进程处理调用的方式
+        阻塞 :调用结果返回前,当前线程挂起
+        非阻塞 : 调用结果返回前,当前线程不挂起,执行下一个调用
 
-描述进程处理调用的方式
-阻塞 :调用结果返回前,当前线程挂起
-非阻塞 : 调用结果返回前,当前线程不挂起,执行下一个调用
+    4 nginx每个进程都是使用异步非阻塞的方式.
 
-4 nginx每个进程都是使用异步非阻塞的方式.
+    5 Nginx服务器的事件驱动模型
+        select模型,poll模型,epoll模型
 
-5 Nginx服务器的事件驱动模型
-select模型,poll模型,epoll模型
-
-6 Nginx服务器架构
-主进程,工作进程,后端服务,缓存
-(1) 主进程 负责读取配置文件,接受指令,建立socket
-(2) 工作进程 负责接受请求,与后端服务器交互
-(3) 缓存索引重建及管理进程 , 将本地磁盘的缓存文件加载到内存,并会更新
+    6 Nginx服务器架构
+        主进程,工作进程,后端服务,缓存
+        (1) 主进程 负责读取配置文件,接受指令,建立socket
+        (2) 工作进程 负责接受请求,与后端服务器交互
+        (3) 缓存索引重建及管理进程 , 将本地磁盘的缓存文件加载到内存,并会更新
 
 四 nginx服务器的重定向功能
-1 nginx 后端服务器的配置的5个指令
-upstream name {} : name是给后端服务器起的组名. {}包含服务器
-请求默认是顺序处理请求,也可以给各个服务器配置不同的权重,让某个服务器处理请求多些
+    1 nginx 后端服务器的配置的5个指令
+        upstream name {} : name是给后端服务器起的组名. {}包含服务器
+        请求默认是顺序处理请求,也可以给各个服务器配置不同的权重,让某个服务器处理请求多些
 
-server address : 服务器指令
+        server address : 服务器指令
 
-ip_hash 指令 : 会话保持
+        ip_hash 指令 : 会话保持
 
-keepalive connections 指令 : 保持指定数量的连接数
+        keepalive connections 指令 : 保持指定数量的连接数
 
-least_conn 指令 : 使用负载均衡策略为网络连接分配服务器. 选择当前连接数少的服务器
+        least_conn 指令 : 使用负载均衡策略为网络连接分配服务器. 选择当前连接数少的服务器
 
-Rewrite的功能
-1 : 域名跳转
-server{
-listen 80;
-server_name jump.myweb.name/;
-rewrite ^/ http://www.myweb.info/;
-}
-2 : 域名镜像
+    Rewrite的功能
+    1 : 域名跳转
+        server{
+            listen 80;
+            server_name jump.myweb.name/;
+            rewrite ^/ http://www.myweb.info/;
+        }
+    2 : 域名镜像
 
 五 Nginx服务器的代理服务
-1: 正向代理和反向代理 : 资源在internet是正向代理,反之资源在局域网是反向代理
+    1: 正向代理和反向代理 : 资源在internet是正向代理,反之资源在局域网是反向代理
 
-2: 正向代理服务配置
-server
-{
-    resolver 8.8.8.8
-    listen 82
-    location /
+    2: 正向代理服务配置
+    server
     {
-        proxy_pass http://$http_host$request_uri;
+        resolver 8.8.8.8
+        listen 82
+        location /
+        {
+            proxy_pass http://$http_host$request_uri;
 
+        }
     }
-}
 
-3: 反向代理服务配置 : Nginx的反向代理服务也比较高效
-upstream proxy_svrs
-{
-    server host1;
-    server host2;
-}
+    3: 反向代理服务配置 : Nginx的反向代理服务也比较高效
+    upstream proxy_svrs
+    {
+        server host1;
+        server host2;
+    }
+    server
+    {
+        listen 80;
+        server_name www.myweb.name;
+        location /{
+                proxy_pass proxy_svrs;
+         }
+    }
 
-server
-{
-listen 80;
-server_name www.myweb.name;
-location /{
-    proxy_pass proxy_svrs;
- }
-}
+    4: 使用该指令的过程中还要注意 : URL中是否包含有URI
+       Nignx服务器的处理方式是不同的 :
+       如果URL中不包含URI,Nginx服务器不会改变原来地址的URI
+       但是如果包含了URI,Nginx服务器将会使用新的URI代替URI.
 
-4: 使用该指令的过程中还要注意,URL中是否包含有URI,Nignx服务器的处理方式是不同的,如果URL中不包含URI,Nginx服务器不会改变原来地址的URI
-但是如果包含了URI,Nginx服务器将会使用新的URI代替URI.
+    5: Proxy Buffer(缓冲): 每个请求都会根据相应的指令配置各自的Buffer
+       Proxy Buffer启动后, 会异步地将后端服务器的响应数据传递给客户端,解决传输效率不同步或者优先级别不相同的设备之间传递数据
 
-5: Proxy Buffer(缓冲): 每个请求都会根据相应的指令配置各自的Buffer
-Proxy Buffer启动后, 会异步地将后端服务器的响应数据传递给客户端,解决传输效率不同步或者优先级别不相同的设备之间传递数据
+    6: Proxy Cache(缓存):
+       将硬盘数据在内存中建立缓存数据,提高数据的访问效率,对于过期不用的缓存可以销毁,但不会销毁硬盘的数据
 
-6: Proxy Cache(缓存): 将硬盘数据在内存中建立缓存数据,提高数据的访问效率,对于过期不用的缓存可以销毁,但不会销毁硬盘的数据
-
-7: Nginx服务器的负载均衡
-nginx服务器反向代理服务的一个用途是实现负载均衡
-(1) 对所有请求实现一般轮询规则的负载均衡
-
-(2) 对所有请求实现加权轮询规则的负载均衡
-
-(3) 对特定资源实现负载均衡
-
-(4) 对不同域名实现负载均衡
-
-(5) 带有URL重写(Rewrite)的负载均衡
+    7: Nginx服务器的负载均衡
+       nginx服务器反向代理服务的一个用途是实现负载均衡
+       (1) 对所有请求实现一般轮询规则的负载均衡
+       (2) 对所有请求实现加权轮询规则的负载均衡
+       (3) 对特定资源实现负载均衡
+       (4) 对不同域名实现负载均衡
+       (5) 带有URL重写(Rewrite)的负载均衡
 
 六 nginx缓存
-1 404错误驱动web缓存: 配置将404错误响应进行重定向,然后使用location块捕获重定向请求,向后端服务器发起请求获取响应数据,然后将数据转发给客户端的同时缓存到本地
-
-2 资源不存在驱动web缓存 :  和1一样,都是proxy_store on
-
-3 基于memcache的缓存机制的6个指令
-
-4 Proxy Cache 缓存机制
-
-5 重点: 与Squid组合
+    1 404错误驱动web缓存: 配置将404错误响应进行重定向,然后使用location块捕获重定向请求,向后端服务器发起请求获取响应数据,然后将数据转发给客户端的同时缓存到本地
+    2 资源不存在驱动web缓存 :
+      和1一样,都是proxy_store on
+    3 基于memcache的缓存机制的6个指令
+    4 Proxy Cache 缓存机制
+    5 重点: 与Squid组合
 
 七 Nginx服务器的邮件服务
-1 邮件服务主要由三部分构成 : 用户代理,邮件服务器,SMTP邮件传输协议
+    1 邮件服务主要由三部分构成 :
+      用户代理
+      邮件服务器
+      SMTP邮件传输协议
 
-2 Nginx 邮件服务器 : mail {} 包含配置的内容
+    2 Nginx 邮件服务器 : mail {} 包含配置的内容
 
 
 
