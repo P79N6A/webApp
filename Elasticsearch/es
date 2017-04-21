@@ -4,20 +4,21 @@ online = "10.15.212.31";
 es = Elasticsearch(hosts=online)
 按时间范围查询
 search = es.search(index='chapter', body={
-    'query': {
-        'range': {
-            'createTime': {
-                'gte': '2016-09-29 11:00:00',
-                'lte':'2016-09-29 11:00:05'
+        'query': {
+            'range': {
+                'createTime': {
+                    'gte': '2016-09-29 11:00:00',
+                    'lte':'2016-09-29 11:00:05'
+                }
             }
         }
     }
-})
+)
 按时间id查询
 search = es.search(index='chapter', q='id:115962804')
 
 按多个条件查询：
-{"EQL_id":"2197328","EQL_status":"1"}
+    {"EQL_id":"2197328","EQL_status":"1"}
 
 索引查询：
     多条件
