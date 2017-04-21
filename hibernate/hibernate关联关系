@@ -1,7 +1,7 @@
 1：一对多映射
-mappedBy是 one 对应的一方
+mappedBy是one对应的一方
 @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "entry", targetEntity = CurrentStep.class)
-    public Set<CurrentStep> getCurrentSteps() {
+public Set<CurrentStep> getCurrentSteps() {
         return currentSteps;
 }
 

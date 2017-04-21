@@ -17,11 +17,12 @@ OSWorkFlow 入门指南
 
 3: 启动工作流
 在一个工作流开始前，它是没有状态的，不处在任务一个步骤，用户必须采取某些动作才能开始这个流程
-这些特殊步骤被定义在<initial-actions>
+1、这些特殊步骤被定义在<initial-actions>
 <initial-actions>
     <action id = "1" name="Start Workflow">
         <results>
-            <unconditional-result old-status="Finished" status="Queued" step="1"/> 指明了下一个步骤和状态
+            <unconditional-result old-status="Finished" status="Queued" step="1"/>
+            //指明了下一个步骤和状态
         </results>
     </action>
 </initial-actions>
