@@ -1,7 +1,7 @@
 (1)hibernate有三种状态
     1、瞬时状态:
        新增new的对象，还没有调用save方法
-       
+
     2、持久化状态：
        当执行完save方法后，此时user被session托管 (此处表示的是hibernate的1级缓存)
        在事务提交后，会保存到数据库中
