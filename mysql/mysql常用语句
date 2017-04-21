@@ -42,3 +42,5 @@ mysql字符集
 Max_used_connections  2008 最大连接数
 Threads_connected     1063 当前连接数
 
+查询2017-04-13的数据:
+    select * from looking_cartoon_chapter where  create_time BETWEEN '2017-04-13 00:00:00' AND '2017-04-14 00:00:00'
