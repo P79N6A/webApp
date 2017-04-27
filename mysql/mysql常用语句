@@ -44,3 +44,6 @@ Threads_connected     1063 当前连接数
 
 查询2017-04-13的数据:
     select * from looking_cartoon_chapter where  create_time BETWEEN '2017-04-13 00:00:00' AND '2017-04-14 00:00:00'
+
+mysql建表:
+    当有多个timestamp字段时候，其中一个字段 ON UPDATE CURRENT_TIMESTAMP时候，那么其他字段必须有默认值.
