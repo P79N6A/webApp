@@ -42,7 +42,12 @@
 
        (6)autowiring(自动依赖装配)
 
-
+       (7)BeanFactoryPostProcessor(spring后置处理器)的实现:
+          https://my.oschina.net/u/1047640/blog/147036 参考文档
+          http://www.cnblogs.com/mesopotamia/p/4987092.html
+          beanFactoryPostprocessor的作用是在beanFactory初始化之后提供一个修改的机会
+            实例化Bean之前,对注册表中的bean definitions的属性进行后期加工
+            使用场景 占位符：PropertyPlaceholderConfigurer ：
 
 
 
