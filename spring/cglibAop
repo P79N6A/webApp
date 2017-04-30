@@ -1,0 +1,54 @@
+Cglib动态代理
+JDK的动态代理机制只能代理实现了接口的类，而不能实现接口的类就不能实现JDK的动态代理.
+
+CGLib采用了非常底层的字节码技术，其原理是通过字节码技术为一个类创建子类，并在子类中采用方法拦截的技术拦截所有父类方法的调用，顺势织入横切逻辑
+但因为采用的是继承，所以不能对final修饰的类进行代理。
+
+简单的实现举例：
+
+1 这是一个需要被代理的类，也就是父类，通过字节码技术创建这个类的子类，实现动态代理。
+public class SayHello {
+ public void say(){
+  System.out.println("hello everyone");
+ }
+}
+
+2 创建CglibProxy
+    该类实现了创建子类的方法与代理的方法。
+    getProxy(SuperClass.class)方法通过入参即父类的字节码，通过扩展父类的class来创建代理对象。
+    intercept()方法拦截所有目标类方法的调用，obj表示目标类的实例，method为目标类方法的反射对象，args为方法的动态入参，proxy为代理类实例。
+    proxy.invokeSuper(obj, args)通过代理类调用父类中的方法。
+
+    public class CglibProxy implements MethodInterceptor{
+     private Enhancer enhancer = new Enhancer();
+     public Object getProxy(Class clazz){
+      //设置需要创建子类的类
+      enhancer.setSuperclass(clazz);
+      enhancer.setCallback(this);
+      //通过字节码技术动态创建子类实例
+      return enhancer.create();
+     }
+     //实现MethodInterceptor接口方法
+     public Object intercept(Object obj, Method method, Object[] args,
+       MethodProxy proxy) throws Throwable {
+      System.out.println("前置代理");
+      //通过代理类调用父类中的方法
+      Object result = proxy.invokeSuper(obj, args);
+      System.out.println("后置代理");
+      return result;
+     }
+    }
+
+3 使用
+    public class DoCGLib {
+     public static void main(String[] args) {
+      CglibProxy proxy = new CglibProxy();
+      //通过生成子类的方式创建代理类
+      SayHello proxyImp = (SayHello)proxy.getProxy(SayHello.class);
+      proxyImp.say();
+     }
+    }
+
+
+CGLib创建的动态代理对象性能比JDK创建的动态代理对象的性能高不少，但是CGLib在创建代理对象时所花费的时间却比JDK多得多，所以对于单例的对象，
+因为无需频繁创建对象，用CGLib合适，反之，使用JDK方式要更为合适一些。同时，由于CGLib由于是采用动态创建子类的方法，对于final方法，无法进行代理。
