@@ -1,0 +1,79 @@
+spring aop 可以使用spring本身提供的aop实现之外,还封装了业界优秀的aop解决方案aspectJ来使用.
+对于spring自身的aop,充分利用了ioc容器proxy代理对象以及aop拦截器的功能特性.
+
+spring aop模块,在这些实现原理的分析中,包括代理对象的生成,aop拦截器的实现等.
+
+1 advice通知 : 定义在连接点做什么,为切面增强提供织入接口.
+    在BeforeAdivce的继承关系中,定义了为待增强的目标方法设置的前置增强接口MethodBeforeAdivce,使用这个前置接口需要实现一个回调函数.作为回调函数,会被配置到
+目标方法后,会在调用目标方法时被回调.
+
+
+2 pointcut切点: 决定advice通知应该作用于那个连接点.
+
+3 advisor通知器: 完成对目标方法的切面增强设计和关注点设计,需要一个对象把它们结合起来.
+
+
+二 动态代理
+
+三 建立AopProxy对象
+通过配置和调用spring的proxyfactorybean来完成这个任务,在proxyfactorybean中,封装了主要代理对象的生成过程.可以使用: jdk的proxy和cglib两种方式
+
+1 对于需要使用AspectJ的aop应用,aspectjproxyfactory起到集成spring和aspectj的作用.
+
+2 对于使用spring aop的应用 , proxyfactorybean和proxyfactory都提供了aop功能的封装.
+使用proxyfactorybean可以在ioc容器中完成声明式配置
+  1 proxyfactorybean的配置和使用:
+    定义使用的通知器advisor,这个通知器定义了需要对目标对象进行增强的切面行为.
+    定义proxyfactorybean,它是封装aop功能的主要类. 包括proxyInterface,interceptorNames和target
+        interceptorNames: 是定义好的通知器
+        target:是目标对象,由于生成代理对象.(生成代理对象通过jdk的proxy和CGLIB来完成的)
+
+    定义target,作为target属性注入的bean,需要用aop通知器中的切面应用来增强的对象.
+
+    proxyfactorybean实现需要依赖jdk的proxy或者cglib提供的proxy特性来生成代理对象.
+
+    aopproxy代理对象生成过程.首先读取proxyfactorybean中的配置,为生成代理对象做好准备,比如要设置代理对象的方法调用接口.
+    spring通过aopProxy类来具体生成代理对象.
+
+    AopProxy是一个接口: 有个两个实现: Cglib2AopProxy和JdkDynamicProxy
+
+    在生成AopProxy代理对象的时候,Spring Aop设计了专门的AopProxyFactory作为aopProxy代理对象的生产工厂,由它来负责产生相应的aopProxy代理对象,
+    在使用ProxyFactoryBean得到AopProxy代理对象的时候,默认使用AopProxy代理对象的生产工厂是DefaultAopProxyFactory对象.它定义了AopProxy代理对象的生成
+    策略,决定使用那种aopProxy代理对象的生成技术.
+
+3 使用proxyfactory,需要编程式使用
+
+4 jdk生成AopProxy对象
+  使用jdk的proxy类来生成代理对象,在生成proxy对象之前,首先需要从advised对象中取得代理对象的代理接口配置,然后调用proxy的newProxyInstance方法,
+  最终得到对应的proxy代理对象.对于JdkDynamicProxy,本身实现了invocationHandler接口和invoke方法.
+  通过invoke的具体实现,来完成对目标对象方法调用的增强.
+
+
+5 CGLIB生成AopProxy代理对象
+  在Enhancer的callback回调设置中,实现上通过设置DynamicAdvisedIntercepter拦截器完成aop功能.
+  通过DynamicAdvisedIntercepter的inceptor方法,完成对目标对象的增强.
+  两种方式: 完成的回调的方式是不一样的.
+
+6 Aop拦截器的调用: 首先会根据配置来对拦截器是否与当前的调用方法相匹配进行判断.匹配后才对目标对象做增强.
+aop实现的核心部分: 无论那种生成aopProxy的方式,它们对拦截器的调用都是ReflectiveMethodInvocation中通过process方法实现的.决定是否需要实行增功能.
+
+
+7 目标对象的调用 : 对拦截器调用完以后,才是对目标对象的方法调用.这样一个普通的java对象功能就得到了增强.
+  jdk是在invoke方法中: AopUtils.invokeJoinpointUsingReflection
+  Cglib是在intercept方法中: methodProxy.invoke
+
+8 配置通知器 :
+
+9 Advice通知的实现 :
+    在拦截器调用过程中,已经封装了Spring对aop的实现,比如对各种advice通知器的增强织入功能
+    尽管在使用spring aop的时候,看到的是一些advice的使用,但实际是这些aop应用中的advice通知是不能直接对目标对象完成增强的
+    解决办法:
+        1 对于每种advice通知,spring设计了对应的adviceAdapter通知适配器,这些通知适配器实现了advice通知对目标对象的不同增强方式.
+        2 对于这些AdviceAdapter通知适配器,在aopProxy代理对象的回调方法中,需要有一个注册机制,它们才能发挥作用.完成注册,拦截器就具有adviceAdapter适配器的功能了
+        3 这些拦截器经过适配后,再去结合aopProxy代理对象的拦截回调机制,才能够让advice通知对目标对象的增强作用产生.
+
+
+
+
+
+
