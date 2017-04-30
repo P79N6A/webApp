@@ -35,8 +35,13 @@
             ioc容器将BeanDefinition注入到1个HashMap中，Ioc容器通过HashMap持有BeanDefinition
 
     5、Ioc的依赖注入
-       (1) AbstractBeanFac tory实现类的getBean方法，会调用doGetBean方法，从而触发依赖注入
-        注意:这里会循环调用getBean方法，注册所依赖的bean，直到取到一个没有任何依赖的Bean为止。
+        依赖注入的过程是用户第一次向IoC容器索要Bean时触发的,但是通过控制lazy-init属性来让容器完成对Bean的赖加载。
+        赖加载实际上也是一个完成依赖注入的过程，但它是在初始化的过程中完成的。
+
+        当用户向Ioc容器索要Bean时候，调用getBean()方法，这个接口就是触发依赖注入的地方。
+        在得到一个bean的时候，可以根据getDependsOn()方法，获得它所依赖的所有bean
+
+        在调用完getBean()方法后，会调用createBean(),这个过程会根据BeanDefinition定义生成Bean对象。
 
     6、容器其他相关特性
        (1) ApplicationContext和Bean的初始化和销毁
