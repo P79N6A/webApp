@@ -1,0 +1,15 @@
+一 spring 声明式事务
+1 声明式事务处理的实现大致分为以下几个部分
+  (1)读取和处理在ioc容器中配置的事务处理属性,并转化为spring事务处理需要的内部数据结构
+  (2)spring事务处理模块实现统一的事务处理过程. 这个通用的事务过程包含处理事务配置属性,以及与线程绑定完成事务处理的过程
+  (3)spring事务处理实现,spring委托给具体的事务处理器来完成.
+
+2 实现分析
+  (1) 事务处理拦截器的配置
+      在Ioc容器进行注入的时候,会创建TransactionIntercepter对象,而这个对象会创建一个TranscationAttriburePointcut,为读取TransactionAttribute做准备.
+      在容器初始化的过程中,会实例化一个ProxyFactory,建立sping aop的应用.会为这个proxyFactory设置通知,目标对象,并最终返回proxy代理对象.在proxy代理对象建立起来后,
+      在调用其代理方法的时候,会调用相应的TransactionIntercepter拦截器. 会根据TransactionAttribute配置的事务属性进行配置.从而为事务处理做好准备.
+
+  (2) 事务处理配置的读入
+      在aop配置完成的基础上,以TransactionAttributeSourceAdvisor的实现为入口
+  (3)
