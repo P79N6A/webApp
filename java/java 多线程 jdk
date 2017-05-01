@@ -60,7 +60,7 @@ public class SemapDemo implements Runnable{
 
                 LinkedBlockingQueue: 无界队列
                     当有新的人到来，系统的线程数小于corePoolSize时，线程池会生产新的线程执行任务，
-                    但当系统的线程数达到corePoolSize时，线程池会生成新的线程执行任务，但当系统的线程数达到corePoolSize，就不会继续增加。
+                    但当系统的线程数达到corePoolSize时，线程池会生成新的线程执行任务，但当系统的线程数达到maximumPoolSize，就不会继续增加。
                     随后的任务一直会加入队列中。如果处理任务的速度小于加入队列的任务速度，就会内存溢出。
 
                 PriorityBlockingQueue: 优先级队列

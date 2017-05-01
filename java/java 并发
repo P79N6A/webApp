@@ -34,7 +34,7 @@ incrementAndGet() 方法 : 首先会根据get()获取AtomicLong对应的long值�
 如果同一个线程再次获取这个锁，计数值将递增，而当线程退出同步代码块，计数器会相应地递减。
 当计数值为0,这个锁将被释放.
 
-如果没有不可重入
+如果没有不可重入: 会发生死锁
 public class Widget{
     public synchronized void doSomething(){
 
