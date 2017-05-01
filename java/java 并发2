@@ -55,8 +55,7 @@ take()方法其实就是Producer-Consumer中的Consumer。它会从Queue中取�
 interrupt方法能中断目标线程，调用interrupt并不意味着立即停止目标线程正在进行的工作，而只是传递了请求中的消息
 isInterrupted方法能返回目标线程的中断状态
 interrupted方法将清除当前线程的中断状态
-注意： 在使用静态的interrupted时应该小心，因为它会清除当前线程的中断状态。如果在调用interrupted时返回了ture，那么除非你想屏蔽这个中断，否则必须对它进行处理
-可以抛出InterruptedException,或者通过再次调用interrupt来恢复中断状态。
+注意： 在使用静态的interrupted时应该小心，因为它会清除当前线程的中断状态。如果在调用interrupted时返回了ture，那么除非你想屏蔽这个中断，否则必须对它进行处理,可以抛出InterruptedException,或者通过再次调用interrupt来恢复中断状态。
 
 3、中断策略
 规定线程如何解释某个中断请求，当发现中断请求时，应该做哪些工作，哪些工作单元对于中断来说是原子操作，以及以多快的速度响应中断

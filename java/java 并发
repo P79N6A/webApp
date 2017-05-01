@@ -169,8 +169,8 @@ public class privateLock {
     ConcurrentHashMap采用了分段锁的设计，只有在同一个分段内才存在竞态关系，不同的分段锁之间没有锁竞争。
     Segment 分段锁的结构
     ConcurrentHashMap中的HashEntry相对于HashMap中的Entry有一定的差异性：
-    HashEntry中的value以及next都被volatile修饰，这样在多线程读写过程中能够保持它们的可见性
-    相比于对整个Map加锁的设计，分段锁大大的提高了高并发环境下的处理能力
+    	HashEntry中的value以及next都被volatile修饰，这样在多线程读写过程中能够保持它们的可见性
+    	相比于对整个Map加锁的设计，分段锁大大的提高了高并发环境下的处理能力
 
     1 提供的迭代器不会抛出ConcurrentModificationException
         ConcurrentHashMap返回的迭代器具有弱一致性，而非"及时失败"。弱一致性的迭代器可以容忍并发的修改
@@ -187,7 +187,7 @@ public class privateLock {
 4、CopyOnWriteArrayList
 Copy-On-Write 容器的线程安全性
 每次修改是，都会创建并重新发布一个新的容器副本，然后再将写好的数据，合到原来的版本上。
-迭代器不会抛出ConcurrentModificationException
+迭代器不会抛出现
 
 5、阻塞队列 (生产者-消费者模式）
 (1)阻塞队列提供了可阻塞的put和take方法，以及支持定时的offer和poll方法
