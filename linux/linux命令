@@ -62,13 +62,18 @@ sort 排序
 sort -u 排序并删除
 diff 比较两个文件的不同
 
+杀掉进程
+    ps aux | grep mams-data | grep -v grep | awk '{print $2}'|xargs kill
+后台启动，并将日志输出data-service.out
+    nohup /usr/local/jdk1.8.0_60/bin/java -jar mams-data-service-0.0.1-SNAPSHOT.war --spring.profiles.active=dev & > data-service.out
+
 三、用户身份
-useradd: 创建用户
-userdel: 删除用户
-passwd: 修改用户密码
-groupadd 创建用户组
-groupdel 删除用户组
-whoami、logname 当前登录用户名
+    useradd: 创建用户
+    userdel: 删除用户
+    passwd: 修改用户密码
+    groupadd 创建用户组
+    groupdel 删除用户组
+    whoami、logname 当前登录用户名
 linux系统的重要文件：
     /etc/passwd    存储用户账号
     /etc/group       存储组账号
