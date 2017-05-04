@@ -15,36 +15,29 @@ nginx-lua实现简单权限控制 :用户可以访问那个系统，那个接口
 3、负载均衡
 upstream backend {
              #ip_hash;
-
              server 192.168.1.251;
-
              server 192.168.1.252;
-
              server 192.168.1.247;
          }
 server {
-
         listen       80;
         server_name  trffweb;
 
         location / {
              #反向代理的地址
              proxy_pass http://backend;
-
         }
 }
+
 4、QPS流量限制
    1、流量限制:目的是在大促或者流量突增期间，我们的后端服务假设某个接口能够扛住的的QPS为10k，这时候同时有20k个请求进来，经过限流模块，会先放10k个请求，其余的请求会阻塞一段时间。，让客户端重试，同时又能起到流量搓峰的作用。
-   可以由两个指令： limit_rate 和 limit_rate_after 共同完成
+      可以由两个指令： limit_rate 和 limit_rate_after 共同完成
 
    2、使用Nginx和Lua的方式：支持10kQPS的流量
 
-
 5、并发连接数限制
    使用ngx_http_limit_zone_module模块
-
    limit_conn_zone
-
    limit_conn
 
 6、防止ddos
@@ -54,3 +47,20 @@ server {
 
    ngx_http_limit_req_module
    可以限制单个 IP 每秒请求数
+
+7、web缓存
+    Squid 缓存功能
+
+8、可以使用alias path 更改location URI
+例子
+    location ~ ^/data/(.+\.(htm|htm))$
+    {
+        alias /locationtest1/other/$1
+    }
+当此location接受到/data/index.html时，将到/locationtest1/other/目录下查找。
+
+9、Nginx权限控制
+    allow ip1 : 白名单
+    deny  ip2 : 黑名单
+
+
