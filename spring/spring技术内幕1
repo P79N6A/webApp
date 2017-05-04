@@ -42,39 +42,56 @@
         在得到一个bean的时候，可以根据getDependsOn()方法，获得它所依赖的所有bean
 
         在调用完getBean()方法后，会调用createBean(),这个过程会根据BeanDefinition定义生成Bean对象。
-
-    6、容器其他相关特性
+	
+        createBean()会调用两个方法，createBeanInstance 和 populateBean 
+		createBeanInstance中生成了java对象实例，使用了CGLIB对bean进行实例化。CGLIB是一个常用的字节吗生成器的类库，它提供了一系列api来提供生成和转换java的字节吗功能
+		在doc容器中，使用cgiig生成bean对象，需要看一下simpleinstantiationstrategy类，它提供了两种实例化java对象的方法，一种是beanutils，使用jam的反射功能，另一种是cglib
+		populatebean的实现：把生成的bean对象的依赖关系设置好，完成整个依赖注入的过程。需要使用BeandefinitionResolver来对BeanDefinition进行解析，然后注入到property中。
+			
+		
+   6、容器其他相关特性
        (1) ApplicationContext和Bean的初始化和销毁
-            prepareBeanFactory 方法初始化
+	    对于BeanFactory,特别是ApplicationContext，自身有一个初始化和销毁的关闭的过程。
+            prepareBeanFactory 方法初始化 ： 为容器配置了classloader、propertyeditor和beanpostprocessor ， 从而为容器的启动做好准备。
             doclose 方法关闭容器
 
        (2) Ioc容器中的Bean生命周期
-           Bean实例的创建
-           为Bean实例设置属性
+           Bean实例的创建 initializebean ， 也会调用前置处理器和后置处理器。
+           Bean实例设置属性 invokeinitmethods (包括默认的和自定义的初始化方法)
            调用Bean的初始化方法
            应用可以通过Ioc容器使用Bean
            当容器关闭时，调用Bean的销毁方法
 
        (3) lazy-init属性和预实例化
-           用户可以通过设置Bean的lazy-init属性来控制预实例化的过程。
+           用户可以通过设置Bean的lazy-init属性来控制预实例化的过程。而不是getbean方法时候。
+           预初始化，是refresh方法中的一个步骤。在
 
-       (4)FactoryBean的实现
+       (4)FactoryBean的实现 ： factorybean为应用生成需要的对象，这些对象往往是经过特殊处理的。
+          Spring 为此提供了一个 org.springframework.bean.factory.FactoryBean 的工厂类接口，用户可以通过实现该接口定制实例化 Bean 的逻辑
           它是实现了FactoryBean<T>接口的Bean，根据该Bean的Id从BeanFactory中获取的实际上是FactoryBean的getObject()返回的对象，而不是FactoryBean本身，
           如果要获取FactoryBean对象，可以在id前面加一个&符号来获取
 
-       (5)BeanPostProcessor的实现:
-            实现了BeanPostProcessor接口定制我们自己的Bean处理器可以在Spring容器初始化Bean的时候做我们想做的很多事
+       (5)BeanPostProcessor的实现: 具备了接收doc容器事件回调的能力。
+            实现了BeanPostProcessor接口定制我们自己的Bean处理器,可以在Spring容器初始化Bean的时候做我们想做的很多事 提供了postprocessbeforeinitialization和postprocessafterinitialization
 
-       (6)autowiring(自动依赖装配)
-
-       (7)BeanFactoryPostProcessor(spring后置处理器)的实现:
+	    BeanFactoryPostProcessor(spring后置处理器)的实现:
           https://my.oschina.net/u/1047640/blog/147036 参考文档
           http://www.cnblogs.com/mesopotamia/p/4987092.html
           beanFactoryPostprocessor的作用是在beanFactory初始化之后提供一个修改的机会
             实例化Bean之前,对注册表中的bean definitions的属性进行后期加工
             使用场景 占位符：PropertyPlaceholderConfigurer ：
 
+	  主要区别就是： BeanFactoryPostProcessor可以修改BEAN的配置信息而BeanPostProcessor不能
 
+       (6)autowiring(自动依赖装配)的实现
+	    之前一直是通过beandefinition的属性值和构造函数显示对bean依赖关系进行管理。
+            可以通过autowiring属性，ioc容器会根据这个属性的配置，使用反射自动查找属性的类型或名字，基于属性和名字来自动匹配ioc容器中的bean，完成依赖注册
+            对于autowirebyname，它首先需要从beandefinition 得到当前bean的属性名，然后直接使用属性名作为bean名称向容器索取bean。同样会触发getbean
+            
+
+      （7）可以设置依赖检查：dependency－check属性来指定依赖检查模式，如果依赖不满足，则会抛出异常。
+      （8）可以让bean得到doc容器的状态：实现aware接口 例如可以使用applicationcontextaware ,得到bean所在应用上下文的信息。从而直接在bean中使用应用上下文。
+          
 
 
 

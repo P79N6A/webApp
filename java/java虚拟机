@@ -262,7 +262,7 @@ jstack命令用于生成虚拟机当前时刻的线程快照（一般称为threaddump 或javacore 文件）
 第二部分：虚拟机执行子系统
 各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——字节码
 
-1 Class类文件的结构:http://blog.csdn.net/a19881029/article/details/16117251
+1  Class类文件的结构:http://blog.csdn.net/a19881029/article/details/16117251
    Class文件是一组以8位字节为基础单位的二进制流
 
    Class文件格式只有两种数据类型:无符号数和表

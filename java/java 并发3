@@ -81,7 +81,7 @@ ReadWriteLock
 第13章 显示锁
 内置锁不足：
 无法中断一个正在等待获取锁的线程
-无法实现非阻塞结构的加锁规则
+无法实现非阻塞的加锁方式
 Java 1.5内置锁性能远低于ReentrantLock
 一、显示锁使用
 1、Lock与ReentranLock:
@@ -103,7 +103,7 @@ try{
 
 3、可中断的锁获取操作
 public boolean sendOnSharedLine(String message) throws InterruptedException{
-    lock.lockInterruptibly();//可中断锁
+    lock.lockInterruptibly();//可中断锁：如果拿不到锁是可以中断的
     try{
 
     }finally{

@@ -46,9 +46,10 @@ public class SemapDemo implements Runnable{
            workQueue： 线程池所使用的缓冲队列
                 SynchronousQueue : 可以理解他是一个数据交换通道
                     是一个特殊的BlockingQueue。
-                    没有实际容量
+                    没有实际容量(不存放数据，而是存放线程)
                     每个插入操作都要等待一个相应的删除操作。相反，每个删除操作都要等到相应的插入操作。
                     如果没有空闲进程，则尝试创建新的进程，如果进程数量已经达到最大值，则执行拒绝操作。
+		     Executors.newCachedThreadPool()就使用了SynchronousQueue
 
                 ArrayBlockingQueue: 有界队列
                     当使用有界的队列时
@@ -60,7 +61,7 @@ public class SemapDemo implements Runnable{
 
                 LinkedBlockingQueue: 无界队列
                     当有新的人到来，系统的线程数小于corePoolSize时，线程池会生产新的线程执行任务，
-                    但当系统的线程数达到corePoolSize时，线程池会生成新的线程执行任务，但当系统的线程数达到corePoolSize，就不会继续增加。
+                    但当系统的线程数达到corePoolSize时，线程池会生成新的线程执行任务，但当系统的线程数达到maximumPoolSize，就不会继续增加。
                     随后的任务一直会加入队列中。如果处理任务的速度小于加入队列的任务速度，就会内存溢出。
 
                 PriorityBlockingQueue: 优先级队列

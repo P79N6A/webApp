@@ -11,7 +11,7 @@
 不同的子类a,b,c 实现这个父类A的function方法，并且实现的方式不同，将不同的方法实现，封装在不同的子类中
 类图
           A
-     |——|——|
+     |——  |  ——|
      a    b    c
 
 代码如下：
@@ -331,6 +331,7 @@ public class FoodFactory {
     | | |
     H1H2H3
 
+
 8、适配器模式 :
 将一个类的接口转换成客户需要的另外一种接口，在不改变现有的类实现前提，使它能够应用于新的目标接口
 主要目的扩展功能
@@ -462,7 +463,7 @@ namespace CarRunOnRoad_Bridge_
 
 //接收者类
 public class Receiver {
-    //真正执行命令逻辑的方法
+    //真正执行命令令逻辑的方法
    public  void action(){
        System.out.println("执行具体操作！");
    }
