@@ -23,3 +23,9 @@ eval "命令字符串"
 
 六、定时执行shell脚本
 0 3 * * * root sh /data/venus-agent-2.x.x/venus-agent restart
+
+七、启动war包
+ps aux | grep mams-data | grep -v grep | awk '{print $2}'|xargs kill
+    查看进程号，并杀掉进程
+nohup /usr/local/jdk1.8.0_60/bin/java -jar mams-data-service-0.0.1-SNAPSHOT.war --spring.profiles.active=dev & > data-service.out
+    启动war
