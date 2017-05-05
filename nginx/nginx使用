@@ -52,43 +52,7 @@ server {
     Nginx服务器基于Proxy Store的缓存机制
     Nginx服务器基于memcached的缓存机制
         memcached是一套高性能的基于分布式的缓存系统，用于动态web应用以减轻后台数据服务器的负载。
-        upstream memcacheds {
-                server 10.1.240.166:22222;
-        }
-        server  {
-                listen       8080;
-                server_name  nm.ttlsa.com;
-                index index.html index.htm index.php;
-                root  /data/wwwroot/test.ttlsa.com/webroot;
-
-                location /images/ {
-                        set $memcached_key $request_uri;
-                        add_header X-mem-key  $memcached_key;
-                        memcached_pass  memcacheds;
-                        default_type text/html;
-                        error_page 404 502 504 = @app;
-                }
-
-                location @app {
-                        rewrite ^/.* /nm_ttlsa.php?key=$request_uri;
-                }
-
-                location ~ .*\.php?$
-                {
-                        include fastcgi_params;
-                        fastcgi_pass  127.0.0.1:10081;
-                        fastcgi_index index.php;
-                        fastcgi_connect_timeout 60;
-                        fastcgi_send_timeout 180;
-                        fastcgi_read_timeout 180;
-                        fastcgi_buffer_size 128k;
-                        fastcgi_buffers 4 256k;
-                        fastcgi_busy_buffers_size 256k;
-                        fastcgi_temp_file_write_size 256k;
-                        fastcgi_intercept_errors on;
-                        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-                }
-        }
+        将页面的html代码内容缓存到Memcached中，通过Nginx直接连接并读取Memcached中的内容，来实现页面缓存
 
     Nginx服务器基于Proxy Cache的缓存机制
 
