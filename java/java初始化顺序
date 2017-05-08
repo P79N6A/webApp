@@ -1,0 +1,36 @@
+class Fu{
+    static {
+        System.out.println("Fu static code");
+    }
+    {
+        System.out.println("Fu code");
+    }
+    public Fu(){
+        System.out.println("Fu GouZao");
+    }
+}
+
+class Zi extends Fu{
+    static {
+        System.out.println("Zi static code");
+    }
+    {
+        System.out.println("Zi code");
+    }
+    public Zi(){
+        System.out.println("Zi GouZao");
+    }
+}
+
+public class Text{
+    public static void main(String[] args) {
+        Zi zi = new Zi();
+    }
+}
+
+Fu static code
+Zi static code
+Fu code
+Fu GouZao
+Zi code
+Zi GouZao
