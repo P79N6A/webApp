@@ -99,6 +99,6 @@ pubilc class GenericDemo{
 
 
       public static <T> void tell(T arr[]){
-        
+
       }
 }
