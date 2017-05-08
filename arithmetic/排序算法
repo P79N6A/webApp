@@ -1,0 +1,80 @@
+1.插入排序—直接插入排序
+  先将序列的第1个记录看成是一个有序的子序列，然后从第2个记录逐个进行插入，直至整个序列有序为止。
+  插入排序的时间复杂度和空间复杂度分别为
+  O(n*n ) 和 O(1)
+
+public class Test {
+    public static void main(String[] args) {
+        int a[] = {3, 1, 5, 7, 2, 4, 9, 6, 10, 8};
+        System.out.println("初始值：");
+        print(a);
+        insertSort(a);
+        System.out.println("\n排序后：");
+        print(a);
+    }
+    public static void print(int a[]) {
+        for (int i = 0; i < a.length; i++) {
+            System.out.print(a[i] + " ");
+        }
+    }
+    public static void insertSort(int[] a) {
+        for (int i = 1; i < a.length; i++) {//从头部第一个当做已经排好序的，把后面的一个一个的插到已经排好的列表中去。
+            if (a[i] < a[i - 1]) {
+                int x = a[i];//x为待插入元素
+                int j;
+                for (j = i - 1; j >= 0 && x < a[j]; j--) {
+                    //通过循环，逐个后移一位找到要插入的位置。
+                }
+                    a[j + 1] = a[j];
+                }
+                a[j + 1] = x;//插入
+            }
+        }
+    }
+}
+
+2.选择排序
+在要排序的一组数中，选出最小（或者最大）的一个数与第1个位置的数交换；然后在剩下的数当中再找最小（或者最大）的与第2个位置的数交换，依次类推，直到第n-1个元素（倒数第二个数）和第n个元素（最后一个数）比较为止。
+public class SimpleSelectSort {
+    public static void main(String[] args) {
+        int a[] = {3,1,5,7,2,4,9,6,10,8};
+        SimpleSelectSort  obj=new SimpleSelectSort();
+        System.out.println("初始值：");
+        obj.print(a);
+        obj.selectSort(a);
+        System.out.println("\n排序后：");
+        obj.print(a);
+    }
+    private void selectSort(int[] a) {
+        for(int i=0;i<a.length;i++){
+            int k=i;//k存放最小值下标。每次循环最小值下标+1
+            for(int j=i+1;j<a.length;j++){//找到最小值下标
+                if(a[k]>a[j])
+                    k=j;
+            }
+            swap(a,k,i);//把最小值放到它该放的位置上
+        }
+    }
+    public void print(int a[]){
+        for(int i=0;i<a.length;i++){
+            System.out.print(a[i]+" ");
+        }
+    }
+     public  void swap(int[] data, int i, int j) {
+            if (i == j) {
+                return;
+            }
+            data[i] = data[i] + data[j];
+            data[j] = data[i] - data[j];
+            data[i] = data[i] - data[j];
+        }
+}
+
+排序算法： 时间复杂度和空间复杂度
+    冒泡排序	O(n2)	    O(n2)		    O(1)
+    快速排序	O(n2)	    O(n*log2n)		O(log2n)~O(n)
+    选择排序	O(n2)	    O(n2)		    O(1)
+    二叉树排序	O(n2)	    O(n*log2n)		O(n)
+    插入排序    O(n2)	    O(n2)		    O(1)
+    堆排序	    O(n*log2n)	O(n*log2n)		O(1)
+    希尔排序	O	        O		        O(1)
