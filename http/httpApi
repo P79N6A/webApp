@@ -1,0 +1,55 @@
+//将json对象，以String方式
+1、public static JSONObject post(String url, JSONObject json) throws KeyStoreException {
+        HttpClient client = new DefaultHttpClient();
+        StringBuffer uriAPI = new StringBuffer();
+        uriAPI.append(url);
+        uriAPI.append("?").append("api_key").append("=").append("uiiiajdfjalalfal11aaad");
+        uriAPI.append("&").append("nonce").append("=").append("jnnlla");
+        uriAPI.append("&").append("sign").append("=").append("77CC5971CF492EE0537346AD1DCF1822BA173F15465786A714E2B5FD961A406D");
+
+        //加载证书
+        java.security.KeyStore trustStore = java.security.KeyStore.getInstance(java.security.KeyStore.getDefaultType());
+        try {
+            trustStore.load(new FileInputStream(new File("C:/Program Files/Java/jdk1.8.0_111/jre/lib/security/cacerts")), "changeit".toCharArray());
+            org.apache.http.conn.ssl.SSLSocketFactory socketFactory = new org.apache.http.conn.ssl.SSLSocketFactory(trustStore);
+            //不校验域名
+            socketFactory.setHostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            //一般为443
+            org.apache.http.conn.scheme.Scheme sch = new org.apache.http.conn.scheme.Scheme("https", socketFactory, 443);
+
+            client.getConnectionManager().getSchemeRegistry().register(sch);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableKeyException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+        HttpPost post = new HttpPost(uriAPI.toString());
+        JSONObject response = null;
+        String strResult = null;
+
+        try {
+            List<NameValuePair> list = Lists.newArrayList();
+            BasicNameValuePair bodyString = new BasicNameValuePair("bodyJsonString", json.toJSONString());
+            list.add(bodyString);
+            UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(list, HTTP.UTF_8);
+            post.setEntity(urlEncodedFormEntity);
+            HttpResponse res = client.execute(post);
+            if (res.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
+                strResult = EntityUtils.toString(res.getEntity());
+                System.out.println(" strResult == " + strResult);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return response;
+}
+
+2、在spring mvc端使用：@QueryParam来获得请求参数: 请求行的参数和body中的参数都可以获得.
+
+
