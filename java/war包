@@ -1,2 +1,5 @@
 解压war包
-jar xvf *.war
+    jar xvf *.war
+
+运行war包
+    java -jar mams-data-service-0.0.1-SNAPSHOT.war
