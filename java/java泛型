@@ -93,12 +93,12 @@ public class GenericDemo{
 
 六、泛型数组
 pubilc class GenericDemo{
-          public static void main(String[] args){
-                     Integer arr [] = {1,2,3,4}
-                     tell(arr);
-           }
+      public static void main(String[] args){
+             Integer arr [] = {1,2,3,4}
+             tell(arr);
 
-          public static <T> void tell(T arr[]){
 
-          }
+      public static <T> void tell(T arr[]){
+        
+      }
 }
