@@ -7,7 +7,7 @@
         uriAPI.append("&").append("nonce").append("=").append("jnnlla");
         uriAPI.append("&").append("sign").append("=").append("77CC5971CF492EE0537346AD1DCF1822BA173F15465786A714E2B5FD961A406D");
 
-        //加载证书
+        //加载证书 :  需要从浏览器上下载证书
         java.security.KeyStore trustStore = java.security.KeyStore.getInstance(java.security.KeyStore.getDefaultType());
         try {
             trustStore.load(new FileInputStream(new File("C:/Program Files/Java/jdk1.8.0_111/jre/lib/security/cacerts")), "changeit".toCharArray());
