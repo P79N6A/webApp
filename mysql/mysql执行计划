@@ -36,7 +36,8 @@
 
      extra：包含不适合在其他列中显示但十分重要的额外信息
         1 Using where：
-          表示MySQL服务器在存储引擎受到记录后进行“后过滤”（Post-filter）,如果查询未能使用索引，Using where的作用只是提醒我们MySQL将用where子句来过滤结果集
+          表示MySQL服务器在存储引擎受到记录后进行“后过滤”（Post-filter）,如果查询未能使用索引，
+          Using where的作用只是提醒我们MySQL将用where子句来过滤结果集
         2 Using temporary：
           表示MySQL需要使用临时表来存储结果集，常见于排序和分组查询；
         3 Using filesort：
