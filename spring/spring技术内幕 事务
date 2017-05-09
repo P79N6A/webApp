@@ -29,17 +29,23 @@
           在完成以上的准备工作后，经过TransactionProxyFactoryBean的aop包装，此时如果对目标对象进行调用，起作用的对象是一个Proxy对象。
 
   3 声明式事务处理
-      1 事务的创建
+      (1) 事务的创建
         spring是如何根据当前的事务状态和事务属性配置完成事务创建的。
         TransactionStatus和TransactionInfo，这两个对象持有的数据是事务处理器对事务进行处理的主要依据。
         事务创建结果是生成一个TransactionStatus对象，通过这个对象来保存事务处理需要的基本信息，这个对象与前面提到过的TransactionInfo对象联系在一起
         TransactionStatus是TransactionInfo的一个属性，然后会把TransactionInfo保存在ThreadLocal对象里，
         这样当前线程可以通过ThreadLocal对象取得TransactionInfo，以及与这个事务对应的TransactionStatus对象，从而把事务的处理信息与调用事务方法的当前线程绑定起来。
 
-      2 相对于创建全新事务的另一种情况，在创建当前事务时，线程中已经由事务存在了，这种情况同样需要处理，会涉及事务传播属性的具体处理。
+      (2) 相对于创建全新事务的另一种情况，在创建当前事务时，线程中已经由事务存在了，这种情况同样需要处理，会涉及事务传播属性的具体处理。
         7种传播行为
 
+      (3) 事务的挂起： suspend
 
+      (4) 事务提交：commit
+
+      (5) 事务的回滚：
+
+  4 事务处理器
 
 
 
