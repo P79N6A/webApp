@@ -1,23 +1,22 @@
 Spring事务管理器：
 	统一管理事务，JDBC,Hibernate,Mybatis一致的是管理数据源的
 
-一 事务传播 :
-	当在一个事务中，调用另一个事务时
+一 事务传播 : 在handleExistingTransaction实现
+	当在一个事务中，调用另一个事务时:
 	Propagation.MANDATORY 。
 		当前方法必须在已经定义的Transaction中运行，如果没有已定义的Transaction则抛出异常。
-	Propagation.NESTED 。
-		如果没有已定义的Transaction，当前方法新开一个Transaction并在该Transaction中运行。如果存在已定义的Transaction，当前方法在嵌套事务(Nested Transaction)中运行 — 嵌套事务中可以定义储存点，
-		因此可以独立于外部的Transaction而进行rollback。
 	Propagation.NEVER 。
-		当前方法不应在Transaction中运行，如果存在已经定义的Transaction则抛出异常。
+    	当前方法不应在Transaction中运行，如果存在已经定义的Transaction则抛出异常。
+	Propagation.NESTED 。
+		支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，就新建一个事务。
 	Propagation.NOT_SUPPORTED 。
 		当前方法不应在Transaction中运行，如果存在已经定义的Transaction，则该Transaction暂停(挂起)直至该方法运行完毕。
 	Propagation.REQUIRED 。
-		默认值 。当前方法必须在Transaction中运行。如果存在已经定义的Transaction，则该方法在已定义的Transaction中运行；如果不存在已经定义的Transaction，则该方法新开一个Transaction并在其中运行。
+		支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。
 	Propagation.REQUIRES_NEW 。
-		当前方法必须在新开的Transaction中运行。如果存在已经定义的Transaction，则该已定义的Transaction暂停直至新开的Transaction执行完毕。
+		新建事务，如果当前存在事务，把当前事务挂起。
 	Propagation.SUPPORTS 。
-		当前方法不需要在Transaction中运行，但如果存在已经定义的Transaction，则该方法也可以在Transaction中正常执行。
+		支持当前事务，如果当前没有事务，就以非事务方式执行。
 
 具体事例
 @Service("bookShopService")

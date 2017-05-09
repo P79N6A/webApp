@@ -5,28 +5,42 @@
     织入进来。
 
 一 spring 声明式事务
-1 声明式事务处理的实现大致分为以下几个部分
-  (1)读取和处理在ioc容器中配置的事务处理属性,并转化为spring事务处理需要的内部数据结构。
-     这里涉及的类是TransactionAttributeSourceAdvisor,它是一个通知器，Spring使用这个通知器来生成TransactionAttribute对象。
-     这些属性对象是和TransactionProxyFactoryBean拦截下来的事务方法结合起来。
+  1 声明式事务处理的实现大致分为以下几个部分
+      (1)读取和处理在ioc容器中配置的事务处理属性,并转化为spring事务处理需要的内部数据结构。
+         这里涉及的类是TransactionAttributeSourceAdvisor,它是一个通知器，Spring使用这个通知器来生成TransactionAttribute对象。
+         这些属性对象是和TransactionProxyFactoryBean拦截下来的事务方法结合起来。
 
-  (2)spring事务处理模块实现统一的事务处理过程. 这个通用的事务过程包含处理事务配置属性,以及与线程绑定完成事务处理的过程
-     spring通过TransactionInfo和TransactionStatus这两个数据对象，在事务处理过程中记录和传递相关执行场景。
+      (2)spring事务处理模块实现统一的事务处理过程. 这个通用的事务过程包含处理事务配置属性,以及与线程绑定完成事务处理的过程
+         spring通过TransactionInfo和TransactionStatus这两个数据对象，在事务处理过程中记录和传递相关执行场景。
 
-  (3)spring事务处理实现,spring委托给具体的事务处理器来完成。
+      (3)spring事务处理实现,spring委托给具体的事务处理器来完成。
 
 
-2 实现分析
-  (1) 事务处理拦截器的配置
-      在Ioc容器进行注入的时候,会创建TransactionIntercepter对象,而这个对象会创建一个TranscationAttriburePointcut,为读取TransactionAttribute做准备.
-      在容器初始化的过程中,会实例化一个ProxyFactory,建立sping aop的应用.会为这个proxyFactory设置通知,目标对象,并最终返回proxy代理对象。
-      在proxy代理对象建立起来后,在调用其代理方法的时候,会调用相应的TransactionIntercepter拦截器. 会根据TransactionAttribute配置的事务属性进行配置.从而为事务处理做好准备。
+  2 实现分析
+      (1) 事务处理拦截器的配置
+          在Ioc容器进行注入的时候,会创建TransactionIntercepter对象,而这个对象会创建一个TranscationAttriburePointcut,为读取TransactionAttribute做准备.
+          在容器初始化的过程中,会实例化一个ProxyFactory,建立sping aop的应用.会为这个proxyFactory设置通知,目标对象,并最终返回proxy代理对象。
+          在proxy代理对象建立起来后,在调用其代理方法的时候,会调用相应的TransactionIntercepter拦截器. 会根据TransactionAttribute配置的事务属性进行配置.从而为事务处理做好准备。
 
-  (2) 事务处理配置的读入
-      在aop配置完成的基础上,以TransactionAttributeSourceAdvisor的实现为入口
+      (2) 事务处理配置的读入
+          在aop配置完成的基础上,以TransactionAttributeSourceAdvisor的实现为入口
 
-  (3) 事务处理拦截器的设计与实现
-      在完成以上的准备工作后，经过TransactionProxyFactoryBean的aop包装，此时如果对目标对象进行调用，起作用的对象是一个Proxy对象。
+      (3) 事务处理拦截器的设计与实现
+          在完成以上的准备工作后，经过TransactionProxyFactoryBean的aop包装，此时如果对目标对象进行调用，起作用的对象是一个Proxy对象。
 
-3 声明式事务处理
-  (
+  3 声明式事务处理
+      1 事务的创建
+        spring是如何根据当前的事务状态和事务属性配置完成事务创建的。
+        TransactionStatus和TransactionInfo，这两个对象持有的数据是事务处理器对事务进行处理的主要依据。
+        事务创建结果是生成一个TransactionStatus对象，通过这个对象来保存事务处理需要的基本信息，这个对象与前面提到过的TransactionInfo对象联系在一起
+        TransactionStatus是TransactionInfo的一个属性，然后会把TransactionInfo保存在ThreadLocal对象里，
+        这样当前线程可以通过ThreadLocal对象取得TransactionInfo，以及与这个事务对应的TransactionStatus对象，从而把事务的处理信息与调用事务方法的当前线程绑定起来。
+
+      2 相对于创建全新事务的另一种情况，在创建当前事务时，线程中已经由事务存在了，这种情况同样需要处理，会涉及事务传播属性的具体处理。
+        7种传播行为
+
+
+
+
+
+
