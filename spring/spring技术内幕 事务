@@ -15,7 +15,6 @@
 
       (3)spring事务处理实现,spring委托给具体的事务处理器来完成。
 
-
   2 实现分析
       (1) 事务处理拦截器的配置
           在Ioc容器进行注入的时候,会创建TransactionIntercepter对象,而这个对象会创建一个TranscationAttriburePointcut,为读取TransactionAttribute做准备.

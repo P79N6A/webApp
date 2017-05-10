@@ -1,0 +1,13 @@
+一、web环境中的mvc
+    spring ioc是一个独立的模块，它并不是直接在web容器中发挥作用的，如果要在web环境中使用ioc容器，需要spring为ioc设计
+    一个启动过程，把ioc容器导入，并在web容器中建立起来。
+
+二、上下文在web容器中的启动
+   1、Ioc容器启动的基本过程 : ContextLoaderListener ->　ContextLoader -> XmlWebApplicationContext
+      ContextLoader完成两个Ioc容器建立的过程： 一个是在web容器中建立起双亲ioc容器，另一个是生成相应的WebApplicationContext并将其初始化。
+      Spring为web应用提供了上下文的扩展接口WebApplicationContext来满足启动过程的需要。
+
+
+
+
+
