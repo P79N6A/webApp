@@ -7,6 +7,9 @@
       ContextLoader完成两个Ioc容器建立的过程： 一个是在web容器中建立起双亲ioc容器，另一个是生成相应的WebApplicationContext并将其初始化。
       Spring为web应用提供了上下文的扩展接口WebApplicationContext来满足启动过程的需要。
 
+三、Spring mvc
+    DispatcerServlet可以看成是Spring MVC实现中最为核心的部分，它的设计与分析也是下面分析Spring MVC的一条主线。
+
 
 
 
