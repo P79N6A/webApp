@@ -1,0 +1,49 @@
+一级缓存：作用于session，session的缓存由hibernate维护， 用户不能操作缓存内容
+    如果想操作缓存内容，必须通过hibernate提供的evit/clear方法操作。
+    public void test5()throws Exception{
+            Session session = sf.openSession();
+            session.beginTransaction();
+
+            User user = new User();
+            user.setUserName("林黛玉");
+            session.save(user);
+            user.setUserName("嘉宝");
+            session.save(user);
+            session.getTransaction().commit();
+            session.close();
+    }
+    由于一级缓存的作用，user对象只会被保存一次
+
+二级缓存：作用于session-factory,可以跨多个session，即不同的session都可以访问缓存数据。
+    <property name="hibernate.cache.use_second_level_cache">true</property>
+    <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+    <!-- 开启查询缓存 -->
+    <property name="hibernate.cache.use_query_cache">true</property>
+
+    使用二级缓存：
+　　如果设置了查询缓存，需要手动设置setCacheable(true)。
+
+    public void test1(){
+        Session session = sf.openSession();
+        session.beginTransaction();
+        //setCacheable 指定从二级缓存中找，或放入二级缓存，针对list不从一级缓存中取数据的情况
+        //从缓存中读数据，查询条件必须一致
+        //缓存机制为Map<条件，结果>
+        Query query = session.createQuery("from Dept").setCacheable(true);
+        System.out.println(query.list());
+
+        session.getTransaction().commit();
+        session.close();
+
+        Session session1 = sf.openSession();
+        session1.beginTransaction();
+
+        query = session1.createQuery("from Dept").setCacheable(true);
+        System.out.println(query.list());
+
+        session1.getTransaction().commit();
+        session1.close();
+    }
+
+使用注意
+    get和load ： get是立即查询，load默认使用懒加载，当用到数据的时候才向数据库查询

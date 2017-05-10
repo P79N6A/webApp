@@ -1,3 +1,8 @@
+第3章: 元数据
+一、域模型元数据
+    1、@Entity
+    2、@cache : 用于设置二级缓存
+    3、@Transient
 1、hibernate与mysql字段类型对应关系
 映射类型    Java类型                                Mysql类型
 timestamp	java.util.Date or java.sql.Timestamp	TIMESTAMP
