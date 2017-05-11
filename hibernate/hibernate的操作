@@ -1,0 +1,22 @@
+一、Session
+    session.save(对象)
+    session.delete(对象)
+    session.load(Student.class, 1);//是会延时加载
+    session.get(Student.class, 1);//不会延时加载
+    session.update(对象)
+        1. 用来更新离线(detached)对象，更新完成后转为persistent状态
+        2. 更新瞬时(transient)对象会报错
+        3. 持久化(persistent)状态的对象只要设定不同字段就会发生更新
+    session.flush();
+        1. 当session的事务提交后,会强制将内存(session缓存)与数据库同步。
+
+二、Query查询接口
+
+三、关系映射
+
+
+
+
+
+
+

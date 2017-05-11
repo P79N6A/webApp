@@ -10,5 +10,7 @@
 
     3、离线状态:数据库中有，但是session中不存在该对象。
 
+(2)hibernate三种对象状态
+   1、User user=new User()一个对象时
 
 
