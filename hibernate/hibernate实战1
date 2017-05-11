@@ -2,11 +2,45 @@
 一、域模型元数据
     1、@Entity
     2、@cache : 用于设置二级缓存
-    3、@Transient
+    3、@Transient : 不会持久化
+
+二、映射持久化类
+    1、配置键生成器：
+       GenerationType.AUTO , GenerationType.SEQUENCE , GenerationType.INDENTITY , GenerationType.TABLE
+
+    2、@Column(nullable=false,unique=true)
+       unique=true是指这个字段的值在这张表里不能重复，所有记录值都要唯一，就像主键那样
+       nullable=false是这个字段在保存时必需有值，不能还是null值就调用save去保存入库
+
+    3、@Access
+        默认使用property，即使用get/set 方法访问属性;
+        默认使用field，   即绕过get/set 方法，直接使用反射访问字段属性;
+
+    4、@Formula 使用派生属性
+       在每次从数据库检索item实体时，进行计算
+       @Formula("MONTHLY_SALARY*12")
+       private float yearlySalary;
+
+    5、@ColumnTransformer : SQL表达式记性计算
+       @Column(name = "IMPERIALWEIGHT")
+       @org.hibernate.annotations.ColumnTransformer(
+          read = "IMPERIALWEIGHT / 2.20462",
+          write = "? * 2.20462"
+       )
+       protected double metricWeight;
+
+    6、@Embedded : 相当于把其他实体的字段，映射过来
+       Husband(id,name,wife)
+
+       Wife(name,age):在Husband的wife属性上建立注解@Embedded,表明该对象是从别的位置嵌入过来的,是不需要单独映射的表.
+       这种方式生成的表为husband(id,name,wifename,wifeage),不会生成wife表.
+
+
+
 1、hibernate与mysql字段类型对应关系
-映射类型    Java类型                                Mysql类型
-timestamp	java.util.Date or java.sql.Timestamp	TIMESTAMP
-integer	    int or java.lang.Integer	            INTEGER
-long	    long or java.lang.Long	                BIGINT
-string	    java.lang.String	                    VARCHAR
-double	    double or java.lang.Double	            DOUBLE
+    映射类型    Java类型                                Mysql类型
+    timestamp	java.util.Date or java.sql.Timestamp	TIMESTAMP
+    integer	    int or java.lang.Integer	            INTEGER
+    long	    long or java.lang.Long	                BIGINT
+    string	    java.lang.String	                    VARCHAR
+    double	    double or java.lang.Double	            DOUBLE

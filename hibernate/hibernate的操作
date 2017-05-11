@@ -11,6 +11,17 @@
         1. 当session的事务提交后,会强制将内存(session缓存)与数据库同步。
 
 二、Query查询接口
+    HQL:
+        步骤一：获得Query对象：Query query=s.createQuery(“HQL语句”);
+        步骤二：为参数赋值：query.setXXX();
+        步骤三：获得List对象：LIST list=query.list(); 说明，除了此方法外，Query
+                接口还有一个常用的方法uniqueResult，如果明确查询的结果只有一个，便选择使用此方法。如果查询结果有多个使用此方法会报异常。
+    QBC:
+        步骤一： 获得Criteria对象：Criteria criteria = s.createCriteria(User.class);
+        步骤二： 封装查询条件为一个Criterion对象：Criterion cr = Expression.eq("name", "new name");
+                 或者 Criterion cr=Restrictions.eq("name","new name");
+        步骤三： 获得带查询条件的Criteria对象：criteria.add(cr); 执行此步才使这个对象具有一个条件限制的查询操作。
+        步骤四: List clist = criteria.list(); 也可以直接返回一个User对象：User user=(User) criteria.uniqueResult();
 
 三、关系映射
 
