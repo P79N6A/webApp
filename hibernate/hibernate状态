@@ -11,6 +11,10 @@
     3、离线状态:数据库中有，但是session中不存在该对象。
 
 (2)hibernate三种对象状态
-   1、User user=new User()一个对象时
+   1、User user=new User()一个对象时,它表示创建一个瞬时对象；
+      当调用save(user)方法，这个对象成为持久对象，直到事务提交，数据库连接关闭。在save方法后，事务提交前，user.set**()方法，也会保存，采取对数据更新操作。
+      会执行1条insert 和 update 方法。
+
+
 
 

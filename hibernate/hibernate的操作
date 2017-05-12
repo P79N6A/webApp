@@ -25,17 +25,123 @@
 
 三、关系映射
     1、多对一 : 一个部门有可以有多个员工，而一个员工只属于一个部门
+    Department配置
+        public class Department {
+            private int id;
+            private String name;
 
-    public class Department {
-        private int id;
-        private String name;
+            public int  getId() {   return id;   }
+            public void setId(int id) {   this.id = id;  }
 
-        public int  getId() {   return id;   }
-        public void setId(int id) {   this.id = id;  }
+            public String getName() { return name;  }
+            public void setName(String name) {  this.name = name; }
+        }
+        <hibernate-mapping package="com.asm.hibernate.domain">
+            <class name="Department">
+                <id name="id">
+                    <generator class="native" />
+                </id>
+                <property name="name"></property>
+            </class>
+        </hibernate-mapping>
 
-        public String getName() { return name;  }
-        public void setName(String name) {  this.name = name; }
-    }
+    Employee配置
+        public class Employee {
+            private int id;
+            private String name;
+            private Department depart;
+
+            public int getId() {
+                return id;
+            }
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+           public void setName(String name){   
+                this.name = name; 
+          }
+
+           public Department getDepart() {
+                return depart;
+           }
+
+          public void setDepart(Department depart) {
+               this.depart = depart;
+          }
+        }
+        <hibernate-mapping package="com.asm.hibernate.domain">
+            <class name="Employee">
+                <id name="id">
+                    <generator class="native" />
+                </id>
+                <property name="name"></property>
+                <many-to-one name="depart" column="depart_id" />
+            </class>
+        </hibernate-mapping>
+
+
+    2、一对多关系映射:如果一个部门有多个员工，则用“一对多”的关系来表示这个关系
+       Department配置
+        增加private Set<Employee> emps; 及相应的get/set方法。
+        增加配置属性：
+            <set name="emps">  
+                <key column="depart_id"></key>  
+                <one-to-many class="Employee"/> 
+            </set>
+
+
+    3、一对一映射：一个人有一个身份证，而一个身份证只属于某一个人
+       Person 配置
+           public class Person{
+                private int id;  
+                private String name;  
+                private IdCard idCard; 
+           }
+           <hibernate-mapping package="com.asm.hibernate.domain">
+                <class name="Person">
+                    <id name="id">    
+                        <generator class="native"/>
+                    </id>
+                    <property name="name"></property>
+                    <one-to-one name="idCard"></one-to-one>
+                </class>
+           </hibernate-mapping>
+
+       IdCard 配置
+            public class IdCard {  
+                private int id;  
+                private Date validity;  
+                private Person person;  
+            }
+
+           <hibernate-mapping package="com.asm.hibernate.domain">  
+                <class name="IdCard">   
+                    <id name="id">    
+                        <generator class="foreign">     
+                            <param name="property">person</param> 
+                        </generator> 
+                  </id> 
+                   <property name="validity"></property> 
+                    <one-to-one name="person" constrained="true"></one-to-one> 
+              
+                </class> 
+           </hibernate-mapping> 
+
+       配置文件说明：
+            由于上面提到的是采取主键关联，即是说这里的id即是主键，同时也是（关联相关表的）外键，
+            因此，以下对id的生成采取了”foreign”方式，其实这种方式也就指明了主键同时为外键。下面的<param>指定了外键的参考信息，
+            此元素中的内容指明了它参考<one-to-one>的person。 注意在<one-to-one name="person" constrained="true">中设定了constrained属性，
+            其作用是说明该配置文件所映射表的主键同时作为外键，参照关联类对应表的主键。
+
+
+
+
+
 
 
 
