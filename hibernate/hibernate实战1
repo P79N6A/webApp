@@ -1,4 +1,4 @@
-第3章: 元数据
+第1部分
 一、域模型元数据
     1、@Entity
     2、@cache : 用于设置二级缓存
@@ -30,17 +30,43 @@
        protected double metricWeight;
 
     6、@Embedded : 相当于把其他实体的字段，映射过来
-       Husband(id,name,wife)
+            Husband(id,name,wife)
+            Wife(name,age):在Husband的wife属性上建立注解@Embedded,表明该对象是从别的位置嵌入过来的,是不需要单独映射的表
+            这种方式生成的表为husband(id,name,wifename,wifeage),不会生成wife表
+            @Attributeoverrides : 可以重写嵌入进来的属性
 
-       Wife(name,age):在Husband的wife属性上建立注解@Embedded,表明该对象是从别的位置嵌入过来的,是不需要单独映射的表.
-       这种方式生成的表为husband(id,name,wifename,wifeage),不会生成wife表.
+ 三 映射转换
+    1、hibernate与mysql字段类型对应关系
+        映射类型    Java类型                                Mysql类型
+        timestamp	java.util.Date or java.sql.Timestamp	TIMESTAMP
+        integer	    int or java.lang.Integer	            INTEGER
+        long	    long or java.lang.Long	                BIGINT
+        string	    java.lang.String	                    VARCHAR
+        double	    double or java.lang.Double	            DOUBLE
 
+    2、转换基本属性值：AttributeConverter
 
+第2部分
+一 映射继承关系
+   @MappedSuperClass
+   public abstract class BillingDetails{
+        @NotNull
+        protected String owner;
+   }
 
-1、hibernate与mysql字段类型对应关系
-    映射类型    Java类型                                Mysql类型
-    timestamp	java.util.Date or java.sql.Timestamp	TIMESTAMP
-    integer	    int or java.lang.Integer	            INTEGER
-    long	    long or java.lang.Long	                BIGINT
-    string	    java.lang.String	                    VARCHAR
-    double	    double or java.lang.Double	            DOUBLE
+   @Entity
+   @AttributeOverride(
+        name="owner",
+        column =@Column(name="CC_OWNER",nullable =false)
+   )
+   public class CreditCard extends BillingDetails{
+        @Id
+        @GeneratedValue(generator = Constants.ID_GENERATOR)
+        protected Long id;
+
+        @NotNull
+        protected String cardNumber;
+
+        @NotNull
+        protected String expMonth;
+   }
