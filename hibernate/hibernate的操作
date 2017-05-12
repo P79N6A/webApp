@@ -24,6 +24,20 @@
         步骤四: List clist = criteria.list(); 也可以直接返回一个User对象：User user=(User) criteria.uniqueResult();
 
 三、关系映射
+    1、多对一 : 一个部门有可以有多个员工，而一个员工只属于一个部门
+
+    public class Department {
+        private int id;
+        private String name;
+
+        public int  getId() {   return id;   }
+        public void setId(int id) {   this.id = id;  }
+
+        public String getName() { return name;  }
+        public void setName(String name) {  this.name = name; }
+    }
+
+
 
 
 
