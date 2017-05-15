@@ -235,6 +235,34 @@
     2. bag集合的使用
 
 
+五、级联关系
+    1、级联操作（cascade）
+    cascade可以在<set><list><bag><map>中进行配置
+    例如
+    Set<Employee> emps = new HashSet<Employee>();
+        emps.add(emp1);
+        emps.add(emp2);
+        epart.setEmps(emps);
+    当保存epart时会保错，因为emp1和emp2还没有保存，如果想进行级联操作，只需要<set>配置中增加cascade属性,比如我们现在Department.hbm.xml 的<set>元素下增加cascade="save-update"属性后，再来执行会发现正常.
+
+    2、维护关系（inverse）
+      所以通常在关联关系中，我们总是会让“多”这方来维护关系，而让“一”这方放弃维护关系
+      因此我们需要在“一”的一方配置“inverse”属性，让它来放弃维护关系
+      修改Department.hbm.xml文件，在<set>元素下增加“inverse="true"”属性后，再来执行“OneToManyTest”
+
+六、懒加载:通过代理（proxy）机制来实现延迟加载
+    它的具体过程：Hibernate丛数据库获取某一个对象数据时、获取某一个对象的集合属性值时，或获取某一个对象所关联的另一个对象时，由于没有使用该对象的数据，hibernate并不是数据库加载真正的数据，而只是为该对象创建一个代理对象来代表这个对象，这个对象上的所有属性都是默认值；只有在真正需要使用该对象的数据时才创建这个真实对象，真正从数据库中加载它的数据，这样在某些情况下，就可以提高查询效率。
+
+    Hibernate中默认采用延迟加载的情况主要有以下几种
+        1,当调用session上的load()加载一个实体时，会采用延迟加载。
+        2，当session加载某个实体时，会对这个实体中的集合属性值采用延迟加载
+        3当session加载某个实体时，会对这个实体所有单端关联的另一个实体对象采用延迟加载。
+
+    fetch:与懒加载配置使用
+    
+
+
+
 
 
 
