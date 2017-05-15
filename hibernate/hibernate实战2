@@ -1,0 +1,32 @@
+一、延时加载
+（1）、get方法：
+   1 Session session=HibernateUtil.getSession();
+   2 Book book =(Book) session.get(Book.class,2);
+   3 System.out.println(book.getName());
+   在执行get的时候，控制台打印sql语句，执行第三行时打印书名
+（2）、load方法：
+   1 Session session=HibernateUtil.getSession();
+   2 Book book =(Book) session.load(Book.class,1);
+   3 System.out.println(book.getName());
+   当执行完第二行代码还未执行第三行时,控制台什么都没有打印,而是生成一个代理对象，执行第三行时,控制台打印出sql语句和书名"斗破苍穹".
+
+  get/load方法还有一个很重要的区别就是:
+  　　load方式检索不到的话会抛出org.hibernate.ObjectNotFoundException异常
+  　　get方法检索不到的话会返回null
+
+二、抓取策略
+    指定关联对象抓取的方式，可以设置fetch = "select" 和 fetch = "join"
+    select方式：先查询返回要查询的主体对象（列表），再根据关联外键id，每一个对象发一个select查询，获取关联的对象，形成n+1次查询。
+    join方式：  主体对象和关联对象用一句外键关联的sql同时查询出来，不会形成多次查询。
+
+    在映射文档中定义的抓取策略将会有产生以下影响：
+   （1）通过get()或load()方法取得数据。
+   （2）只有在关联之间进行导航时，才会隐式的取得数据(延迟抓取)。
+   （3）在映射文档中显式的声明连接抓取做为抓取策略并不会影响到随后的HQL查询。
+
+    lazy 和fetch配合使用：
+
+    1、当lazy="true" fetch = "select" 的时候 ， 这个时候是使用了延迟策略，开始只查询出一端实体，多端的不会查询，只有当用到的时候才会发出sql语句去查询 ；
+    2、当lazy="false" fetch = "select" 的时候 ， 这个时候是使没有用延迟策略，同时查询出一端和多端，同时产生1+n条sql.
+    3、当lazy="true"/lazy="false" fetch = "join"的时候，自己认为这个时候延迟已经没有什么用了，因为采用的是外连接查询，同时把一端和多端都查询出来了，延迟没有起作用。
+
