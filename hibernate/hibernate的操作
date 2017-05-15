@@ -96,6 +96,7 @@
 
 
     3、一对一映射：一个人有一个身份证，而一个身份证只属于某一个人
+       这里采取主键关联，这里的id即是主键，同时也是外键，因此以下id的生成采取了foreign方式，其实这种方式也就指明了主键同时为外键.
        Person 配置
            public class Person{
                 private int id;  
@@ -137,6 +138,110 @@
             因此，以下对id的生成采取了”foreign”方式，其实这种方式也就指明了主键同时为外键。下面的<param>指定了外键的参考信息，
             此元素中的内容指明了它参考<one-to-one>的person。 注意在<one-to-one name="person" constrained="true">中设定了constrained属性，
             其作用是说明该配置文件所映射表的主键同时作为外键，参照关联类对应表的主键。
+
+       外键关联：
+            <hibernate-mapping package="com.asm.hibernate.domain">  
+                <class name="IdCard">   
+                    <id name="id">    
+                        <generator class="native" /> 
+                  </id> 
+                  <property name="validity">
+                    </property> 
+                    <many-to-one name="person" column="person_id" unique="true" /> 
+                </class>
+            </hibernate-mapping>
+            说明：由于采取了外键关联，所以这里的从表的主键将不再作为外键参考主表的主键，所以它会采取一般的方式生成主键，
+            即<id>生成和以前的那此相同采取“native”方式。另注意到< many-to-one >,发现增加了unique有属性，这样尽管是多对一，但能有效保证实质是一对一。
+
+4、多对多关系映射:一个学生可以有多个老师，同样一个老师可以有多个学生 ：需要一个中间表
+   Student 配置
+       public class Student {  
+            private int id;  
+            private String name; 
+           private Set<Teacher> teachers;  
+       }
+
+       <hibernate-mapping package="com.asm.hibernate.domain">  
+            <class name="Student"> 
+                <id name="id">    
+                   <generator class="native"/> 
+              </id> 
+              <property name="name"></property> 
+              <set name="teachers" table="teacher_student">    
+                        <key column="student_id"/> 
+                        <many-to-many class="Teacher" column="teacher_id"/> 
+                </set> 
+             </class>
+       </hibernate-mapping>
+
+       这里重点说明最后的<set>配置
+       （1）Student中Set类型的属性配置一个<set>元素，其实在前面的一对多中已经出现了<set>元素的配置，<set>中的table属性为关联表的名称。 
+       （2）它的子元素<key>中的column为关联表中以该映射文件所映射的表的主键为外键的字段名称. 
+       （3）<many-to-many> column属性为关联表中以欲关联类对应表的主键为外键的字段名称。
+
+   Teacher 配置
+       public class Teacher{
+            private int id;  
+            private String name; 
+           private Set<Student> students;  
+       }
+
+       <hibernate-mapping package="com.asm.hibernate.domain">  
+            <class name="Teacher">   
+                <id name="id">    
+                    <generator class="native"/> 
+              </id> 
+              <property name="name"></property>    
+              <set name="students" table="teacher_student">
+                    <key column="teacher_id" /> 
+                    <many-to-many class="Student" column="student_id"/> 
+                </set> 
+            </class> 
+       </hibernate-mapping>
+
+5、组件关系映射 : 每个人有不同的名字，或者多个人可以是同一个名字，对于这种现象可以是“一个一”或者“多对一”，这样会被设计成两张表来映射，
+而我们采用组件关系来映射就可以在一张表中映射实现
+    public class Name {
+        private String firstName;
+        private String secondName;
+    }
+    public class People {
+        private int id;
+        private Name name;
+    }
+
+    <hibernate-mapping   package="com.asm.hibernate.domain">
+        <class name="People">
+            <id name="id">
+                <generator class="native"/>
+            </id>
+            <component name="name">
+                <property name="firstName" column="first_name"></property>
+                <property name="secondName" column="second_name"></property>
+            </component>
+        </class>
+    </hibernate-mapping>
+
+四、其他集合类型 :
+    在Hibernate中set、list、Bag、Map这三种集合类型
+    1. list集合的使用:
+        <list name="emps">
+            <key column="depart_id" />
+            <!-- 保证顺序 -->
+            <list-index column="order_by" />
+            <one-to-many class="Employee" />
+        </list>
+
+    2. bag集合的使用
+
+
+
+
+
+
+
+
+
 
 
 
