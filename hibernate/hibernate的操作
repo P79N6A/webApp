@@ -274,7 +274,8 @@
         配置第三方缓存机制
         两种方式指定要缓存的实体类
 
-
+hibernate使用知识点总结：
+http://www.open-open.com/lib/view/open1329299027234.html
 
 
 
