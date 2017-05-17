@@ -1,0 +1,69 @@
+// 当应用程序类加载器、扩展类加载器、启动类加载器（jvm）都加载不到时，可以自定义类加载器
+   自定义的ClassLoader不想打破双亲委派模型，所以自定义的ClassLoader继承自java.lang.ClassLoader并且只重写findClass方法
+
+public class MyClassLoader extends ClassLoader
+{
+    public MyClassLoader(){
+    }
+
+    public MyClassLoader(ClassLoader parent)
+    {
+        super(parent);
+    }
+
+    protected Class<?> findClass(String name) throws ClassNotFoundException
+    {
+        File file = getClassFile(name);
+        try
+        {
+            byte[] bytes = getClassBytes(file);
+            Class<?> c = this.defineClass(name, bytes, 0, bytes.length);
+            return c;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return super.findClass(name);
+    }
+
+    private File getClassFile(String name)
+    {
+        File file = new File("D:/Person.class");
+        return file;
+    }
+
+    private byte[] getClassBytes(File file) throws Exception
+    {
+        // 这里要读入.class的字节，因此要使用字节流
+        FileInputStream fis = new FileInputStream(file);
+        FileChannel fc = fis.getChannel();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        WritableByteChannel wbc = Channels.newChannel(baos);
+        ByteBuffer by = ByteBuffer.allocate(1024);
+
+        while (true)
+        {
+            int i = fc.read(by);
+            if (i == 0 || i == -1)
+                break;
+            by.flip();
+            wbc.write(by);
+            by.clear();
+        }
+
+        fis.close();
+
+        return baos.toByteArray();
+    }
+}
+
+注意
+.class和getClass()的区别
+
+最后讲解一个内容，.class方法和getClass()的区别，这两个比较像，我自己没对这两个东西总结前，也常弄混。它们二者都可以获取一个唯一的java.lang.Class对象，但是区别在于：
+
+1、.class用于类名，getClass()是一个final native的方法，因此用于类实例
+
+2、.class在编译期间就确定了一个类的java.lang.Class对象，但是getClass()方法在运行期间确定一个类实例的java.lang.Class对象
