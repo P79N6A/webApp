@@ -45,35 +45,40 @@ InetAddress localHost = InetAddress.getLocalHost();
 1 可以通过getHostName(),getCanonicalHostName(),getAddress(),getHostAddress(),将主机名作为字符串返回
 2 缓存,InetAddress会缓存查找结果
 3 InetAddress对象是否符合某个标准
-isAnyLocalAddress,是否是通配地址
-isLoopbackAddress,是否是回送地址
-isLinkLocalAddress,是否是一个Ipv6本地链接地址
-isSiteLocalAddress,是否是一个IPv6本地网站地址
-isMulticastAddress,是否是一个组播地址
-isMCGlobal,是否全球组播地址
-isMCOrgLocal,是否是组织范围地址
-isMCSiteLocal,是否是网站范围组播地址
-isMCLinkLocal,是一个子网范围组播地址
-isMCNodeLocal,是否本地接口组播地址
+    isAnyLocalAddress,是否是通配地址
+    isLoopbackAddress,是否是回送地址
+    isLinkLocalAddress,是否是一个Ipv6本地链接地址
+    isSiteLocalAddress,是否是一个IPv6本地网站地址
+    isMulticastAddress,是否是一个组播地址
+    isMCGlobal,是否全球组播地址
+    isMCOrgLocal,是否是组织范围地址
+    isMCSiteLocal,是否是网站范围组播地址
+    isMCLinkLocal,是一个子网范围组播地址
+    isMCNodeLocal,是否本地接口组播地址
 
 4 测试可达性(能否建立一个网络链接)
-isReachable 方法
+    InetAddress address = InetAddress.getByName(ip);
+    isReachable 方法
+    判断本地机器与ip机器的连通性
 
 5 覆盖Object方法: equals,hashcode,toString
-equals 比较的是InetAddress的ip地址
+    equals 比较的是InetAddress的ip地址
 
+ 6、NetworkInterface
 四 URL
 1  相对路径 再浏览 http://www.ibiblio.org/javafaq/javatutorial.html时,单击超链接<a href="javafaq.html">
-会跳转http://www.ibiblio.org/javafaq/javafaq.html
+   会跳转http://www.ibiblio.org/javafaq/javafaq.html
+
 2  绝对路径 还是浏览上面的页面,单击<a href="/projects/ipv6">
-会跳转http://www.ibiblio.org/projects/ipv6
-3  支持的协议包括
-http,https,ftp,mailto,file,jar
+   会跳转http://www.ibiblio.org/projects/ipv6
+
+3  支持的协议包括 : http,https,ftp,mailto,file,jar
+
 4  openStream方法(从URL获取数据)
-URL url = new URL("http://www.lolcats.com");
+    URL url = new URL("http://www.lolcats.com");
     try {
-            System.out.write(c);
-              InputStream inputStream = url.openStream();
+        System.out.write(c);
+        InputStream inputStream = url.openStream();
         int c;
         while ((c = inputStream.read())!=-1)
         inputStream.close();
@@ -96,11 +101,20 @@ URL url = new URL("https://www.jd.com");
         System.out.println("UserInfo =" + url.getUserInfo());
         System.out.println("Authority =" + url.getAuthority());
 
+URL相等性比较
+    URL类包括通常的equals()和hashcode()方法。
+    当两个URL都指向相同主机，端口和路径上的相同资源，而且有相同的片段标示符合查询字符串时才相等。
 8 URI是对URL的抽象,实际使用的URI大多是URL,但大多数规范和标准都是用URI定义的
 
 9 URLEncoder.encode("字符串",UTF-8);//对字符串进行编码
-
+  UriUtils.encode(bodyJsonString, "utf-8") // RFC3986 标准
 10 URLDecoder.decode("字符串",UTF-8);//对字符串进行解码
+
+11 代理
+   Proxy类： 允许你为不同的远程主机选择不同的代理服务器。
+   代理本身用java.net.Proxy类的实例来表示。
+   三种代理： Http、Socks、Direct
+   代理的其他信息用SocketAddress对象标示
 
 五 URLConnection 表示指向URL指定资源的活动连接
 URL中openConnection(); 方法可以获得

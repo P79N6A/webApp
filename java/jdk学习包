@@ -31,7 +31,15 @@
 二、理解
     java.lang.reflect
     java.net
-    javax.net.*
+        InetAddress类：InetAddress.getLocalHost();
+        NetworkInterface
+        URL : openStream方法,下载web网页内容
+              openConection方法， 打开连接
+        URLEncoder
+        URLDecoder
+        Proxy代理
+        SocketAddress：表示代理的ip地址和端口
+        ProxySelector： 用来确定不同连接的代理服务器。
     java.nio.*
     java.util.concurrent.*
 
