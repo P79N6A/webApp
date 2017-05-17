@@ -1,0 +1,61 @@
+一、精通
+    java.io
+        1、字节流
+            抽象类 OutputStream、InputStream
+            InputStream的子类实现包括：
+                FileInputStream、ByteArrayInputStream、ObjectInputStream  基本处理类
+                BufferedInputStream、DataInputStream、PushbackInputStream 包装类
+
+            字节流主要是操作byte类型的数组:见要想读取InputStream实现类中的数据，需要用到byte[] 数组，然后将其转化为字符串并输出。
+
+        2、字符流 : 程序中一个字符等于两个字节
+            抽象类 Reader、Writer
+            子类包括 BufferedReader,CharArrayReader,FilterReader, InputStreamReader,PipedReader,StringReader 。
+
+    java.lang
+        Boolean、Byte、Character、Double、Float、Integer、Long、Short
+        Class、ClassLoader、Compiler（ JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();）
+        Enum
+        InheritableThreadLocal、Thread、ThreadLocal
+            ThreadLocal:只与当前线程绑定
+            InheritableThreadLocal:会把值传给子线程,与子线程共享值
+        Throwable、Errors
+        Math、Number、StrictMath ： StrictMath是使用native方法
+        Process、ProcessBuilder
+        Runtime、RuntimePermission
+        SecurityManager
+        StackTraceElement
+
+    java.util
+
+二、理解
+    java.lang.reflect
+    java.net
+    javax.net.*
+    java.nio.*
+    java.util.concurrent.*
+
+三、使用
+    java.lang.annotation
+    javax.annotation.*
+    java.lang.ref
+    java.math
+    java.rmi.*
+    javax.rmi.*
+    java.security.*
+    javax.security.*
+    java.sql
+    javax.sql.*
+    javax.transaction.*
+    java.text
+    javax.xml.*
+    org.w3c.dom.*
+    org.xml.sax.*
+    javax.crypto.*
+    javax.imageio.*
+    javax.jws.*
+    java.util.jar
+    java.util.logging
+    java.util.prefs
+    java.util.regex
+    java.util.zip
