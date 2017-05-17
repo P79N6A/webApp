@@ -1,29 +1,31 @@
-异或
-交互两个数
-public static void main(String[] args) {
-    int a = 50 ;
-    int b = 40 ;
+1、异或 交互两个数
+    public static void main(String[] args) {
+        int a = 50 ;
+        int b = 40 ;
 
-    a=a^b;
+        a=a^b;
 
-    System.out.println(a);
+        System.out.println(a);
 
-    b=b^a;
-    System.out.println(b);
+        b=b^a;
+        System.out.println(b);
 
-    a=a^b;
-    System.out.println(a);
-}
-//    26
-//    50
-//    40
+        a=a^b;
+        System.out.println(a);
+    }
+    //    26
+    //    50
+    //    40
 
-左移n 等于乘以2的n次方 相反右移n, 除以2的n次方
-public static void main(String[] args) {
-        int a = 20 ;
-        int b = 30 ;
-        System.out.println(a << 4);
-}
-//320
+2、左移n 等于乘以2的n次方 相反右移n, 除以2的n次方
+    public static void main(String[] args) {
+            int a = 20 ;
+            int b = 30 ;
+            System.out.println(a << 4);
+    }
+    //320
+
+3、&符表示的是按位数进行与（同为1的时候返回1，否则返回0）
+
 
 

@@ -13,7 +13,7 @@
             子类包括 BufferedReader,CharArrayReader,FilterReader, InputStreamReader,PipedReader,StringReader 。
 
     java.lang
-        Boolean、Byte、Character、Double、Float、Integer、Long、Short
+        Boolean、Byte、Character、Double、Float、Integer（Integer.toHexString(x) 十进制转换为十六进制）、Long、Short
         Class、ClassLoader、Compiler（ JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();）
         Enum
         InheritableThreadLocal、Thread、ThreadLocal
