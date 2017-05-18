@@ -65,6 +65,7 @@ InetAddress localHost = InetAddress.getLocalHost();
     equals 比较的是InetAddress的ip地址
 
  6、NetworkInterface
+
 四 URL
 1  相对路径 再浏览 http://www.ibiblio.org/javafaq/javatutorial.html时,单击超链接<a href="javafaq.html">
    会跳转http://www.ibiblio.org/javafaq/javafaq.html
@@ -90,16 +91,16 @@ InetAddress localHost = InetAddress.getLocalHost();
 6 getContent: 可以下载内容
 
 7 URL具体的信息
-URL url = new URL("https://www.jd.com");
-        System.out.println("File =" + url.getFile());
-        System.out.println("Host =" + url.getHost());
-        System.out.println("Port =" + url.getPort());
-        System.out.println("Protocol =" + url.getProtocol());
-        System.out.println("Ref =" + url.getRef());
-        System.out.println("Query =" + url.getQuery());
-        System.out.println("Path =" + url.getPath());
-        System.out.println("UserInfo =" + url.getUserInfo());
-        System.out.println("Authority =" + url.getAuthority());
+    URL url = new URL("https://www.jd.com");
+    System.out.println("File =" + url.getFile());
+    System.out.println("Host =" + url.getHost());
+    System.out.println("Port =" + url.getPort());
+    System.out.println("Protocol =" + url.getProtocol());
+    System.out.println("Ref =" + url.getRef());
+    System.out.println("Query =" + url.getQuery());
+    System.out.println("Path =" + url.getPath());
+    System.out.println("UserInfo =" + url.getUserInfo());
+    System.out.println("Authority =" + url.getAuthority());
 
 URL相等性比较
     URL类包括通常的equals()和hashcode()方法。
@@ -117,29 +118,35 @@ URL相等性比较
    代理的其他信息用SocketAddress对象标示
 
 五 URLConnection 表示指向URL指定资源的活动连接
-URL中openConnection(); 方法可以获得
-1 getInputStream 读取服务器的方法
-2 读取首部信息
-3 缓存 在首部中会有cache-control 包括下面内容
-max-age 从现在开始直到缓存项过期之前的秒数
-s-maxage 从现在器,直到缓存项在共享缓存中过期之前的秒数,私有缓存可以将缓存保存更久
-public
-private
-no-cache : 需要用一个Etag或Last-modified首部
-no-store : 不缓存
+    URL中openConnection(); 方法可以获得
+        1 getInputStream 读取服务器的方法 : 下载服务器内容
+        2 读取首部信息
+        3 缓存 在首部中会有cache-control 包括下面内容
+    max-age 从现在开始直到缓存项过期之前的秒数
+    s-maxage 从现在器,直到缓存项在共享缓存中过期之前的秒数,私有缓存可以将缓存保存更久
+    public
+    private
+    no-cache : 需要用一个Etag或Last-modified首部
+    no-store : 不缓存
+
+    java的web缓存： java并不完成缓存
+        ResponseCache的一个具体子类
+        CacheRequest
+        CacheResponse
 
 六 客户端Socket : 可以将网络连接看作是另一个可以读/写字节的流
-可以连接远程机器,发送数据,接收数据,关闭连接,绑定端口,监听入站数据,绑定端口上接收来自远程机器的连接
-1 通过InputStream 从服务器读
-2 通过OutStream 往服务器写
-3 close方法关闭输入和输出,shutdownInput和shutdownOutput只关闭一半
-4 Socket是java完成客户端TCP操作的基础类
-5 Socket地址(SocketAddress 这些信息可以重用来创建新的Socket)
-6 可以指定本地的用那个端口创建Socket连接
-7 Socket异常
-BindException: 没有足够的权限使用这个端口
-ConnectException: 连接被远程拒绝
-NoRouteToHostException: 连接超时
+    可以连接远程机器,发送数据 ,接收数据,关闭连接,绑定端口,监听入站数据,绑定端口上接收来自远程机器的连接
+    1 通过InputStream 从服务器读
+    2 通过OutStream 往服务器写
+    3 close方法关闭输入和输出,shutdownInput和shutdownOutput只 关闭一半
+    4 Socket是java完成客户端TCP操作的基础类
+    5 Socket地址(SocketAddress 这些信息可以重用来创建新的Socket)
+    6 可以指定本地的用那个端口创建Socket连接
+    7 Socket异常
+
+    BindException: 没有足够的权限使用这个端口
+    ConnectException: 连接被远程拒绝
+    NoRouteToHostException: 连接超时
 
 七 服务器Socket:ServetSocket类表示服务器Socket
 服务器Socket等待连接,而客户端Socket发起连接
@@ -153,14 +160,30 @@ NoRouteToHostException: 连接超时
 
 八
 1:创建安全客户端Socket
-SocketFactory factory = SSLSocketFactory.getDefault();
-Socket socket = factory.createSocket("login.ibiblio.org",7000)
+    SocketFactory factory = SSLSocketFactory.getDefault();
+    Socket socket = factory.createSocket("login.ibiblio.org",7000)
 
 2:创建安全服务器Socket
-SSLServerSocketFactrory.getDefault();
-createServetSocket()
+    SSLServerSocketFactrory.getDefault();
+    createServetSocket()
 
+九、非阻塞IO
+    channel 和 selector
 
+十、UDP客户端
+        DatagramSocket socket = new DatagramSocket(0)
+    UDP服务端
+        DatagramSocket socket = new DatagramSocket(13)
+
+十一、单播、组播、广播
+    单播：是点对点，单播方式
+    组播：将数据从一个主机发送给多个不同的主机，但不是发送给每一个人，数据只传送到加入某个特定的组播组的客户端
+          Internet组播建立在UDP基础上，java中的组播使用DatagramPacket，以及一个新的MulticastSocket类。
+          组播地址和组
+            组播地址：一组主机共享地址。
+            组是指一组共享一个组播地址的internet主机。
+
+    广播：将数据广播到其发送范围的每一个点
 
 
 

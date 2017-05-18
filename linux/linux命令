@@ -39,6 +39,9 @@ grep 过滤文件内容，并显示
     7、grep 'text' －c 查看匹配字符的计数。
     8、grep dddadfa -r /data 查看data目录下，包含dddadfa文件
 
+
+    less  web-2017-05-16.log | grep -C10 'localhost:1099' //输出匹配文字10行
+
 sed  替换或删除文件内容
     1、sed -i 's/name/name1/g' test.txt 替换name为name1\
     2、sed -i 's/name//g' test.txt 删除name单词
@@ -95,7 +98,7 @@ su切换成root用户以后，pwd一下，发现工作目录仍然是普通用�
 
 四、备份压缩
 1、tar
-tar -zcvf /etc 将/etc目录压缩 etc.tar.gz
+tar -zcvf etc.tar.gz /etc 将/etc目录压缩 etc.tar.gz
 tar -zxvf  将etc.tar.gz解压 /etc目录
 
 tar -jcvf /etc 将/etc目录压缩 etc.tar.bz2

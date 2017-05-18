@@ -33,14 +33,16 @@
     java.net
         InetAddress类：InetAddress.getLocalHost();
         NetworkInterface
-        URL : openStream方法,下载web网页内容
-              openConection方法， 打开连接
+        URL :
+            openStream方法,下载web网页内容
+            openConection方法， 打开连接 : URLConection
         URLEncoder
         URLDecoder
         Proxy代理
         SocketAddress：表示代理的ip地址和端口
         ProxySelector： 用来确定不同连接的代理服务器。
     java.nio.*
+        channel 和 selector
     java.util.concurrent.*
 
 三、使用
