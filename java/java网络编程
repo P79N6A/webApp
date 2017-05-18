@@ -181,8 +181,7 @@ URL相等性比较
           Internet组播建立在UDP基础上，java中的组播使用DatagramPacket，以及一个新的MulticastSocket类。
           组播地址和组
             组播地址：一组主机共享地址。
-            组是指一组共享一个组播地址的internet主机。
-
+            组是指一组共享一个组播地址的internet主机（成员）。
     广播：将数据广播到其发送范围的每一个点
 
 
