@@ -41,6 +41,11 @@
         Proxy代理
         SocketAddress：表示代理的ip地址和端口
         ProxySelector： 用来确定不同连接的代理服务器。
+
+        Socket和ServerSocket:
+            ServerSocket用于服务端
+            Socket是建立网络连接使用
+
     java.nio.*
         channel 和 selector
     java.util.concurrent.*
