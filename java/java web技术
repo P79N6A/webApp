@@ -177,8 +177,14 @@
     Filter: 请求进来先进入Filter
 
 
+第10章： 深入理解Session和Cookie
+    Session与Cookie作用是为了保持访问用户与后端服务器的交互状态
+    使用Session和Cookie时，要注意两个问题： Cookie数量和大小，Session的共享问题
 
+    1: Cookie的作用：当一个用户通过HTTP访问一个服务器时，这个服务器将一些key/value键值对返回给浏览器，这个用户下次访问这个服务器，这个key/value会被带回服务器
+       Cookie的属性项
 
+    2: Session: 同一个客户端每次和服务端交互时，不需要传回所有的Cookie值，只要返回一个ID。
 
 
 
