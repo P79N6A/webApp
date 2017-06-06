@@ -58,12 +58,49 @@ awk 按分隔符输出
     打印系统环境变量 ： awk 'BEGIN { print ENVIRON["HOME"]; print ENVIRON["PATH"]}'
     求一个文件中的最大值 ：awk 'BEGIN {max = 0} {if ($1+0 > max+0) max=$1 fi} END {print "Max=", max}'
     awk循环使用: cat data.txt | awk 'BEGIN {str = ""} { str=str$1","} END {print "str=", str}'
+    http://blog.csdn.net/kehyuanyu/article/details/45721099
 
-tail -f 输出文件后面的内容
-head -n 5 /etc/passwd | tail -n 3 (从第5行开始，到倒数3行)
-sort 排序
-sort -u 排序并删除
-diff 比较两个文件的不同
+    *精确匹配*
+    #打印名字为root的用户在/etc/passwd文件中的记录
+    awk -F : '$1=="root" {print $0}' /etc/passwd
+
+    模糊匹配
+    1)$n~正则表达式
+        awk -F: '$0 ~ /^root/' /etc/passwd  #打印以root开头的行
+
+    2)if($n~正则表示式) print $0
+        awk -F: '{if($0 ~ /^root/) print $0}' /etc/passwd
+
+    条件操作符
+        awk '{if($0~/zhengxh/) print $0} filename    #输出含有zhengxh的行
+
+    反向匹配
+        $n !~ /adf/
+        awk '$1 !~ /zhengxh/ {print $0}' filename    #输出第一列不是zhengxh的行
+
+    大小写匹配
+        awk '/[zZ]hengxh/'  filename
+
+    使用或运算
+        awk '$0 ~ /(zhengxh|hover)/' filename     #查找含有zhengxh或hover字串的行
+
+    (6)内置变量
+        ARGC       命令行参数个数
+        ARGV       命令行参数排列
+        ENVIRON    环境变量支持队列的
+        FNR        浏览文件的记录数
+        FS         设置输入域分隔符，与-F同
+        NF         记录域的个数
+        NR         已读的记录数
+        OFS        输出域分隔符
+        ORS        输出记录分隔符
+        RS         控制记录分隔符
+
+    tail -f 输出文件后面的内容
+    head -n 5 /etc/passwd | tail -n 3 (从第5行开始，到倒数3行)
+    sort 排序
+    sort -u 排序并删除
+    diff 比较两个文件的不同
 
 杀掉进程
     ps aux | grep mams-data | grep -v grep | awk '{print $2}'|xargs kill
