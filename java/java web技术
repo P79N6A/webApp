@@ -153,9 +153,37 @@
              就会把这些代码认定为“Hot Spot Code”（热点代码），为了提高热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与本地平台相关的机器码，并进行各层次的优化。
 
 
-
 第五章：jvm指令集简介
     介绍Oolong编程语言： 执行java *.class文件 命令，会生产*.j文件
+
+    1、class文件头
+
+
+第9章： Servlet工作原理
+    创建Servlet的过程：
+        首先，解析web.xml文件，并且将servlet包装成Context容器中的Wrapper
+        然后，Servlet的实例化： load-on-startup配置项大于0，才会实例化。调用Servlet的init方法
+    Servlet如何工作：服务器如何根据这个URL来到达正确的servlet容器中的
+        通过Mapper，请求可以找到正确的Servlet容器，在请求到达Servlet容器前，必须经过Filter和Listener
+
+    Servlet的Listener：基于观察者模式
+      1、ServletContextAttributeListener: 设置Attribute时会触发
+      2、ServletRequestAttributeListener: request设置Attribute时会触发
+      3、ServletRequestListener: HttpServletRequest调service方法会触发
+      4、HttpSessionAttributeLister: session设置Attribute时会触发
+      5、ServletContextListener: Context初始化和销毁时会触发
+      6、HttpSessionListener：session对象创建和销毁时会触发
+
+    Filter: 请求进来先进入Filter
+
+
+
+
+
+
+
+
+
 
 
 
