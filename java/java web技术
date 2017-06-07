@@ -214,7 +214,34 @@
        (4) Wrapper容器  Wrapper代表一个Servlet,它负责管理一个Servlet,包括Servlet的装载，初始化，执行和回收
 
 
-第12章：
+第12章：Jetty工作原理 :
+     1、jetty基本架构 简单，比较灵活
+        jetty核心由Server和Connector两个组件构成
+        Server组件是基于Handler容器工作的，类似于Tomcat的Container容器
+        Connector组件负责接受客户端连接请求
+        LifeCycle生命周期组件
+
+      2、Handler的体系结构： Jetty主要是基于Handler来设计的
+
+      3、接受请求： 可以独立提供web服务，也可以与其他web服务器集成
+         (1) 基于HTTP工作:没有其他web服务器
+             设置Jetty的Connector的实现为:SocketConnector;让Jetty以BIO的方式工作处理请求
+
+         (2) 基于AJP协议工作：与web服务器一起使用时（apache或者nginx）
+
+         (3) 基于NIO工作：Jetty默认NIO
+
+      4、Tomcat比较
+         tomcat在处理连接的生命周期短，tomcat比较有优势
+         jetty处理大量长连接，比如聊天应用
+         jetty扩展性更好，Tomcat特性支持多
+
+
+
+
+
+
+
 
 
 
