@@ -185,6 +185,22 @@
        Cookie的属性项
 
     2: Session: 同一个客户端每次和服务端交互时，不需要传回所有的Cookie值，只要返回一个ID。
+       服务器创建session出来后，会把session的id号，以cookie的形式回写给客户机，这样，只要客户机的浏览器不关，再去访问服务器时，都会带着session的id号去，服务器发现客户机浏览器带session id过来了，就会使用内存中与之对应的session为之服务
+
+    3: Cookie和Session都可以跟踪客户端的访问记录，但他们的工作方式不同
+       Cookie通过把所有数据通过HTTP的头部从客户端传到服务器端，又从服务端再传到客户端，所有数据都存储在客户端的浏览器中，所以这些Cookie数据可以被访问到。
+       会导致不安全。
+       Session的安全性要高：Session是将数据保存在服务端，只是通过Cookie传递一个SessionID
+
+    4:分布式Session
+      Cookie和Session各有优缺点： 所以有结合使用
+      可以将Cookie和Session的配置项注册到zookeeper注册中心，应用服务可以从zookeeper上获取相应的内容
+      Session的内容不保存在应用服务器的内存中，而是存在分布式缓存中
+
+    5:Cookie压缩： 可以自定义一个Filter在页面输出时对Cookie进行全部或部分压缩
+
+
+
 
 
 
