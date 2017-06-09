@@ -18,8 +18,9 @@
     3、业务设计原则
 
 二、负载均衡与反向代理
-    HTTP负载均衡，也就是我们通常所有“七层负载均衡”,工作在第七层“应用层”
-    Nginx具有TCP负载均衡的功能
+    HTTP负载均衡，也就是我们通常所有“七层负载均衡”,工作在第七层“应用层”(ngx_http_upstream_module)
+
+    Nginx具有TCP负载均衡的功能 (ngx_stream_upstream_module)
     TCP负载均衡， 就是我们通常所说的“四层负载均衡”,工作在“网络层”和“传输层”
     1、TCP负载均衡的配置方式: 使用了一个新的stream模块来实现TCP负载均衡,允许我们配置一组监听TCP连接的服务,允许你配置多个服务的TCP连接，通过在upstream的server组中配置proxy_pass指令
         stream（和http等同级）
@@ -36,6 +37,49 @@
         }
     2、TCP负载均衡原理 : 当Nginx从监听端口收到一个新的客户端链接时，立刻执行路由调度算法，获得指定需要连接的服务IP，然后创建一个新的上游连接，连接到指定服务器。
     3、服务健壮性监控 : TCP负载均衡模块支持内置健壮性检测，一台上游服务器如果拒绝TCP连接超过proxy_connect_timeout配置的时间，将会被认为已经失效。在这种情况下，Nginx立刻尝试连接upstream组内的另一台正常的服务器
+    4、可以通过OpenResty实现更智能的负载均衡
+    5、失败重试：upstream server 和 proxy_pass
+    6、健康检查：nginx_upstream_check_module支持TCP和Http心跳检查
+    7、域名上游服务器
+       upstream backend {
+            server c0.3.cn
+            server c1.3.cn
+       }
+       备份上游服务器
+       upstream backend {
+           server 192.168.61.1:9080 weight = 1;
+           server 192.168.61.1:9090 weight = 2 backup;
+       }
+       不可用上游服务器
+       upstream backend {
+          server 192.168.61.1:9080 weight = 1;
+          server 192.168.61.1:9090 weight = 2 down;
+       }
+
+    8、Nginx与上游服务器长连接 ： keepalive 每个worker进程与上游服务器可缓存的空闲连接的最大数量。超出这个数量时，最近最少使用的连接将关闭。
+       upstream backend {
+            server 192.168.61.1: 9080 weight =1;
+            server 192.168.61.1: 9090 weight =2 backip;
+            keepalive 100;
+       }
+       location / {
+            proxy_http_version 1.1;
+            proxy_set_header Connection "";
+            proxy_pass http://backend;
+       }
+
+    9、Nginx（动态负载均衡）：使用nginx-stream-upsync-module
+
+三、隔离术
+    1、线程隔离： 线程隔离主要是指线程池隔离，会把请求分类，然后交给不同的线程池处理。
+    2、进程隔离： 系统拆分
+    3、集群隔离：
+    4、机房隔离：每个机房的服务都有自己的服务分组，本机房的服务应该只调用本机房服务，不进行垮机房调用。
+    5、读写隔离：
+    6、动静隔离：静态文件和动态文件分离
+    7、爬虫隔离：
+    8、使用Hystrix（熔断器）实现服务隔离
+    9、基于Servlet3实现请求隔离 : Servlet3请求异步化(注Tomcat6和Tomcat7的区别 )
 
 
 
@@ -43,3 +87,9 @@
 
 
 
+
+
+
+
+
+\
