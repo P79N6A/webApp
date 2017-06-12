@@ -48,9 +48,12 @@ Threads_connected     1063 当前连接数
 mysql建表:
     当有多个timestamp字段时候，其中一个字段 ON UPDATE CURRENT_TIMESTAMP时候，那么其他字段必须有默认值.
 
-mysql日器格式化
-SELECT DATE_FORMAT(create_time,'%y-%m-%d') date,count(baidu_id) as count from video_base_info GROUP BY DATE_FORMAT(create_time,'%y-%m-%d')
-    DATE_FORMAT(NOW(),'%b %d %Y %h:%i %p')
-    DATE_FORMAT(NOW(),'%m-%d-%Y')
-    DATE_FORMAT(NOW(),'%d %b %y')
-    DATE_FORMAT(NOW(),'%d %b %Y %T:%f')
+mysql日期格式化
+    SELECT DATE_FORMAT(create_time,'%y-%m-%d') date,count(baidu_id) as count from video_base_info GROUP BY DATE_FORMAT(create_time,'%y-%m-%d')
+        DATE_FORMAT(NOW(),'%b %d %Y %h:%i %p')
+        DATE_FORMAT(NOW(),'%m-%d-%Y')
+        DATE_FORMAT(NOW(),'%d %b %y')
+        DATE_FORMAT(NOW(),'%d %b %Y %T:%f')
+
+mysql按关键字截取字符串
+    SELECT substring_index(video_resolution,'x',1)*substring_index(video_resolution,'x',2) from video_base_info limit 100
