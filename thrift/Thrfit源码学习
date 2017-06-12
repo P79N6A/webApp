@@ -29,6 +29,25 @@ Rpc调用分类
        RpcProtocol<---- RpcConnector =========  RpcAcceptor ---->   RpcProtocol
 
     4、 RPC 实现结构的各个组件组成部分，下面我们详细说明下每个组件的职责划分
+        1. RpcServer
+           负责导出（export）远程接口
+        2. RpcClient
+           负责导入（import）远程接口的代理实现
+        3. RpcProxy
+           远程接口的代理实现
+        4. RpcInvoker
+           客户方实现：负责编码调用信息和发送调用请求到服务方并等待调用结果返回
+           服务方实现：负责调用服务端接口的具体实现并返回调用结果
+        5. RpcProtocol
+           负责协议编/解码
+        6. RpcConnector
+           负责维持客户方和服务方的连接通道和发送数据到服务方
+        7. RpcAcceptor
+           负责接收客户方请求并返回请求结果
+        8. RpcProcessor
+           负责在服务方控制调用过程，包括管理调用线程池、超时时间等
+        9. RpcChannel
+           数据传输通道
 
 一、Thrift源码分析
     对照这个模型，Thrift的核心组件有：
