@@ -1,0 +1,29 @@
+作为一个高性能的RPC框架，Thrift的主要特点有
+    1. 基于二进制的高性能的编解码框架
+
+    2. 基于NIO的底层通信
+
+    3. 相对简单的服务调用模型
+
+    4. 使用IDL支持跨平台调用
+
+
+Rpc调用分类
+    1、同步调用:
+    2、异步调用:
+        客户方调用后不用等待执行结果返回，可以通过回调通知方式获取返回结果
+        若客户方不关心调用返回结果，则变成单向异步调用，单向异步不用返回结果
+
+    3、RPC实现概念结构
+       (1) RPC 服务方通过 RpcServer 去导出（export）远程接口方法，而客户方通过 RpcClient 去引入（import）远程接口方法
+       (2) 客户方像调用本地方法一样去调用远程接口方法，RPC 框架提供接口的代理实现，实际的调用将委托给代理RpcProxy
+       (3) 代理封装调用信息并将调用转交给RpcInvoker去实际执行。在客户端的RpcInvoker 通过连接器RpcConnector 去维持与服务端的通道RpcChannel，并使用RpcProtocol 执行协议编码（encode）并将编码后的请求消息通过通道发送给服务方
+       (4) RPC 服务端接收器 RpcAcceptor 接收客户端的调用请求，同样使用RpcProtocol 执行协议解码（decode）。解码后的调用信息传递给RpcProcessor 去控制处理调用过程，最后再委托调用给RpcInvoker 去实际执行并返回调用结果
+
+       Caller --------> Remote API              Remote API -------> Callee
+          |                |                        |                 |
+       RPCClient        RpcProxy                RpcInvoker          RPCServer
+                           |                        |
+                        RpcInvoker              RpcProcessor
+                           |                        |
+       RpcProtocol<---- RpcConnector =========  RpcAcceptor ---->   RpcProtocol

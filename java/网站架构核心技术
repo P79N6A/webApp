@@ -117,6 +117,40 @@
 
     四、节流 : 特定时间窗口内对重复的相同事件最多处理一次，或者想限制多个连续相同事件最小执行时间间隔。
 
+五： 降级 目的是保证核心服务可用
+     1、自动降级： 超时降级、统计失败降级、故障降级、限流降级
+     2、人工降级： 手动停用一些服务
+
+六、超时与重试机制
+    1、如果应用不设置超时，可能会导致请求响应慢，慢请求积累导致连锁反应，并且设置合理的重试机制
+    一、代理层超时与重试
+        1、Nginx：
+        客户端超时设置： 读取请求头超时时间，读取请求体超时时间，发送响应超时时间，长连接超时时间
+        DNS解析超时设置： Nginx使用域名时，需要设置DNS解析超时时间
+        代理超时设置：
+            网络连接：
+                proxy_connect_timeout time: 从后端/上游服务器建立连接的超时时间，默认60s
+                proxy_read_timeout time: 设置从后端/上游服务器读取响应的超时时间，默认60s
+                proxy_send_timeout time: 设置从后端/上游服务器发送请求的超时时间，默认60s
+            失败重试：
+                proxy_next_upstream error
+                proxy_next_upstream_tries number
+                proxy_next_upstream_timeout time
+
+     二、Web容器超时
+            1、connectionTimeout: 配置与客户端建立连接的超时时间
+            2、socket.soTimeout:从客户端读取请求数据的超时时间
+            3、asyncTimeout:Servlet3异步请求时间
+            4、文件上传的超时时间
+            5、keepAliveTimeout和maxKeepAliveRequest：长连接超时时间
+
+     三、数据库客户端超时
+
+七、回滚机制 ： 事务回滚、部署版本回滚
+
+第二部分 高并发
+
+
 
 
 
