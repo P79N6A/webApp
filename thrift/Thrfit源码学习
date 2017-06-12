@@ -27,3 +27,48 @@ Rpc调用分类
                         RpcInvoker              RpcProcessor
                            |                        |
        RpcProtocol<---- RpcConnector =========  RpcAcceptor ---->   RpcProtocol
+
+    4、 RPC 实现结构的各个组件组成部分，下面我们详细说明下每个组件的职责划分
+
+一、Thrift源码分析
+    对照这个模型，Thrift的核心组件有：
+    TProtocol 协议和编解码组件
+    TTransport 传输组件
+    TProcessor 服务调用组件
+    TServer，Client 服务器和客户端组件
+    IDL 服务描述组件，负责生产跨平台客户端
+
+二、协议和编辑码： 协议和编解码是一个网络应用程序的核心问题之一，客户端和服务器通过约定的协议来传输消息(数据)，通过特定的格式来编解码字节流，并转化成业务消息，提供给上层框架调用
+Thrift的协议比较简单，它把协议和编解码整合在了一起。抽象类TProtocol定义了协议和编解码的顶层接口
+一、TProtocol主要做了两个事：
+    1、关联TTransport对象
+    2、定义一系列读写消息的编解码接口，包括两类，一类是复杂数据结构比如readMessageBegin, readMessageEnd,  writeMessageBegin, writMessageEnd.
+       还有一类是基本数据结构，比如readI32, writeI32, readString, writeString
+    3、所谓协议就是客户端和服务器端约定传输什么数据，如何解析传输的数据。对于一个RPC调用的协议来说，要传输的数据主要有:
+    调用方
+        1. 方法的名称，包括类的名称和方法的名称
+        2. 方法的参数，包括类型和参数值
+        3.一些附加的数据，比如附件，超时事件，自定义的控制信息等等
+    返回方
+        1. 调用的返回码
+        2. 返回值
+        3.异常信息
+
+    从TProtocol的定义我们可以看出Thrift的协议约定如下事情:
+        1、先writeMessageBegin表示开始传输消息了，写消息头。Message里面定义了方法名，调用的类型，版本号，消息seqId
+        2、接下来是写方法的参数，实际就是写消息体。如果参数是一个类，就writeStructBegin
+        3、接下来写字段，writeFieldBegin, 这个方法会写接下来的字段的数据类型和顺序号。这个顺序号是Thrfit对要传输的字段的一个编码，从1开始
+        4. 如果是一个集合就writeListBegin/writeMapBegin，如果是一个基本数据类型，比如int, 就直接writeI32
+        5. 每个复杂数据类型写完都调用writeXXXEnd，直到writeMessageEnd结束
+        6. 读消息时根据数据类型读取相应的长度
+
+     IDL和生成代码分析
+        1、生成的类主要有5个部分
+           1.　接口类型，默认名称都是Iface。这个接口类型被服务器和客户端共同使用。服务器端使用它来做顶层接口，编写实现类。客户端代码使用它作为生成代理的服务接口。
+               自动生成的接口有两个，一个是同步调用的Iface，一个是异步调用的AsyncIface。异步调用的接口多了一个回调参数。
+           2.  客户端类型，一个同步调用的客户端Client，一个异步调用的客户端AsyncClient
+           3. Processor，用来支持方法调用，每个服务的实现类都要使用Processor来注册，这样最后服务器端调用接口实现时能定位到具体的实现类。后面会有专门的文章介绍
+           4.方法参数的封装类，以"方法名_args"命名
+           5.方法返回值的封装类，以"方法名_result"命名
+
+
