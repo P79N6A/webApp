@@ -3,21 +3,23 @@
        通过使用Ioc容器，对象之间的相互依赖关系由IoC容器进行管理，并由Ioc容器完成对象的注入。
 
     2、spring ioc应用场景
-        提供了一个基本的javabean容器，通过ioc模式管理依赖关系，并通过ioc模式管理依赖关系，并通过依赖注入和aop切面增强了为javabean这样的
-        pojo对象赋予事务管理等功能。
+        提供了一个基本的javabean容器，通过ioc模式管理依赖关系，并通过ioc模式管理依赖关系，并通过依赖注入和aop切面增强了为javabean这样的pojo对象赋予事务管理等功能。
 
     3、ioc容器实现：两个主要容器系列BeanFactory和ApplicationContext
         BeanFactory : 接口只实现了容器的基本功能。 是最基本的接口类出现在spring的ioc容器体系中。
-            第1条主线： BeanFactory、HierarchicalBeanFactory、ConfigurableBeanFactor
+            第1条主线： BeanFactory、HierarchicalBeanFactory、ConfigurableBeanFactory
+            BeanFactory 定义了基本IoC容器的基本方法：getBean
+            HierarchicalBeanFactory 增加getParentBeanFactory接口功能,使BeanFactory 具备双亲Ioc容器的管理功能
+            ConfigurableBeanFactory 增加setParentBeanFactory和addBeanPostProcessor 配置后置处理器
+
             应用场景：
                 ClassPathResource res = new ClassPathResource("beans.xml");
                 DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
                 XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
                 reader.loadBeanDefinitions(res);
 
-        ApplicationContext : 增加了一些功能
-            第2条主线： BeanFactory、（ListableBeanFactory,AutowireCapableBeanFactory,HierarchicalBeanFactory)、
-            ApplicationContext、（WebApplication，ConfigurableApplicationContext）
+        ApplicationContext : 通过继承MessageSource、ResourceLoader、ApplicationEventPublisher接口， 在BeanFactory基础上增加了一些功能
+            第2条主线： BeanFactory、（ListableBeanFactory,AutowireCapableBeanFactory,HierarchicalBeanFactory)、ApplicationContext、（WebApplication，ConfigurableApplicationContext）
             应用场景：
         BeanDefinition : 管理基于Spring的应用中的各种对象以及它们之间的相互依赖关系,是一种数据类型。
 
@@ -25,7 +27,6 @@
 
     4、ioc容器的初始化过程
         ioc容器的初始化是有前面介绍的refresh()方法来启动的，这个方法标志着Ioc容器的正式启动。
-
        (1)、Resource：
             使用FileSystemResource 或者 使用ClassPathResource
        (2)、BeanDefinition载入和解析 :

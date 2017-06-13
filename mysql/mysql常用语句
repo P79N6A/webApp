@@ -57,3 +57,6 @@ mysql日期格式化
 
 mysql按关键字截取字符串
     SELECT substring_index(video_resolution,'x',1)*substring_index(video_resolution,'x',2) from video_base_info limit 100
+
+查看mysql版本
+    select version();
