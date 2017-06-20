@@ -1,29 +1,29 @@
-ç¬¬ä¸€éƒ¨åˆ† æ¦‚è¿°
-ä¸€ã€äº¤æ˜“åž‹ç³»ç»Ÿè®¾è®¡åŽŸåˆ™
-    1ã€é«˜å¹¶å‘åŽŸåˆ™
-       (1) æ— çŠ¶æ€
-       (2) æ‹†åˆ†: ä¸šåŠ¡ã€åŠŸèƒ½ã€æ•°æ®åº“
-       (3) æœåŠ¡åŒ– : æœåŠ¡æ³¨å†Œï¼Œè´Ÿè½½å‡è¡¡
-       (4) æ¶ˆæ¯é˜Ÿåˆ—
-       (5) æ•°æ®å¼‚æž„
-       (6) ç¼“å­˜ : å¯¹äºŽå¤§åž‹ç½‘ç«™ï¼Œå¯èƒ½ä¼šæ¶‰åŠå¤šçº§ç¼“å­˜
-       (7) å¹¶è¡Œ : è¯»æ•°æ®æ—¶ï¼Œæ•°æ®æ‰§è¡Œæ²¡æœ‰ä¾èµ–å…³ç³»æ—¶ï¼Œå¯ä»¥å¹¶è¡Œè¯».
+µÚÒ»²¿·Ö ¸ÅÊö
+Ò»¡¢½»Ò×ÐÍÏµÍ³Éè¼ÆÔ­Ôò
+    1¡¢¸ß²¢·¢Ô­Ôò
+       (1) ÎÞ×´Ì¬
+       (2) ²ð·Ö: ÒµÎñ¡¢¹¦ÄÜ¡¢Êý¾Ý¿â
+       (3) ·þÎñ»¯ : ·þÎñ×¢²á£¬¸ºÔØ¾ùºâ
+       (4) ÏûÏ¢¶ÓÁÐ
+       (5) Êý¾ÝÒì¹¹
+       (6) »º´æ : ¶ÔÓÚ´óÐÍÍøÕ¾£¬¿ÉÄÜ»áÉæ¼°¶à¼¶»º´æ
+       cc
 
-    2ã€é«˜å¯ç”¨åŽŸåˆ™
-       (1) é™çº§
-       (2) é™æµï¼š é˜²æ­¢æ¶æ„è¯·æ±‚æµé‡ï¼Œæ¶æ„æ”»å‡»
-       (3) åˆ‡æµé‡ï¼šæœºæˆ¿æŒ‚äº†ï¼Œéœ€è¦åˆ‡æµé‡
-       (4) å¯å›žæ»šï¼š
+    2¡¢¸ß¿ÉÓÃÔ­Ôò
+       (1) ½µ¼¶
+       (2) ÏÞÁ÷£º ·ÀÖ¹¶ñÒâÇëÇóÁ÷Á¿£¬¶ñÒâ¹¥»÷
+       (3) ÇÐÁ÷Á¿£º»ú·¿¹ÒÁË£¬ÐèÒªÇÐÁ÷Á¿
+       (4) ¿É»Ø¹ö£º
 
-    3ã€ä¸šåŠ¡è®¾è®¡åŽŸ åˆ™
+    3¡¢ÒµÎñÉè¼ÆÔ­ Ôò
 
-äºŒã€è´Ÿè½½å‡è¡¡ä¸Žåå‘ä»£ç†
-    HTTPè´Ÿè½½å‡è¡¡ï¼Œä¹Ÿå°±æ˜¯æˆ‘ä»¬é€šå¸¸æ‰€æœ‰â€œä¸ƒå±‚è´Ÿè½½å‡è¡¡â€,å·¥ä½œåœ¨ç¬¬ä¸ƒå±‚â€œåº”ç”¨å±‚â€(ngx_http_upstream_module)
+¶þ¡¢¸ºÔØ¾ùºâÓë·´Ïò´úÀí
+    HTTP¸ºÔØ¾ùºâ£¬Ò²¾ÍÊÇÎÒÃÇÍ¨³£ËùÓÐ¡°Æß²ã¸ºÔØ¾ùºâ¡±,¹¤×÷ÔÚµÚÆß²ã¡°Ó¦ÓÃ²ã¡±(ngx_http_upstream_module)
 
-    Nginxå…·æœ‰TCPè´Ÿè½½å‡è¡¡çš„åŠŸèƒ½ (ngx_stream_upstream_module)
-    TCPè´Ÿè½½å‡è¡¡ï¼Œ å°±æ˜¯æˆ‘ä»¬é€šå¸¸æ‰€è¯´çš„â€œå››å±‚è´Ÿè½½å‡è¡¡â€,å·¥ä½œåœ¨â€œç½‘ç»œå±‚â€å’Œâ€œä¼ è¾“å±‚â€
-    1ã€TCPè´Ÿè½½å‡è¡¡çš„é…ç½®æ–¹å¼: ä½¿ç”¨äº†ä¸€ä¸ªæ–°çš„streamæ¨¡å—æ¥å®žçŽ°TCPè´Ÿè½½å‡è¡¡,å…è®¸æˆ‘ä»¬é…ç½®ä¸€ç»„ç›‘å¬TCPè¿žæŽ¥çš„æœåŠ¡,å…è®¸ä½ é…ç½®å¤šä¸ªæœåŠ¡çš„TCPè¿žæŽ¥ï¼Œé€šè¿‡åœ¨upstreamçš„serverç»„ä¸­é…ç½®proxy_passæŒ‡ä»¤
-        streamï¼ˆå’Œhttpç­‰åŒçº§ï¼‰
+    Nginx¾ßÓÐTCP¸ºÔØ¾ùºâµÄ¹¦ÄÜ (ngx_stream_upstream_module)
+    TCP¸ºÔØ¾ùºâ£¬ ¾ÍÊÇÎÒÃÇÍ¨³£ËùËµµÄ¡°ËÄ²ã¸ºÔØ¾ùºâ¡±,¹¤×÷ÔÚ¡°ÍøÂç²ã¡±ºÍ¡°´«Êä²ã¡±
+    1¡¢TCP¸ºÔØ¾ùºâµÄÅäÖÃ·½Ê½: Ê¹ÓÃÁËÒ»¸öÐÂµÄstreamÄ£¿éÀ´ÊµÏÖTCP¸ºÔØ¾ùºâ,ÔÊÐíÎÒÃÇÅäÖÃÒ»×é¼àÌýTCPÁ¬½ÓµÄ·þÎñ,ÔÊÐíÄãÅäÖÃ¶à¸ö·þÎñµÄTCPÁ¬½Ó£¬Í¨¹ýÔÚupstreamµÄserver×éÖÐÅäÖÃproxy_passÖ¸Áî
+        stream£¨ºÍhttpµÈÍ¬¼¶£©
         stream {
             server {
                 listen 1034;
@@ -35,28 +35,28 @@
                 server 192.168.0.6:1034;
             }
         }
-    2ã€TCPè´Ÿè½½å‡è¡¡åŽŸç† : å½“Nginxä»Žç›‘å¬ç«¯å£æ”¶åˆ°ä¸€ä¸ªæ–°çš„å®¢æˆ·ç«¯é“¾æŽ¥æ—¶ï¼Œç«‹åˆ»æ‰§è¡Œè·¯ç”±è°ƒåº¦ç®—æ³•ï¼ŒèŽ·å¾—æŒ‡å®šéœ€è¦è¿žæŽ¥çš„æœåŠ¡IPï¼Œç„¶åŽåˆ›å»ºä¸€ä¸ªæ–°çš„ä¸Šæ¸¸è¿žæŽ¥ï¼Œè¿žæŽ¥åˆ°æŒ‡å®šæœåŠ¡å™¨ã€‚
-    3ã€æœåŠ¡å¥å£®æ€§ç›‘æŽ§ : TCPè´Ÿè½½å‡è¡¡æ¨¡å—æ”¯æŒå†…ç½®å¥å£®æ€§æ£€æµ‹ï¼Œä¸€å°ä¸Šæ¸¸æœåŠ¡å™¨å¦‚æžœæ‹’ç»TCPè¿žæŽ¥è¶…è¿‡proxy_connect_timeouté…ç½®çš„æ—¶é—´ï¼Œå°†ä¼šè¢«è®¤ä¸ºå·²ç»å¤±æ•ˆã€‚åœ¨è¿™ç§æƒ…å†µä¸‹ï¼ŒNginxç«‹åˆ»å°è¯•è¿žæŽ¥upstreamç»„å†…çš„å¦ä¸€å°æ­£å¸¸çš„æœåŠ¡å™¨
-    4ã€å¯ä»¥é€šè¿‡OpenRestyå®žçŽ°æ›´æ™ºèƒ½çš„è´Ÿè½½å‡è¡¡
-    5ã€å¤±è´¥é‡è¯•ï¼šupstream server å’Œ proxy_pass
-    6ã€å¥åº·æ£€æŸ¥ï¼šnginx_upstream_check_moduleæ”¯æŒTCPå’ŒHttpå¿ƒè·³æ£€æŸ¥
-    7ã€åŸŸåä¸Šæ¸¸æœåŠ¡å™¨
+    2¡¢TCP¸ºÔØ¾ùºâÔ­Àí : µ±Nginx´Ó¼àÌý¶Ë¿ÚÊÕµ½Ò»¸öÐÂµÄ¿Í»§¶ËÁ´½ÓÊ±£¬Á¢¿ÌÖ´ÐÐÂ·ÓÉµ÷¶ÈËã·¨£¬»ñµÃÖ¸¶¨ÐèÒªÁ¬½ÓµÄ·þÎñIP£¬È»ºó´´½¨Ò»¸öÐÂµÄÉÏÓÎÁ¬½Ó£¬Á¬½Óµ½Ö¸¶¨·þÎñÆ÷¡£
+    3¡¢·þÎñ½¡×³ÐÔ¼à¿Ø : TCP¸ºÔØ¾ùºâÄ£¿éÖ§³ÖÄÚÖÃ½¡×³ÐÔ¼ì²â£¬Ò»Ì¨ÉÏÓÎ·þÎñÆ÷Èç¹û¾Ü¾øTCPÁ¬½Ó³¬¹ýproxy_connect_timeoutÅäÖÃµÄÊ±¼ä£¬½«»á±»ÈÏÎªÒÑ¾­Ê§Ð§¡£ÔÚÕâÖÖÇé¿öÏÂ£¬NginxÁ¢¿Ì³¢ÊÔÁ¬½Óupstream×éÄÚµÄÁíÒ»Ì¨Õý³£µÄ·þÎñÆ÷
+    4¡¢¿ÉÒÔÍ¨¹ýOpenRestyÊµÏÖ¸üÖÇÄÜµÄ¸ºÔØ¾ùºâ
+    5¡¢Ê§°ÜÖØÊÔ£ºupstream server ºÍ proxy_pass
+    6¡¢½¡¿µ¼ì²é£ºnginx_upstream_check_moduleÖ§³ÖTCPºÍHttpÐÄÌø¼ì²é
+    7¡¢ÓòÃûÉÏÓÎ·þÎñÆ÷
        upstream backend {
             server c0.3.cn
             server c1.3.cn
        }
-       å¤‡ä»½ä¸Šæ¸¸æœåŠ¡å™¨
+       ±¸·ÝÉÏÓÎ·þÎñÆ÷
        upstream backend {
            server 192.168.61.1:9080 weight = 1;
            server 192.168.61.1:9090 weight = 2 backup;
        }
-       ä¸å¯ç”¨ä¸Šæ¸¸æœåŠ¡å™¨
+       ²»¿ÉÓÃÉÏÓÎ·þÎñÆ÷
        upstream backend {
           server 192.168.61.1:9080 weight = 1;
           server 192.168.61.1:9090 weight = 2 down;
        }
 
-    8ã€Nginxä¸Žä¸Šæ¸¸æœåŠ¡å™¨é•¿è¿žæŽ¥ ï¼š keepalive æ¯ä¸ªworkerè¿›ç¨‹ä¸Žä¸Šæ¸¸æœåŠ¡å™¨å¯ç¼“å­˜çš„ç©ºé—²è¿žæŽ¥çš„æœ€å¤§æ•°é‡ã€‚è¶…å‡ºè¿™ä¸ªæ•°é‡æ—¶ï¼Œæœ€è¿‘æœ€å°‘ä½¿ç”¨çš„è¿žæŽ¥å°†å…³é—­ã€‚
+    8¡¢NginxÓëÉÏÓÎ·þÎñÆ÷³¤Á¬½Ó £º keepalive Ã¿¸öworker½ø³ÌÓëÉÏÓÎ·þÎñÆ÷¿É»º´æµÄ¿ÕÏÐÁ¬½ÓµÄ×î´óÊýÁ¿¡£³¬³öÕâ¸öÊýÁ¿Ê±£¬×î½ü×îÉÙÊ¹ÓÃµÄÁ¬½Ó½«¹Ø±Õ¡£
        upstream backend {
             server 192.168.61.1: 9080 weight =1;
             server 192.168.61.1: 9090 weight =2 backip;
@@ -68,109 +68,118 @@
             proxy_pass http://backend;
        }
 
-    9ã€Nginxï¼ˆåŠ¨æ€è´Ÿè½½å‡è¡¡ï¼‰ï¼šä½¿ç”¨nginx-stream-upsync-module
+    9¡¢Nginx£¨¶¯Ì¬¸ºÔØ¾ùºâ£©£ºÊ¹ÓÃnginx-stream-upsync-module
 
-ä¸‰ã€éš”ç¦»æœ¯
-    1ã€çº¿ç¨‹éš”ç¦»ï¼š çº¿ç¨‹éš”ç¦»ä¸»è¦æ˜¯æŒ‡çº¿ç¨‹æ± éš”ç¦»ï¼Œä¼šæŠŠè¯·æ±‚åˆ†ç±»ï¼Œç„¶åŽäº¤ç»™ä¸åŒçš„çº¿ç¨‹æ± å¤„ç†ã€‚
-    2ã€è¿›ç¨‹éš”ç¦»ï¼š ç³»ç»Ÿæ‹†åˆ†
-    3ã€é›†ç¾¤éš”ç¦»ï¼š
-    4ã€æœºæˆ¿éš”ç¦»ï¼šæ¯ä¸ªæœºæˆ¿çš„æœåŠ¡éƒ½æœ‰è‡ªå·±çš„æœåŠ¡åˆ†ç»„ï¼Œæœ¬æœºæˆ¿çš„æœåŠ¡åº”è¯¥åªè°ƒç”¨æœ¬æœºæˆ¿æœåŠ¡ï¼Œä¸è¿›è¡Œåž®æœºæˆ¿è°ƒç”¨ã€‚
-    5ã€è¯»å†™éš”ç¦»ï¼š
-    6ã€åŠ¨é™éš”ç¦»ï¼šé™æ€æ–‡ä»¶å’ŒåŠ¨æ€æ–‡ä»¶åˆ†ç¦»
-    7ã€çˆ¬è™«éš”ç¦»ï¼š
-    8ã€ä½¿ç”¨Hystrixï¼ˆç†”æ–­å™¨ï¼‰å®žçŽ°æœåŠ¡éš”ç¦»
-    9ã€åŸºäºŽServlet3å®žçŽ°è¯·æ±‚éš”ç¦» : Servlet3è¯·æ±‚å¼‚æ­¥åŒ–(æ³¨Tomcat6å’ŒTomcat7çš„åŒºåˆ« )
+Èý¡¢¸ôÀëÊõ
+    1¡¢Ïß³Ì¸ôÀë£º Ïß³Ì¸ôÀëÖ÷ÒªÊÇÖ¸Ïß³Ì³Ø¸ôÀë£¬»á°ÑÇëÇó·ÖÀà£¬È»ºó½»¸ø²»Í¬µÄÏß³Ì³Ø´¦Àí¡£
+    2¡¢½ø³Ì¸ôÀë£º ÏµÍ³²ð·Ö
+    3¡¢¼¯Èº¸ôÀë£º
+    4¡¢»ú·¿¸ôÀë£ºÃ¿¸ö»ú·¿µÄ·þÎñ¶¼ÓÐ×Ô¼ºµÄ·þÎñ·Ö×é£¬±¾»ú·¿µÄ·þÎñÓ¦¸ÃÖ»µ÷ÓÃ±¾»ú·¿·þÎñ£¬²»½øÐÐ¿å»ú·¿µ÷ÓÃ¡£
+    5¡¢¶ÁÐ´¸ôÀë£º
+    6¡¢¶¯¾²¸ôÀë£º¾²Ì¬ÎÄ¼þºÍ¶¯Ì¬ÎÄ¼þ·ÖÀë
+    7¡¢ÅÀ³æ¸ôÀë£º
+    8¡¢Ê¹ÓÃHystrix£¨ÈÛ¶ÏÆ÷£©ÊµÏÖ·þÎñ¸ôÀë
+    9¡¢»ùÓÚServlet3ÊµÏÖÇëÇó¸ôÀë : Servlet3ÇëÇóÒì²½»¯(×¢Tomcat6ºÍTomcat7µÄÇø±ð )
 
-å››ã€é™æµè¯¦è§£ï¼ˆæŠ¢è´­å’ŒæŠ¢ç¥¨ï¼‰
-    å¸¸è§çš„é™æµï¼š é™åˆ¶æ€»å¹¶å‘æ•°ï¼ˆæ•°æ®åº“è¿žæŽ¥æ± ï¼‰ã€é™åˆ¶çž¬æ—¶å¹¶å‘æ•°ï¼ˆNginxçš„limit_connæ¨¡å—ï¼‰ï¼Œé™åˆ¶å¹³å‡é€ŸçŽ‡ï¼ˆNginxçš„limit_reqæ¨¡å—ï¼‰ï¼Œä»¥åŠé™åˆ¶è¿œç¨‹æŽ¥å£è°ƒç”¨é€ŸçŽ‡ï¼Œ
-    é™åˆ¶MQçš„æ¶ˆè´¹é€ŸçŽ‡ã€‚
-    ä¸€ã€é™æµæ–¹æ³•ï¼š ä»¤ç‰Œæ¡¶ï¼Œæ¼æ¡¶
-        1 ä»¤ç‰Œæ¡¶
-          å‡è®¾é™åˆ¶2r/s,åˆ™æŒ‰ç…§500æ¯«ç§’çš„å›ºå®šé€ŸçŽ‡å¾€æ¡¶ä¸­æ·»åŠ ä»¤ç‰Œ
-          æ¡¶ä¸­æœ€å¤šå­˜æ”¾bä¸ªä»¤ç‰Œï¼Œå½“æ¡¶æ»¡æ—¶ï¼Œæ–°æ·»åŠ çš„ä»¤ç‰Œè¢«ä¸¢å¼ƒ
-          å½“ä¸€ä¸ªè¯·æ±‚è¿‡æ¥ï¼Œä¼šä»Žæ¡¶ä¸­åˆ é™¤nä¸ªä»¤ç‰Œï¼Œå¦‚æžœæ¡¶ä¸­å¤§äºŽnä¸ªä»¤ç‰Œï¼ŒæŽ¥ç€æ•°æ®åŒ…è¢«å‘é€åˆ°ç½‘ç»œï¼Œå¦‚æžœæ¡¶ä¸­å°äºŽnä¸ªä»¤ç‰Œï¼Œè¯·æ±‚å°†è¢«é™æµ
+ËÄ¡¢ÏÞÁ÷Ïê½â£¨ÇÀ¹ººÍÇÀÆ±£©
+    ³£¼ûµÄÏÞÁ÷£º ÏÞÖÆ×Ü²¢·¢Êý£¨Êý¾Ý¿âÁ¬½Ó³Ø£©¡¢ÏÞÖÆË²Ê±²¢·¢Êý£¨NginxµÄlimit_connÄ£¿é£©£¬ÏÞÖÆÆ½¾ùËÙÂÊ£¨NginxµÄlimit_reqÄ£¿é£©£¬ÒÔ¼°ÏÞÖÆÔ¶³Ì½Ó¿Úµ÷ÓÃËÙÂÊ£¬
+    ÏÞÖÆMQµÄÏû·ÑËÙÂÊ¡£
+    Ò»¡¢ÏÞÁ÷·½·¨£º ÁîÅÆÍ°£¬Â©Í°
+        1 ÁîÅÆÍ°
+          ¼ÙÉèÏÞÖÆ2r/s,Ôò°´ÕÕ500ºÁÃëµÄ¹Ì¶¨ËÙÂÊÍùÍ°ÖÐÌí¼ÓÁîÅÆ
+          Í°ÖÐ×î¶à´æ·Åb¸öÁîÅÆ£¬µ±Í°ÂúÊ±£¬ÐÂÌí¼ÓµÄÁîÅÆ±»¶ªÆú
+          µ±Ò»¸öÇëÇó¹ýÀ´£¬»á´ÓÍ°ÖÐÉ¾³ýn¸öÁîÅÆ£¬Èç¹ûÍ°ÖÐ´óÓÚn¸öÁîÅÆ£¬½Ó×ÅÊý¾Ý°ü±»·¢ËÍµ½ÍøÂç£¬Èç¹ûÍ°ÖÐÐ¡ÓÚn¸öÁîÅÆ£¬ÇëÇó½«±»ÏÞÁ÷
 
-        2 æ¼æ¡¶
-          ä¸€ä¸ªå›ºå®šå®¹é‡çš„æ¼æ¡¶ï¼ŒæŒ‰ç…§å¸¸é‡å›ºå®šé€ŸçŽ‡æµå‡ºæ°´æ»´
-          å¦‚æžœæ¡¶æ˜¯ç©ºçš„ï¼Œåˆ™ä¸éœ€æµå‡ºæ°´æ»´
-          å¯ä»¥ä»¥ä»»æ„é€ŸçŽ‡æµå…¥æ°´æ»´åˆ°æ¼æ¡¶
-          å¦‚æžœæµå…¥æ°´æ»´è¶…å‡ºäº†æ¡¶çš„å®¹é‡ï¼Œåˆ™æµå…¥çš„æ°´æ»´ä¸¢å¼ƒ
+        2 Â©Í°
+          Ò»¸ö¹Ì¶¨ÈÝÁ¿µÄÂ©Í°£¬°´ÕÕ³£Á¿¹Ì¶¨ËÙÂÊÁ÷³öË®µÎ
+          Èç¹ûÍ°ÊÇ¿ÕµÄ£¬Ôò²»ÐèÁ÷³öË®µÎ
+          ¿ÉÒÔÒÔÈÎÒâËÙÂÊÁ÷ÈëË®µÎµ½Â©Í°
+          Èç¹ûÁ÷ÈëË®µÎ³¬³öÁËÍ°µÄÈÝÁ¿£¬ÔòÁ÷ÈëµÄË®µÎ¶ªÆú
 
-    äºŒã€åº”ç”¨çº§é™æµ
-        1ã€é™æµæ€»å¹¶å‘/è¿žæŽ¥/è¯·æ±‚æ•° ï¼ˆTPS/QPSï¼‰
-        2ã€é™æµæ€»èµ„æºæ•°
-        3ã€é™æµæŸä¸ªæŽ¥å£çš„æ€»å¹¶å‘/è¯·æ±‚æ•° ï¼šä½¿ç”¨AtomicLong æˆ–è€… Semaphore
+    ¶þ¡¢Ó¦ÓÃ¼¶ÏÞÁ÷
+        1¡¢ÏÞÁ÷×Ü²¢·¢/Á¬½Ó/ÇëÇóÊý £¨TPS/QPS£©
+        2¡¢ÏÞÁ÷×Ü×ÊÔ´Êý
+        3¡¢ÏÞÁ÷Ä³¸ö½Ó¿ÚµÄ×Ü²¢·¢/ÇëÇóÊý £ºÊ¹ÓÃAtomicLong »òÕß Semaphore
            try{
-                if(atomic.incrementAndGet() > é™æµæ•°){
+                if(atomic.incrementAndGet() > ÏÞÁ÷Êý){
 
                 }
            } finally{
                 atomic.decrementAndGet();
            }
-        4ã€é™æµæŸä¸ªæŽ¥å£çš„æ¯ç§’è¯·æ±‚æ•°
-        5ã€å¹³æ»‘é™æµæŸä¸ªæŽ¥å£çš„è¯·æ±‚æ•° ï¼šGuava RateLimiteræä¾›çš„ä»¤ç‰Œæ¡¶ç®—æ³•å¯ç”¨äºŽå¹³æ»‘çªå‘é™æµå’Œå¹³æ»‘é¢„çƒ­é™æµ
-        6ã€åˆ†å¸ƒå¼é™æµï¼šå°†é™æµæœåŠ¡åšæˆåŽŸå­åŒ–ï¼Œè€Œè§£å†³æ–¹æ¡ˆå¯ä»¥ä½¿ç”¨Redis + Lua æˆ– Nginx + Lua
+        4¡¢ÏÞÁ÷Ä³¸ö½Ó¿ÚµÄÃ¿ÃëÇëÇóÊý
+        5¡¢Æ½»¬ÏÞÁ÷Ä³¸ö½Ó¿ÚµÄÇëÇóÊý £ºGuava RateLimiterÌá¹©µÄÁîÅÆÍ°Ëã·¨¿ÉÓÃÓÚÆ½»¬Í»·¢ÏÞÁ÷ºÍÆ½»¬Ô¤ÈÈÏÞÁ÷
+        6¡¢·Ö²¼Ê½ÏÞÁ÷£º½«ÏÞÁ÷·þÎñ×ö³ÉÔ­×Ó»¯£¬¶ø½â¾ö·½°¸¿ÉÒÔÊ¹ÓÃRedis + Lua »ò Nginx + Lua
 
-    ä¸‰ã€æŽ¥å…¥å±‚é™æµ
-        1ã€è´Ÿè½½å‡è¡¡ã€éžæ³•è¯·æ±‚è¿‡æ»¤ã€è¯·æ±‚èšåˆã€ç¼“å­˜ã€é™çº§ã€é™æµã€A/Bæµ‹è¯•ã€æœåŠ¡è´¨é‡ç›‘æŽ§ç­‰ã€‚
-           NginxæŽ¥å…¥å±‚é™æµå¯ä»¥ä½¿ç”¨Nginxè‡ªå¸¦çš„æ¨¡å—ï¼š è¿˜å¯ä»¥ä½¿ç”¨OpenRestyæä¾›çš„Luaé™æµæ¨¡å—
+    Èý¡¢½ÓÈë²ãÏÞÁ÷
+        1¡¢¸ºÔØ¾ùºâ¡¢·Ç·¨ÇëÇó¹ýÂË¡¢ÇëÇó¾ÛºÏ¡¢»º´æ¡¢½µ¼¶¡¢ÏÞÁ÷¡¢A/B²âÊÔ¡¢·þÎñÖÊÁ¿¼à¿ØµÈ¡£
+           Nginx½ÓÈë²ãÏÞÁ÷¿ÉÒÔÊ¹ÓÃNginx×Ô´øµÄÄ£¿é£º »¹¿ÉÒÔÊ¹ÓÃOpenRestyÌá¹©µÄLuaÏÞÁ÷Ä£¿é
 
-    å››ã€èŠ‚æµ : ç‰¹å®šæ—¶é—´çª—å£å†…å¯¹é‡å¤çš„ç›¸åŒäº‹ä»¶æœ€å¤šå¤„ç†ä¸€æ¬¡ï¼Œæˆ–è€…æƒ³é™åˆ¶å¤šä¸ªè¿žç»­ç›¸åŒäº‹ä»¶æœ€å°æ‰§è¡Œæ—¶é—´é—´éš”ã€‚
+    ËÄ¡¢½ÚÁ÷ : ÌØ¶¨Ê±¼ä´°¿ÚÄÚ¶ÔÖØ¸´µÄÏàÍ¬ÊÂ¼þ×î¶à´¦ÀíÒ»´Î£¬»òÕßÏëÏÞÖÆ¶à¸öÁ¬ÐøÏàÍ¬ÊÂ¼þ×îÐ¡Ö´ÐÐÊ±¼ä¼ä¸ô¡£
 
-äº”ï¼š é™çº§ ç›®çš„æ˜¯ä¿è¯æ ¸å¿ƒæœåŠ¡å¯ç”¨
-     1ã€è‡ªåŠ¨é™çº§ï¼š è¶…æ—¶é™çº§ã€ç»Ÿè®¡å¤±è´¥é™çº§ã€æ•…éšœé™çº§ã€é™æµé™çº§
-     2ã€äººå·¥é™çº§ï¼š æ‰‹åŠ¨åœç”¨ä¸€äº›æœåŠ¡
+Îå£º ½µ¼¶ Ä¿µÄÊÇ±£Ö¤ºËÐÄ·þÎñ¿ÉÓÃ
+     1¡¢×Ô¶¯½µ¼¶£º ³¬Ê±½µ¼¶¡¢Í³¼ÆÊ§°Ü½µ¼¶¡¢¹ÊÕÏ½µ¼¶¡¢ÏÞÁ÷½µ¼¶
+     2¡¢ÈË¹¤½µ¼¶£º ÊÖ¶¯Í£ÓÃÒ»Ð©·þÎñ
 
-å…­ã€è¶…æ—¶ä¸Žé‡è¯•æœºåˆ¶
-    1ã€å¦‚æžœåº”ç”¨ä¸è®¾ç½®è¶…æ—¶ï¼Œå¯èƒ½ä¼šå¯¼è‡´è¯·æ±‚å“åº”æ…¢ï¼Œæ…¢è¯·æ±‚ç§¯ç´¯å¯¼è‡´è¿žé”ååº”ï¼Œå¹¶ä¸”è®¾ç½®åˆç†çš„é‡è¯•æœºåˆ¶
-    ä¸€ã€ä»£ç†å±‚è¶…æ—¶ä¸Žé‡è¯•
-        1ã€Nginxï¼š
-        å®¢æˆ·ç«¯è¶…æ—¶è®¾ç½®ï¼š è¯»å–è¯·æ±‚å¤´è¶…æ—¶æ—¶é—´ï¼Œè¯»å–è¯·æ±‚ä½“è¶…æ—¶æ—¶é—´ï¼Œå‘é€å“åº”è¶…æ—¶æ—¶é—´ï¼Œé•¿è¿žæŽ¥è¶…æ—¶æ—¶é—´
-        DNSè§£æžè¶…æ—¶è®¾ç½®ï¼š Nginxä½¿ç”¨åŸŸåæ—¶ï¼Œéœ€è¦è®¾ç½®DNSè§£æžè¶…æ—¶æ—¶é—´
-        ä»£ç†è¶…æ—¶è®¾ç½®ï¼š
-            ç½‘ç»œè¿žæŽ¥ï¼š
-                proxy_connect_timeout time: ä»ŽåŽç«¯/ä¸Šæ¸¸æœåŠ¡å™¨å»ºç«‹è¿žæŽ¥çš„è¶…æ—¶æ—¶é—´ï¼Œé»˜è®¤60s
-                proxy_read_timeout time: è®¾ç½®ä»ŽåŽç«¯/ä¸Šæ¸¸æœåŠ¡å™¨è¯»å–å“åº”çš„è¶…æ—¶æ—¶é—´ï¼Œé»˜è®¤60s
-                proxy_send_timeout time: è®¾ç½®ä»ŽåŽç«¯/ä¸Šæ¸¸æœåŠ¡å™¨å‘é€è¯·æ±‚çš„è¶…æ—¶æ—¶é—´ï¼Œé»˜è®¤60s
-            å¤±è´¥é‡è¯•ï¼š
+Áù¡¢³¬Ê±ÓëÖØÊÔ»úÖÆ
+    1¡¢Èç¹ûÓ¦ÓÃ²»ÉèÖÃ³¬Ê±£¬¿ÉÄÜ»áµ¼ÖÂÇëÇóÏìÓ¦Âý£¬ÂýÇëÇó»ýÀÛµ¼ÖÂÁ¬Ëø·´Ó¦£¬²¢ÇÒÉèÖÃºÏÀíµÄÖØÊÔ»úÖÆ
+    Ò»¡¢´úÀí²ã³¬Ê±ÓëÖØÊÔ
+        1¡¢Nginx£º
+        ¿Í»§¶Ë³¬Ê±ÉèÖÃ£º ¶ÁÈ¡ÇëÇóÍ·³¬Ê±Ê±¼ä£¬¶ÁÈ¡ÇëÇóÌå³¬Ê±Ê±¼ä£¬·¢ËÍÏìÓ¦³¬Ê±Ê±¼ä£¬³¤Á¬½Ó³¬Ê±Ê±¼ä
+        DNS½âÎö³¬Ê±ÉèÖÃ£º NginxÊ¹ÓÃÓòÃûÊ±£¬ÐèÒªÉèÖÃDNS½âÎö³¬Ê±Ê±¼ä
+        ´úÀí³¬Ê±ÉèÖÃ£º
+            ÍøÂçÁ¬½Ó£º
+                proxy_connect_timeout time: ´Óºó¶Ë/ÉÏÓÎ·þÎñÆ÷½¨Á¢Á¬½ÓµÄ³¬Ê±Ê±¼ä£¬Ä¬ÈÏ60s
+                proxy_read_timeout time: ÉèÖÃ´Óºó¶Ë/ÉÏÓÎ·þÎñÆ÷¶ÁÈ¡ÏìÓ¦µÄ³¬Ê±Ê±¼ä£¬Ä¬ÈÏ60s
+                proxy_send_timeout time: ÉèÖÃ´Óºó¶Ë/ÉÏÓÎ·þÎñÆ÷·¢ËÍÇëÇóµÄ³¬Ê±Ê±¼ä£¬Ä¬ÈÏ60s
+            Ê§°ÜÖØÊÔ£º
                 proxy_next_upstream error
                 proxy_next_upstream_tries number
                 proxy_next_upstream_timeout time
 
-     äºŒã€Webå®¹å™¨è¶…æ—¶
-            1ã€connectionTimeout: é…ç½®ä¸Žå®¢æˆ·ç«¯å»ºç«‹è¿žæŽ¥çš„è¶…æ—¶æ—¶é—´
-            2ã€socket.soTimeout:ä»Žå®¢æˆ·ç«¯è¯»å–è¯·æ±‚æ•°æ®çš„è¶…æ—¶æ—¶é—´
-            3ã€asyncTimeout:Servlet3å¼‚æ­¥è¯·æ±‚æ—¶é—´
-            4ã€æ–‡ä»¶ä¸Šä¼ çš„è¶…æ—¶æ—¶é—´
-            5ã€keepAliveTimeoutå’ŒmaxKeepAliveRequestï¼šé•¿è¿žæŽ¥è¶…æ—¶æ—¶é—´
+     ¶þ¡¢WebÈÝÆ÷³¬Ê±
+            1¡¢connectionTimeout: ÅäÖÃÓë¿Í»§¶Ë½¨Á¢Á¬½ÓµÄ³¬Ê±Ê±¼ä
+            2¡¢socket.soTimeout:´Ó¿Í»§¶Ë¶ÁÈ¡ÇëÇóÊý¾ÝµÄ³¬Ê±Ê±¼ä
+            3¡¢asyncTimeout:Servlet3Òì²½ÇëÇóÊ±¼ä
+            4¡¢ÎÄ¼þÉÏ´«µÄ³¬Ê±Ê±¼ä
+            5¡¢keepAliveTimeoutºÍmaxKeepAliveRequest£º³¤Á¬½Ó³¬Ê±Ê±¼ä
 
-     ä¸‰ã€æ•°æ®åº“å®¢æˆ·ç«¯è¶…æ—¶
+     Èý¡¢Êý¾Ý¿â¿Í»§¶Ë³¬Ê±
 
-ä¸ƒã€å›žæ»šæœºåˆ¶ ï¼š äº‹åŠ¡å›žæ»šã€éƒ¨ç½²ç‰ˆæœ¬å›žæ»š
+Æß¡¢»Ø¹ö»úÖÆ £º ÊÂÎñ»Ø¹ö¡¢²¿Êð°æ±¾»Ø¹ö
 
-ç¬¬äºŒéƒ¨åˆ† é«˜å¹¶å‘
-ç¬¬9ç«  åº”ç”¨çº§ç¼“å­˜
-    1ã€ç¼“å­˜å‘½ä¸­çŽ‡: ä»Žç¼“å­˜ä¸­è¯»å–æ•°æ®çš„æ¬¡æ•°ä¸Žæ€»è¯»å–æ¬¡æ•°çš„æ¯”çŽ‡ï¼Œå‘½ä¸­çŽ‡è¶Šé«˜è¶Šå¥½
-    2ã€ç¼“å­˜å›žæ”¶ç­–ç•¥:
-        1ã€åŸºäºŽç©ºé—´æŒ‡ç¼“å­˜è®¾ç½®äº†å­˜å‚¨ç©ºé—´ï¼Œå¦‚è®¾ç½®10MBï¼Œå½“è¾¾åˆ°å­˜å‚¨ç©ºé—´ä¸Šé™æ˜¯ï¼ŒæŒ‰ç…§ä¸€å®šçš„ç­–ç•¥ç§»é™¤æ•°æ®ã€‚
-        2ã€åŸºäºŽæ—¶é—´ ï¼š å­˜æ´»æœŸï¼ˆç¼“å­˜æ•°æ®ä»Žåˆ›å»ºå¼€å§‹ç›´åˆ°åˆ°æœŸçš„ä¸€ä¸ªæ—¶é—´æ®µï¼‰
-                       ç©ºé—²æœŸï¼ˆç¼“å­˜æ•°æ®å¤šä¹…æ²¡è¢«è®¿é—®åŽç§»é™¤ç¼“å­˜çš„æ—¶é—´ï¼‰
-        3ã€javaçš„è½¯å¼•ç”¨å¯ä»¥åšç¼“å­˜å¯¹è±¡
-        4ã€FIFOï¼šå…ˆè¿›å…ˆå‡º
-           LRUï¼šæœ€è¿‘æœ€å°‘ä½¿ç”¨
-           LFUï¼šæœ€ä¸å¸¸ä½¿ç”¨
+µÚ¶þ²¿·Ö ¸ß²¢·¢
+µÚ9ÕÂ Ó¦ÓÃ¼¶»º´æ
+    1¡¢»º´æÃüÖÐÂÊ: ´Ó»º´æÖÐ¶ÁÈ¡Êý¾ÝµÄ´ÎÊýÓë×Ü¶ÁÈ¡´ÎÊýµÄ±ÈÂÊ£¬ÃüÖÐÂÊÔ½¸ßÔ½ºÃ
+    2¡¢»º´æ»ØÊÕ²ßÂÔ:
+        1¡¢»ùÓÚ¿Õ¼äÖ¸»º´æÉèÖÃÁË´æ´¢¿Õ¼ä£¬ÈçÉèÖÃ10MB£¬µ±´ïµ½´æ´¢¿Õ¼äÉÏÏÞÊÇ£¬°´ÕÕÒ»¶¨µÄ²ßÂÔÒÆ³ýÊý¾Ý¡£
+        2¡¢»ùÓÚÊ±¼ä £º ´æ»îÆÚ£¨»º´æÊý¾Ý´Ó´´½¨¿ªÊ¼Ö±µ½µ½ÆÚµÄÒ»¸öÊ±¼ä¶Î£©
+                       ¿ÕÏÐÆÚ£¨»º´æÊý¾Ý¶à¾ÃÃ»±»·ÃÎÊºóÒÆ³ý»º´æµÄÊ±¼ä£©
+        3¡¢javaµÄÈíÒýÓÃ¿ÉÒÔ×ö»º´æ¶ÔÏó
+        4¡¢FIFO£ºÏÈ½øÏÈ³ö
+           LRU£º×î½ü×îÉÙÊ¹ÓÃ
+           LFU£º×î²»³£Ê¹ÓÃ
 
-    3ã€
+    3  ¶Ñ»º´æ:   Ê¹ÓÃjava¶ÑÄÚ´æÀ´´æ´¢»º´æ¶ÔÏó.ºÃ´¦ÊÇ²»ÐèÒªÐòÁÐ»¯£¬È±µãÕ¼¶ÑÄÚ´æ£¬Ò»°ã±È½ÏÈÈÊý¾Ý Guava Cache
+       ¶ÑÍâ»º´æ: »º´æ¿Õ¼ä´ó£¬µ«ÐèÒªÐòÁÐ»¯
+       »º´æ´ÅÅÌ
+       ·Ö²¼Ê½»º´æ
 
+µÚ10ÕÂ
+    1¡¢http»º´æ
+      1 ·þÎñÆ÷¶ËÏìÓ¦µÄLast-Modified»áÔÚÏÂ´ÎÇëÇóÊ±£¬½«If-Modified-SinceÇëÇóÍ·´øµ½·þÎñÆ÷½øÐÐÎÄµµÊÇ·ñÐÞ¸ÄµÄÑéÖ¤£¬Èç¹ûÃ»ÓÐÐÞ¸ÄÔò·µ»Ø304£¬ä¯ÀÀÆ÷¿ÉÒÔÖ±½ÓÊ¹ÓÃ»º´æÄÚÈÝ
+      2 Cache-Control:max-ageºÍExpiresÓÃÓÚ¾ö¶¨ä¯ÀÀÆ÷¶ËÄÚÈÝ»º´æ¶à¾Ã
+      3 Http/1.1 ¹æ·¶¶¨ÒåµÄCache-ControlÓÅÏÈ¼¶¸ßÓÚHttp1.0
+    2¡¢HttpClient¿Í»§¶Ë»º´æ
+    3¡¢Nginx Http»º´æ
+        1¡¢ä¯ÀÀÆ÷·¢ÆðÇëÇó£¬Ê×ÏÈµ½Nginx£¬Nginx¸ù¾ÝURLÔÚNginx±¾µØ²éÕÒÊÇ·ñÓÐ´úÀí²ã±¾µØ»º´æ
+        2¡¢NginxÃ»ÓÐÕÒµ½±¾µØ»º´æ£¬Ôò·ÃÎÊºó¶Ë»ñÈ¡×îÐÂµÄÎÄµµ£¬²¢·ÅÈëNginx±¾µØ»º´æ£¬·µ»Ø200
+        3¡¢NginxÕÒµ½±¾µØ»º´æ£¬²¢Ã»ÓÐ¹ýÆÚ£¬Ôò·µ»Ø304
+    4¡¢»º´æValueÒª½øÐÐÑ¹Ëõ
 
-
-
-
-
-
-
-
-
-
-
-\
+µÚ11ÕÂ
+    1¡¢Êý¾Ý¿âÁ¬½Ó³Ø: Í¨¹ý¸´ÓÃTCPÁ¬½ÓÀ´¼õÉÙ´´½¨ºÍÊÍ·ÅÁ¬½ÓÊ±¼äÀ´ÌáÉýÐÔÄÜ
+    2¡¢HttpClientÁ¬½Ó³Ø:
+      ¿ÉÒÔÔÚÊ¹ÓÃHttpClientµÄÊ±ºò£¬Ê¹ÓÃÁ¬½Ó³Ø
+      Èç¹û²»²ÉÓÃÁ¬½Ó³Ø£¬Ã¿´ÎÁ¬½Ó·¢ÆðHttpÇëÇóµÄÊ±ºò¶¼»áÖØÐÂ½¨Á¢TCPÁ¬½Ó(¾­Àú3´ÎÎÕÊÖ)£¬ÓÃÍê¾Í»á¹Ø±ÕÁ¬½Ó(4´Î»ÓÊÖ)£¬Èç¹û²ÉÓÃÁ¬½Ó³ØÔò¼õÉÙÁËÕâ²¿·ÖÊ±¼äËðºÄ
+      HttpConnectionManagerÁ¬½Ó³Ø¹ÜÀíÀà
