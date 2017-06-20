@@ -18,3 +18,10 @@ Setting->Inspections->Serialization issues->Serializable class without ’serial
 
 7、错误: 编码UTF8的不可映射字符
 右键: 修改File-encoding
+
+8、idea设置pom自动导入
+maven->importing
+
+9、修改控制的编码
+D:\Program Files (x86)\JetBrains\IntelliJ IDEA 14.1.7\bin\idea.exe.vmoptions
+-Dfile.encoding=UTF-8

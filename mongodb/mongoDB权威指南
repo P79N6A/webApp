@@ -1,0 +1,39 @@
+第一章： MongoDB基础知识
+    一、文档：就是键值对的一个有序集
+       文档的键是字符串，除了少数情况，键可以使用任意UTF-8字符
+       键不能含有\0，这个字符用于表示键的结尾
+       .和$ 具有特别意义
+       mongoDB区分类型和大小写
+       mongoDB文档中，键名不能重复
+
+    二、集合：文档可以是各式各样的，文档的内容可以没有任何关系
+        {"greeting" : "Hello,world!"}
+        {"foo" : 5}
+        要求：按文档类型，区分集合
+
+    三、数据库：多个集合组合
+        1、admin 如果将一个用户加到admin数据库，这个用户将自动获得所有数据库的权限
+        2、local
+        3、config：mongoDB用于分片
+
+    四、mongoDB命令行连接操作
+        1、mongo yl-mongodb-test-dev001-bjdxt.qiyi.virtual:27017/lego -u lego -p HmKcGe
+        2、插入保存文档 ： db.foo.insert({"bar" :　"baz"})
+                        db.foo.batchInsert({"_id" :0},{"_id":1},{"_id" : 2})
+                        do.foo.find()
+                        do.foo.delete()
+        3、使用修改器： 可以使用原子性的更新修改器，对文档中的某些字段进行更新
+        4、更新多个文档： 默认情况下,更新只能对符合匹配条件的第一个文档执行操作,要是多个文档符合条件,只有第一个文档会被更新,其他文档不会更新.
+           可以通过getLastError命令,查更新文档的个数
+           可以通过findAndModify命令，返回被更新的文档
+        5、upsert: 如果update的文档，不存在要插入一条新的记录
+        6、写入安全机制：应答式写入　和　非应答式写入
+
+
+
+
+
+
+
+
+

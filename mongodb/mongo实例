@@ -1,0 +1,34 @@
+//db.cartoonbook.find(
+////{"contract" : {"$in" : [null] , "$exists" : true}}
+//{"createTime" : "1468918742318"}
+//	)
+
+//db.food.insert({"fruit" : ["apple","banana"]})
+
+db.food.find("fruit","banana")
+//db.food.insert({"fruit" : ["apple","banana2"]})
+//db.food.insert({"fruit" : ["apple","banana3"]})
+//db.food.insert({"fruit" : ["apple1","banana"]})
+
+db.food.find({"_id" : "ObjectId("5948932fc37dc00422d2c207"}")
+
+db.food.find().limit(5).sort({"comment.score":1})
+
+db.food.insert({"fruit" : ["apple1","banana","ddd11"]})
+db.food.update({"fruit" : "banana3"},{"$set" : {"comment" : { "at" : "joe" , "score" : 5}}},false,true)
+db.food.update({"fruit" : "banana3"},{"$set" : {"comment" : { "at" : "joe" , "score" : 3}}},false,true)
+db.food.update({"fruit" : "banana3"},{"$set" : {"comment" : { "at" : "joe" , "score" : 7}}},false,true)
+db.food.find({"name": {"frist" : "joe" , "last" : "wl"}})
+db.food.find({"name": {"frist" : "joe" }})
+db.food.find({"fruit" : "apple1"})
+db.food.find({"comment": {"$elemMatch" : {"score":5.0}}})
+db.food.find({"comment.score": 5.0})
+
+db.system.indexes.find({"lego":"mamsdataaccess"});
+db.mamsdataaccess.dropIndex({"updateTime" : 1});
+db.mamsdataaccess.ensureIndex({"createTime":1})
+db.mamsdataaccess.ensureIndex({"baiduId":1},{"unique":true})
+db.mamsdataaccess.getIndexes()
+db.mamsdataaccess.totalIndexSize();
+db.mamsdataaccess.reIndex();
+db.mamsdataaccess.find({"createTime" : "1"}).explain()\

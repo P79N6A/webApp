@@ -1,0 +1,119 @@
+第4章
+1、find简介
+mongoDB使用find来进行查询
+(1) 可以匹配查询
+    db.users.find({"username" : "joe"})
+    db.users.find({"username" : "joe","age" : 27 })多条件查询
+(2) 只返回指定字段
+    db.cartoonbook.find({},{"uploadUserName" : 1})
+(3) 查询条件
+    大于 db.users.find({"age"} : {"$gt" : 18})
+    不等于
+        db.cartoonbook.find(
+            {"author" : {"$ne" : "lele"}}
+        )
+(4) OR查询条件
+    db.cartoonbook.find(
+    	{"createTime" :{"$in" : ["1468918742318","1468918987159"]}}
+    )
+(5) NULL : 返回包含这个字段, 并且值为空
+    db.cartoonbook.find({"contract" : {"$in" : [null] , "$exists" : true}})
+
+(6) 查询数组
+        db.food.insert({"fruit" : ["apple","banana"]})
+    只需要拿数组中字段,一个值,就可以匹配上
+        db.food.find("fruit","apple")
+    如果用数组中多个值进行匹配,就可以匹配出来
+        db.food.insert({"fruit" : ["apple","banana2"]})
+        db.food.insert({"fruit" : ["apple","banana3"]})
+        db.food.insert({"fruit" : ["apple1","banana"]})
+        db.food.find({"fruit" : {"$all" : ["apple","banana2"]}})
+    可以按数组的大小进行查询
+        db.food.find({"fruit" : {"$size" : 2}})
+(7) 查询内嵌文档
+    在原有的基础上,插入一个文档
+    db.food.update({"fruit" : "banana"},{"$set" : {"name" : { "frist" : "joe" , "last" : "wl"}}},false,true)
+    必须要匹配整个文档
+    db.food.find({"name": {"frist" : "joe" , "last" : "wl"}})
+    查询一个内嵌文档comment中,score>=0
+    可以使用
+    db.food.find({"comment.score": 5.0})
+    {
+        "_id" : ObjectId("594895d2c37dc00422d2c20b"),
+        "comment" : {
+            "at" : "joe",
+            "score" : 7.0
+        },
+        "fruit" : [
+            "apple1",
+            "banana",
+            "ddd11"
+        ],
+        "name" : {
+            "frist" : "joe",
+            "last" : "wl"
+        }
+    }
+    {
+        "_id" : ObjectId("5948942fc37dc00422d2c209"),
+        "comment" : {
+            "at" : "joe",
+            "score" : 5.0
+        },
+        "fruit" : [
+            "apple",
+            "banana3"
+        ]
+    }
+(6) 游标
+    1 limit : 限制返回结果
+    2 sort: 排序
+    db.food.find().limit(5).sort({"comment.score":1}) 1是升序，2是降序
+
+
+第5章 索引(B树)
+    1 普通索引
+        db.userInfo.ensureIndex({username: 1});
+        db.userInfo.ensureIndex({username: 1, age: -1}); 1表示升序 -1表示降序
+        该索引被创建后，基于username和age的查询将会用到该索引，或者是基于username的查询也会用到该索引，但是只是基于age的查询将不会用到该复合索引
+    2 创建唯一索引
+        db.test.ensureIndex({"userid":1},{"unique":true})
+    3 删除索引
+        db.test.dropIndex({"userid":1})
+    4 查看当前集合索引
+        db.userInfo.getIndexes();
+    5 执行查询集合
+        db.mamsdataaccess.find({"createTime" : "1"}).explain()
+    6 索引管理
+        后台建立索引：db.people.ensureIndex({"username" : 1},{"background" : ture}}
+
+第6章 聚合
+    1 count
+        db.food.count();
+        db.food.count({"comment.score": 7.0}); 带条件count
+    2 distinct
+        db.food2.insert({"fruit" : "apple1","value" : 10})
+        db.food2.insert({"fruit" : "banana3","value" : 12})
+        db.food2.insert({"fruit" : "banana3","value" : 12})
+        db.food2.insert({"fruit" : "apple1","value" : 10})
+        db.food2.insert({"fruit" : "apple1","value" : 10})
+
+        db.food2.distinct("fruit")
+        [
+            "apple1",
+            "banana3"
+        ]
+    3 group
+      语法
+        db.food2.group({key:{fruit:true},initial:{num:0},$reduce:function(doc,prev){
+        	prev.num++
+        }});
+
+    4 aggregate: 过滤, 分组, 求和
+        db.food2.aggregate([
+             { $match: { fruit: "apple1" } },
+             { $group: { _id: "$fruit", total: { $sum: "$value" } } },
+             { $sort: { total: -1 } }
+        ])
+
+
