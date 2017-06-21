@@ -43,6 +43,8 @@ $max 当前更新值大于文档中的值，就将其替换
 
 删除记录
 db.user.remove({name:"jikexueyuan2"})
+清空集合
+db.mamsdataaccess.remove({})
 删除集合（表）
 db.user.drop();
 show collections 查看所有集合
