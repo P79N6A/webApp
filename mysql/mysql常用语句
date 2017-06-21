@@ -60,3 +60,8 @@ mysql按关键字截取字符串
 
 查看mysql版本
     select version();
+
+查看某个字段是否包含 locate('iqiyi.com', source_url)
+    SELECT if(locate('iqiyi.com', source_url),'iqiyi.com',if(locate('qq.com', source_url),'qq.com','')) as url , source_url
+    FROM video_url_info
+    WHERE source_url LIKE '%qq.com%'
