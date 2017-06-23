@@ -46,4 +46,4 @@
 
 二 Spring 自动配置原理
 1 运作原理:
-通过@EnableAutoConfiguration注解 ：
+通过@EnableAutoConfiguration注解 ：这个注释告诉Spring Boot根据你添加的jar依赖关系来“猜”你将如何配置Spring
