@@ -1,6 +1,7 @@
 一、linux文件与目录管理
 ls、cd、cp、mv、pwd、rm
 ls -lSr 按文件的大小列出所有文件
+ll -h linux显示文件目录，并显示文件大小
 cd - 回到上一个访问的目录
 groupadd、chgrp、useradd、chown、chmod （增加组、切换组、增加用户、切换用户、修改文件和目录权限）
 chattr 修改文件的特殊属性
@@ -8,6 +9,8 @@ find、ln、mkdir
 find / -name 'jenkins' -type d 查找目录
 find . -name 'file' 查找文件
 find .|xargs grep -ri "IBM"  linux查找目录下的所有文件中是否含有某个字符串
+find . -name 文件名 | xargs grep aaa 查看文件名下,所有包含aaa字符的文件
+
 ln (s) 没有参数(s)硬连接，否则是软连接
     硬连接: 不能对目录建硬连接，必须管理员才能建硬连接
     软连接: 不空占用空间，删除原文件时，软连接找不到 ln -s 源文件 连接地址
@@ -38,9 +41,8 @@ grep 过滤文件内容，并显示
     6、egrep '111|aaa' test.txt 查看包含111或aaa的行
     7、grep 'text' －c 查看匹配字符的计数。
     8、grep dddadfa -r /data 查看data目录下，包含dddadfa文件
-
-
-    less  web-2017-05-16.log | grep -C10 'localhost:1099' //输出匹配文字10行
+    9、grep -r 递归
+    less web-2017-05-16.log | grep -C10 'localhost:1099' //输出匹配文字10行
 
 sed  替换或删除文件内容
     1、sed -i 's/name/name1/g' test.txt 替换name为name1\
@@ -51,18 +53,23 @@ sed  替换或删除文件内容
     6、sed -i '1,5'd test.txt删除1到5行
 
 输出日志 : 后端执行命令，并且将输出的内存放入 “/dev/null 2>&1” 回收站
+0 是标准输入（STDIN），1 是标准输出（STDOUT），2 是标准错误输出（STDERR）。
 nohup /usr/local/jdk1.8.0_60/bin/java -jar microservice-register-1.0.0-SNAPSHOT.jar > /dev/null 2>&1 &
 
 awk 按分隔符输出
     less test.txt | awk -F ':' '{print $1}' 输出分段的第一个分段的内容
-    打印系统环境变量 ： awk 'BEGIN { print ENVIRON["HOME"]; print ENVIRON["PATH"]}'
-    求一个文件中的最大值 ：awk 'BEGIN {max = 0} {if ($1+0 > max+0) max=$1 fi} END {print "Max=", max}'
-    awk循环使用: cat data.txt | awk 'BEGIN {str = ""} { str=str$1","} END {print "str=", str}'
+    打印系统环境变量 ：
+    awk 'BEGIN { print ENVIRON["HOME"]; print ENVIRON["PATH"]}'
+    求一个文件中的最大值 ：
+    awk 'BEGIN {max = 0} {if ($1+0 > max+0) max=$1 fi} END {print "Max=", max}'
+    awk循环使用:
+    cat data.txt | awk 'BEGIN {str = ""} { str=str$1","}
+    END {print "str=", str}'
     http://blog.csdn.net/kehyuanyu/article/details/45721099
 
     *精确匹配*
     #打印名字为root的用户在/etc/passwd文件中的记录
-    awk -F : '$1=="root" {print $0}' /etc/passwd
+        awk -F: '$1=="root" {print $0}' /etc/passwd
 
     模糊匹配
     1)$n~正则表达式
@@ -194,7 +201,7 @@ head -n 1 /etc/issue 查看主机配置
 六、磁盘管理
 df -h 查看磁盘使用情况
 du 用来查看目录所占空间大小
-du -sh ./*
+du -h ./* == ll h 查看文件占用的空间的大小
 free -m 查看内存使用
 history 查看历史执行的命令
 !num 可以执行历史执行的命令
@@ -202,14 +209,14 @@ more /proc/cpuinfo | grep "model name" 查看cpu信息
 getconf LONG_BIT 查看cpu的位数
 grep MemTotal /proc/meminfo 查看内存
 
-mount /dev/hda2 / 挂载一个文件系统 在根目录下挂载文件系统
+mount /dev/hda2 /挂载一个文件系统 在根目录下挂载文件系统
 umount /dev/hda2
 uname -a 查看linux系统，32位或64位
 
 七、查看CPU使用
 cat /proc/cpuinfo
 
-八、文本操作
+八、文本操作 : 排序后去重，必须一起使用
 sort 文件 | uniq 排序后去重
 sort 文件 | uniq -c 排序后去重，并获得重复的文本数
 sort 文件 | uniq -d 仅显示重复的记录

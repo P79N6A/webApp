@@ -33,3 +33,6 @@ Query query = bookDao.createQuery("SELECT id from Book where status = 1 and crea
 4、hql多表查询
  Query query = bookChapterDao.createQuery("SELECT a.volumeId,a.title,a.chapterNumber,b.title from BookChapter as a , BookVolume as b" +
                 "  where a.volumeId = b.id  and a.bookId = ? and a.status = 1").setParameter(0, book.getId());
+
+5、3个月
+select p from VideoUrlInfo p where updateTime < DATE_SUB(CURDATE(),INTERVAL 3 month)

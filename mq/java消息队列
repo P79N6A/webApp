@@ -11,35 +11,72 @@
 每个消息可以有多个消费者，生产者和消费者之间有时间上的相关性，订阅一个主题的消费者只能消费自它订阅之后发布的消息
 但：jms规范允许客户创建持久订阅，这在一个程度上放松了时间上的相关性要求。
 
-
-
 二、JMS可靠性机制
 1、消息的成功消费通常包含三个阶段：客户接收消息、客户处理消息和消息被确认
+   在事务性会话中，当一个事务被提交的时候，确认自动发生
+   在非事务性会话中，消息何时被确认取决于创建会话时的应答模式
+        Session.AUTO_ACKNOWLEDGE :
+            当客户成功的从receive方法返回的时候，或者从MessageListener.onMessage 方法成功返回的时候，会话自动确认。
+        Session.CLIENT_ACKNOWLEDGE :
+            客户通过消息的acknowledge 方法确认消息需要注意的是，在这种模式中，确认是在会话层上进行：
+            确认一个被消费的消息将自动确认所有已被会话消费的消息。
+            例如，如果一个消息消费者消费了10个消息，然后确认第5个消息，那么所有10个消息都被确认
+        Session.DUPS_ACKNOWLEDGE :
+            该选择只是会话迟钝的确认消息的提交
 2、持久性
-PERSISTENT持久保存信息，NON_PERSISTENT非持久保存信息
+    PERSISTENT持久保存信息，NON_PERSISTENT非持久保存信息
 3、消息优先级： 可以设置优先级
+    优先级分 10个级别，从 0（最低）到 9（最高）。
+    如果不指定优先级，默认级别是 4。需要注意的是，JMS provider 并不一定保证按照优先级的顺序提交消息。
 4、消息过期： 可以设置消息在一定时间后过期
 5、在一个JMS客户端，可以使用本地事务来组合消息的发送和接受(提交和回滚)
-6、消息确认：
-    Session.AUTO_ACKNOWLEDGE : 当客户成功的从receive方法返回的时候，或者从MessageListener.onMessage 方法成功返回的时候，会话自动确认。
-    Session.CLIENT_ACKNOWLEDGE : 客户通过消息的acknowledge 方法确认消息
-    Session.DUPS_ACKNOWLEDGE : 该选择只是会话迟钝的确认消息的提交
+
+6、临时目的地: 它们的存在时间只限于创建它们的连接所保持的时间。只有创建该临时目的地的连接上的消息消费者才能够从临时目的地中提取消息
+7、持久订阅:首先消息生产者必须使用 PERSISTENT 提交消息。
+   客户可以通过会话上的createDurableSubscriber 方法来创建一个持久订阅，该方法的第一个参数必须是一个 topic。第二个参数是订阅的名称
+
+三、
+
+1、Broker : 启动Broker方式
 
 
-
-三、ActiveMQ的Transport协议
-1、VM transport在VM内部通信，从而避免了网络传输的开销，采用的连接不是socket连接，而是直接地方法调用
-
-2、TCP transport允许客户端通过TCP socket连接到远程broker
-
-3、FailOver Transport是一种重新连接的机制,是基于其他Transport的上层,可以配置多个URL，并自动选择其中的一个URL来尝试建立连接。
+2、ActiveMQ的Transport协议
+    主要支持的协议：
+        VM Transport、TCP Transport、SSL
+        Transport、Peer Transport、UDP Transport、Multicast Transport、
+        HTTP and HTTPS Transport、Failover Transport、Fanout Transport、
+        Discovery Transport、ZeroConf Transport 等
+    以下为主要的Transport协议
+        1、VM transport在VM内部通信，从而避免了网络传输的开销，采用的连接不是socket连接，而是直接地方法调用
+        2、TCP transport允许客户端通过TCP socket连接到远程broker
+        3、FailOver Transport是一种重新连接的机制,是基于其他Transport的上层,可以配置多个URL，并自动选择其中的一个URL来尝试建立连接。
+        4、Discovery transport是可靠的tranport,它使用Discovery transport来定位用来连接的URI列表。
 
 四、持久化:
 1、AMQ Message Store是ActiveMQ默认的持久化方式
     Messages保存在data logs,如果data log文件中所有的消息被消费了，data log文件会被标记，然后被清除。
 2、JDBC Persistence 将Messages持久化到数据库中
-
+3、不支持Persistence
+<broker persistent="false">
+</broker>
 http://blog.csdn.net/boonya/article/details/51074478
+
+四、安全性 : ActiveMQ支持可插拔的安全机制，用以在不同的provider之间切换。
+1、 Simple Authentication Plugin
+    适用于简单的认证需求，或者用于建立测试环境.
+    它允许在XML配置文件中指定用户、用户组和密码等信息
+
+2、JAAS Authentication Plugin
+   JAAS Authentication Plugin依赖标准的JAAS机制来实现认证。
+
+3、Custom Authentication Implementation
+   通过编码的方式为ActiveMQ增加认证功能。例如编写一个类继承自XBeanBrokerService
+
+4、Authorization Plugin
+   通过Authorization Plugin为认证后的用户授权
+
+
+
 五、集群支持
 1、 Consumer clusters(消费者集群)
     一个队列有多个消费者 如果一个consumer失效，那么所有末被确认的消息都会被发送到这个queue上的其他Consumer
@@ -48,16 +85,48 @@ http://blog.csdn.net/boonya/article/details/51074478
     有多个JMS broker
     如果一个客户端连接到其中一个broker，如果这个broker失败，那么会自动连接到其他broker。在ActiveMQ中使用failover:// 协议来实现这个功能。
 
-    ActiveMQ可以做broker的集群，也可以做master-slave方式的集群。前者能在多个broker之前fail-over和load-balance，但是在某个节点出故障时，可能导致消息丢失；
-    而后者能实时备份消息，和fail-over，但是不能load-balance。broker cluser的方式，在一个broker上发送的消息可以在其它的broker上收到。
-    当一个broker失效时，客户端可以自动的转到别的broker上运行，多个broker可以同时提供服务，
-    但是消息只存储在一个broker上，如果那个broker失效了，那么客户端直到它重新启动后才能收到该broker上的消息，假如很不幸，那个broker的存储介质坏了，那么消息就丢失掉了
+    如果某个网络上有多个brokers而且客户使用静态发现（使用Static Transport或Failover Transport）或动态发现（使用Discovery Transport），那么客户可以容易地在某个broker失效的情况下切换到其它的
+    brokers。然而，stand alone brokers并不了解其它brokers上的consumers，也就是说如果某个broker上没有consumers，那么这个broker上的消息可能会因得不到处理而积压起来。
+    目前的解决方案是使用Network of brokers，以便在broker之间存储转发消息
 
-3、Master Slave(不常使用)
+3、Master Slave
     将消息复制到slave broker，当master broker遇到故障，可以立即切换slave broker而不丢失任何消息
     缺陷总结
     1.Master bloker只能配置一个slaver bloker
     2.如果主MQ发生故障，要手动停止所有服务，手动停止slave，复制slave数据文件到master，然后手动启动master
+   (1)Pure Master Slave
+        Slave broker消费master broker上所有的消息状态，例如消息、确认和事务状态等。只要slave broker连接到了master broker，它不会（也不被允许）启动任何network connectors或者transport
+        connectors，所以唯一的目的就是复制master broker的状态。
+
+        Master broker只有在消息成功被复制到slave broker之后才会响应客户。例如，客户的commit请求只有在master broker和slave broker都处理完毕commit请求之后才会结束。
+        当master broker失效的时候，slave broker有两种选择，一种是slave broker启动所有的networkconnectors和transport connectors，这允许客户端切换到slave broker；另外一种是slave broker停止。这种情况下，slave broker只是复制了master broker的状态。
+
+        客户应该使用failover transport并且应该首先尝试连接master broker。例如：failover://(tcp://masterhost:61616,tcp://slavehost:61616)?randomize=false
+        设置randomize为false就可以让客户总是首先尝试连接master broker（slave broker并不会接受任何连接，直到它成为了master broker）
+
+        具有以下限制
+        只能有一个slave broker连接到master broker。
+
+        在因master broker失效而导致slave broker成为master之后，之前的master broker只有在当前的
+        master broker（原slave broker）停止后才能重新生效。
+
+        Master broker失效后而切换到slave broker后，最安全的恢复master broker的方式是人工处理。首先
+        要停止slave broker（这意味着所有的客户也要停止）。然后把slave broker的数据目录中所有的数据
+        拷贝到master broker的数据目录中。然后重启master broker和slave broker
+
+    (2)Shared File System Master Slave 使用SAN或者共享文件系统
+        可以运行多个broker，这些broker共享数据目录。当第一个broker得到文件上的排他锁之后，其它的broker便会在循环中等待获得这把锁。
+        客户端使用failover transport来连接到可用的broker。当master broker失效的时候会释放这把锁，这时候其中一个slave broker会得到这把锁从而成为master broker
+
+    (3)JDBC Master Slave
+
+区别
+    ActiveMQ可以做broker的集群，也可以做master-slave方式的集群。
+    前者能在多个broker之前fail-over和load-balance，但是在某个节点出故障时，可能导致消息丢失；
+    而后者能实时备份消息，和fail-over，但是不能load-balance。broker cluser的方式，在一个broker上发送的消息可以在其它的broker上收到。
+    当一个broker失效时，客户端可以自动的转到别的broker上运行，多个broker可以同时提供服务，
+    但是消息只存储在一个broker上，如果那个broker失效了，那么客户端直到它重新启动后才能收到该broker上的消息，假如很不幸，那个broker的存储介质坏了，那么消息就丢失掉了
+
 
 4、桥接模式
     1、桥的功能是消耗来自源队列或主题的消息，并将其发送到目标队列或主题，通常在不同的服务器上
