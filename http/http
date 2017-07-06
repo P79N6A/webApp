@@ -126,6 +126,54 @@ DELETE : 从服务器上删除文档
         服务器计算出客户端相同的摘要,将服务器本地生成的摘要与网络传送过来的摘要进行比较
         服务器发送预先发送下一个随机数据,放到authenticaton-info报文中.
 
+    6: 数据签名
+        public static boolean getCheckSign(String apiKey, String nonce, String sign,String bodyJsonString) {
+            log.info("SignUtil getCheckSign" + "apikey :" + apiKey + "nonce :" + nonce + " sign : " + sign + " bodyJsonString" + bodyJsonString);
+
+            boolean isPass = false;
+            String baseString;//使用组合的字符串encode
+            try {
+                baseString = UriUtils.encode(bodyJsonString, "utf-8") + apiKey + nonce; // RFC3986 标准
+
+                String localsign = hmacSha256(baseString.getBytes(), secretKey.getBytes());
+
+                log.info("SignUtil getCheckSign localsign = " + localsign + " sign = " + sign);
+
+                if (sign.equals(localsign)) {
+                    isPass = true;
+                }
+            } catch (UnsupportedEncodingException e) {
+                log.info("getCheckSign error ", e);
+            }
+            return isPass;
+        }
+
+        public static String hmacSha256(byte[] data, byte[] key) {
+            try {
+                SecretKeySpec signingKey = new SecretKeySpec(key, "HmacSHA256");
+                Mac mac = Mac.getInstance("HmacSHA256");
+                mac.init(signingKey);
+                return byte2hex(mac.doFinal(data));
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public static String byte2hex(byte[] b) {
+            StringBuilder hs = new StringBuilder();
+            String stmp;
+            for (int n = 0; b != null && n < b.length; n++) {
+                stmp = Integer.toHexString(b[n] & 0XFF);
+                if (stmp.length() == 1)
+                    hs.append('0');
+                hs.append(stmp);
+            }
+            return hs.toString().toUpperCase();
+        }
+
 九 安全HTTP
     1 : https是最流行的http安全形式,https是在http层和tcp层之间增加了一层(SSL),SSL完成编码和解码的工作.
     2 : 数字加密

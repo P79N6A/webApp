@@ -197,7 +197,7 @@ package com.jackie.designpatterns.proxy;
 /**
  * 具体主题
  */
-publicclass RealSubject implements Subject{
+public class RealSubject implements Subject{
    @Override
    publicvoid operate() {
         System.out.println("realsubject operatestarted......");
@@ -341,49 +341,45 @@ Target 目标接口
 Adapter—>Adaptee(被适配类)
 适配器
 
-package adapter;
-//DOC 源对象，只有跑的功能
-public class Animal {
-    public void run() {
-        System.out.println("run");
+public interface Target
+{
+    public void method1();
+}
+
+public class Adapter implements Target
+{
+    private Adaptee adaptee;
+
+    public Adapter(Adaptee adaptee)
+    {
+        this.adaptee = adaptee;
+    }
+
+    @Override
+    public void method1()
+    {
+        adaptee.method2();
     }
 }
 
-package adapter;
-
-* DOC 目标接口，既能跑，又能飞
-public interface ITarget {
-    public void run();
-    public void fly();
-}
-
-package adapter;
-
-/**
- * DOC 通过构造函数引入了源对象，并实现了目标的方法
- *
- */
-public class Adapter implements ITarget {
-    private Animal animal;
-
-    public Adapter(Animal animal) {
-        this.animal = animal;
-    }
-
-    /**
-     * DOC 拓展接口要求的新方法
-     */
-    public void fly() {
-        System.out.println("fly");
-    }
-
-    /**
-     * DOC 使用源对象的方法
-     */
-    public void run() {
-        this.animal.run();
+public class Adaptee
+{
+    public void method2()
+    {
+        System.out.println("执行方法");
     }
 }
+
+public class Client
+{
+ public static void main(String[] args)
+ {
+     Target target = new Adapter(new Adaptee());
+
+     target.method1();
+ }
+}
+
 
 9、桥接模式:
 当系统可能有多角度分类，每一种分类都有可能变化，那么就把这种多角度分离出来让他们独立变化，减少他们之间的耦合
@@ -391,125 +387,208 @@ Abstraction -> Implementor
 |       |       |       |
 Abstr1 Abstr2   impl1   impl2
 
-namespace CarRunOnRoad_Bridge_
- 2{
- 3
- 4    //抽象路
- 5    public abstract class AbstractRoad
- 6    {
- 7        protected AbstractCar car;
- 8        public AbstractCar Car
- 9        {
-10            set
-11            {
-12                car = value;
-13            }
-14        }
-15
-16        public abstract void Run();
-17    }
-18
-19    //高速公路
-20    public class SpeedWay : AbstractRoad
-21    {
-22        public override void Run()
-23        {
-24            car.Run();
-25            Console.WriteLine("高速公路上行驶");
-26        }
-27    }
-28
-29    //市区街道
-30    public class Street : AbstractRoad
-31    {
-32        public override void Run()
-33        {
-34            car.Run();
-35            Console.WriteLine("市区街道上行驶");
-36        }
-37    }
-38}
+abstract class AbstractRoad{
+    AbstractCar aCar;
+    void run(){};
+}
+abstract class AbstractCar{
+    void run(){};
+}
 
-namespace CarRunOnRoad_Bridge_
- 2{
- 3    //抽象汽车
- 4    public abstract class AbstractCar
- 5    {
- 6        public abstract void Run();
- 7    }
- 8
- 9    //小汽车;
-10    public class Car : AbstractCar
-11    {
-12        public override void Run()
-13        {
-14            Console.Write("小汽车在");
-15        }
-16    }
-17
-18    //公共汽车
-19    public class Bus : AbstractCar
-20    {
-21        public override void Run()
-22        {
-23            Console.Write("公共汽车在");
-24        }
-25    }
-26}
+class Street extends AbstractRoad{
+    @Override
+    void run() {
+        // TODO Auto-generated method stub
+        super.run();
+        aCar.run();
+        System.out.println("在市区街道行驶");
+    }
+}
+class SpeedWay extends AbstractRoad{
+    @Override
+    void run() {
+        // TODO Auto-generated method stub
+        super.run();
+        aCar.run();
+        System.out.println("在高速公路行驶");
+    }
+}
+class Car extends AbstractCar{
+    @Override
+    void run() {
+        // TODO Auto-generated method stub
+        super.run();
+        System.out.print("小汽车");
+    }
+}
+class Bus extends AbstractCar{
+    @Override
+    void run() {
+        // TODO Auto-generated method stub
+        super.run();
+        System.out.print("公交车");
+    }
+}
 
+public static void main(String[] args){
+
+    AbstractRoad speedWay = new SpeedWay();
+    speedWay.aCar = new Car();
+    speedWay.run();
+
+    AbstractRoad street = new Street();
+    street.aCar = new Bus();
+    street.run();
+}
 
 10、命令模式
 请求者持有命令对象，调用命令对象的方法，命令对象持有接受者，进而调用接受者的执行方法。
 
-//接收者类
-public class Receiver {
-    //真正执行命令令逻辑的方法
-   public  void action(){
-       System.out.println("执行具体操作！");
-   }
-}
-
-//抽象命令接口
 public interface Command {
-    //执行具体操作的命令
-    void execute();
+　　void execute();
 }
 
-//具体命令类
-public class ConcreteCommand implements Command {
-    private  Receiver  receiver;//接收者作为成员变量
-    public ConcreteCommand(Receiver  receiver){
-        this.receiver=receiver;
-    }
-    //调用接收者的相关方法来执行具体逻辑
-    public void execute() {
-        receiver.action();
-    }
+//命令接收者Receiver
+public class Tv {
+　　public int currentChannel = 0;
+
+　　public void turnOn() {
+　　   System.out.println("The televisino is on.");
+　　}
+
+　　public void turnOff() {
+　　   System.out.println("The television is off.");
+　　}
+
+　　public void changeChannel(int channel) {
+　　   this.currentChannel = channel;
+　　   System.out.println("Now TV channel is " + channel);
+　　}
 }
-//请求者类
-public class Invoker {
-    private Command command;//命令对象做成员变量
-    public Invoker(Command command){
-        this.command=command;
-    }
-    public void action(){
-        //调用命令对象的相关方法，执行具体命令
-        command.execute();
-    }
+
+//开机命令ConcreteCommand
+public class CommandOn implements Command {
+　　private Tv myTv;
+
+　　public CommandOn(Tv tv) {
+　　   myTv = tv;
+　　}
+
+　　public void execute() {
+　　   myTv.turnOn();
+　　}
 }
+
+public class CommandOff implements Command {
+　　private Tv myTv;
+
+　　public CommandOff(Tv tv) {
+　　   myTv = tv;
+　　}
+
+　　public void execute() {
+　　   myTv.turnOff();
+　　}
+}
+
+//频道切换命令ConcreteCommand
+public class CommandChange implements Command {
+　　private Tv myTv;
+
+　　private int channel;
+
+　　public CommandChange(Tv tv, int channel) {
+　　   myTv = tv;
+ 　　  this.channel = channel;
+　　}
+
+　　public void execute() {
+　　   myTv.changeChannel(channel);
+　　}
+}
+
+//可以看作是遥控器Invoker
+public class Control {
+　　private Command onCommand, offCommand, changeChannel;
+
+　　public Control(Command on, Command off, Command channel) {
+ 　　  onCommand = on;
+ 　　  offCommand = off;
+　　   changeChannel = channel;
+　　}
+
+　　public void turnOn() {
+　　   onCommand.execute();
+　　}
+
+　　public void turnOff() {
+　　   offCommand.execute();
+　　}
+
+　　public void changeChannel() {
+ 　　  changeChannel.execute();
+　　}
+}
+
+//测试类Client
+public class Client {
+　　public static void main(String[] args) {
+  　　 // 命令接收者Receiver
+ 　　  Tv myTv = new Tv();
+ 　　  // 开机命令ConcreteCommond
+  　　 CommandOn on = new CommandOn(myTv);
+  　　 // 关机命令ConcreteCommond
+  　　 CommandOff off = new CommandOff(myTv);
+  　　 // 频道切换命令ConcreteCommond
+ 　　  CommandChange channel = new CommandChange(myTv, 2);
+ 　　  // 命令控制对象Invoker
+　　   Control control = new Control(on, off, channel);
+
+  　　 // 开机
+  　　 control.turnOn();
+ 　　  // 切换频道
+ 　　  control.changeChannel();
+ 　　  // 关机
+ 　　  control.turnOff();
+　　}
+}
+
 
 11 外观模式 : 通过一个方法中，调用多个接口方法。将相关关联的方法，联系起来一起调用
-class Facade
-{
-    private SubSystemA obj1 = new SubSystemA();
-    private SubSystemB obj2 = new SubSystemB();
-    private SubSystemC obj3 = new SubSystemC();
+public interface Handler {
+    public void operator();
+}
 
-    public void Method()
-    {
-        obj1.MethodA();
-        obj2.MethodB();
-        obj3.MethodC();
+public class MyHandler implements Handler {
+    private String name;
+    private Handler handler;
+
+    public MyHandler(String name) {
+        this.name = name;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
+
+    @Override
+    public void operator() {
+        System.out.println(name+"deal!");
+        if(this.handler!=null){
+            this.handler.operator();
+        }
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        MyHandler h1 = new MyHandler("h1");
+        MyHandler h2 = new MyHandler("h2");
+        MyHandler h3 = new MyHandler("h3");
+
+        h1.setHandler(h2);
+        h2.setHandler(h3);
+        h1.operator();
     }
 }
 
@@ -532,6 +611,7 @@ class ConcretePrototype extends Prototype{
         System.out.println("原型模式实现类");
     }
 }
+
 public class Client {
     public static void main(String[] args){
         ConcretePrototype cp = new ConcretePrototype();
@@ -690,8 +770,6 @@ public class Tea extends Beverage{
             }
         }
     }
-
-
 
 
 
@@ -926,7 +1004,6 @@ public class Test{
 
 17 享元模式 ：减少运行时对象实例的个数，节省内存
 当一个系统中需要存在大量的对象，而且每个对象之间有很多的相同之处，我们通过将对象的属性拆分为变化的和不变化的，变化的称之为外部状态，不变的成为内部状态，将不变的部分定义成独立的对象，并在系统内部共享
-
 
 
 
