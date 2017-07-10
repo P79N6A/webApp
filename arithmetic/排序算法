@@ -115,8 +115,8 @@ public class SimpleSelectSort {
             // 将临时数组中的内容拷贝回原数组中
             // （原left-right范围的内容被复制回原数组）
             while (tmp <= right) {
-                data[tmp] = tmpArr[tmp++];
-            }
+                 data[tmp] = tmpArr[tmp++];
+    }
 }
 
 
