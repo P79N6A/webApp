@@ -4,37 +4,33 @@
   O(n*n ) 和 O(1)
 
 public class Test {
-    public static void main(String[] args) {
-        int a[] = {3, 1, 5, 7, 2, 4, 9, 6, 10, 8};
-        System.out.println("初始值：");
-        print(a);
-        insertSort(a);
-        System.out.println("\n排序后：");
-        print(a);
-    }
-    public static void print(int a[]) {
-        for (int i = 0; i < a.length; i++) {
-            System.out.print(a[i] + " ");
+     public static void insertSort(int[] array) {
+        if (array == null || array.length < 2) {
+            return;
         }
-    }
-    public static void insertSort(int[] a) {
-        for (int i = 1; i < a.length; i++) {//从头部第一个当做已经排好序的，把后面的一个一个的插到已经排好的列表中去。
-            if (a[i] < a[i - 1]) {
-                int x = a[i];//x为待插入元素
-                int j;
-                for (j = i - 1; j >= 0 && x < a[j]; j--) {
-                    //通过循环，逐个后移一位找到要插入的位置。
+        for (int i = 1; i < array.length; i++) {
+            int currentValue = array[i];
+            int position = i;
+            for (int j = i - 1; j >= 0; j--) {
+                if (array[j] > currentValue) {
+                    array[j + 1] = array[j];
+                    position -= 1;
+                } else {
+                    break;
                 }
-                    a[j + 1] = a[j];
-                }
-                a[j + 1] = x;//插入
             }
+            array[position] = currentValue;
         }
+     }
+     public static void main(String[] args) {
+        int[] array = { 3, -1, 0, -8, 2, 1 };
+        insertSort(array);
     }
 }
 
 2.选择排序
-在要排序的一组数中，选出最小（或者最大）的一个数与第1个位置的数交换；然后在剩下的数当中再找最小（或者最大）的与第2个位置的数交换，依次类推，直到第n-1个元素（倒数第二个数）和第n个元素（最后一个数）比较为止。
+在要排序的一组数中，选出最小（或者最大）的一个数与第1个位置的数交换；
+然后在剩下的数当中再找最小（或者最大）的与第2个位置的数交换，依次类推，直到第n-1个元素（倒数第二个数）和第n个元素（最后一个数）比较为止。
 public class SimpleSelectSort {
     public static void main(String[] args) {
         int a[] = {3,1,5,7,2,4,9,6,10,8};
@@ -67,7 +63,7 @@ public class SimpleSelectSort {
             data[i] = data[i] + data[j];
             data[j] = data[i] - data[j];
             data[i] = data[i] - data[j];
-        }
+     }
 }
 
 归并排序（Merge）是将两个（或两个以上）有序表合并成一个新的有序表，即把待排序序列分为若干个子序列，每个子序列是有序的。然后再把有序子序列合并为整体有序序列。
