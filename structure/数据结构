@@ -365,7 +365,7 @@ public class InsertSort {
             int position = i;
             for ( j = i - 1; j >= 0; j--) {
                 if (a[j] > currentValue) {
-                    a[i] = a[j]; //前面的值向后移动
+                    a[j+1] = a[j]; //前面的值向后移动
                     position --;
                 } else {
                     break;
