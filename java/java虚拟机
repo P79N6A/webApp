@@ -238,6 +238,8 @@ http://www.open-open.com/lib/view/open1429883238291.html
  S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT
 0.00  50.00   2.31  41.19  42.50    871   24.682     1    0.087   24.768
 
+jstatd -J-Djava.security.policy=jstatd.all.policy -p 10003 &
+
 查询结果表明：这台服务器的新生代Eden区（E，表示Eden）使用了2.31%的空间，两个Survivor区（S0、 S1，表示Survivor0、 Survivor1）里面都是空的，
 老年代（O，表示Old）和永久代（P，表示Permanent）则分别使用了41.19%和42.50%的空间。
 程序运行以来共发生Minor GC（YGC，表示Young GC）871次，总耗时24.682秒，发生Full GC（FGC，表示FullGC）1次，

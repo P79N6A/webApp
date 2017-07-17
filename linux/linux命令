@@ -185,6 +185,7 @@ ssh-keygen -t rsa -C "your_email@youremail.com"
 ssh 常用命令
     ssh root@10.15.244.129 远程登录
 crontab -e : 配置定时任务
+    /data/tasks/sh/crontab-generate-task.sh
     0 9 * * * /bin/sh /data/tasks/sh/crontab-generate-task.sh '10.15.244.129 10.15.244.127 10.15.244.130 10.15.244.128' '/data/logs/cartoon/web.log /data/logs/cartoon/pull.log' '/mnt/logs/cartoon' 1
 
 vi ~/.ssh/authorized_keys
