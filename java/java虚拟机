@@ -248,6 +248,7 @@ Full GC总耗时（FGCT，表示Full GC Time）为0.087秒，所有GC总耗时（GCT，表示GC Time
 3、jinfo：作用是实时地查看和调整虚拟机各项参数
 
 4 jmap: 命令用于生成堆转储快照
+  jmap -heap 30772 查看堆信息
 
 5 jhat的分析结果
 
