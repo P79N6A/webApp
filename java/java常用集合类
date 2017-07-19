@@ -1,0 +1,194 @@
+一 HashMap 的实现原理
+HashMap实际上是一个“链表散列”的数据结构，即数组和链表的结合体
+HashMap 底层数组的长度总是 2 的 n 次方
+
+HashMap构造方法： 默认构造方法： 初始容量16，加载因子0.75
+table = new Entry[capacity]; 设置数组的初始容量
+Entry 每个 Entry 其实就是一个 key-value 对，它持有一个指向下一个元素的引用，这就构成了链表。
+
+负载因子 loadFactor 衡量的是一个散列表的空间的使用程度，负载因子越大表示散列表的装填程度越高，反之愈小。对于使用链表法的散列表来说，查找一个元素的平均时间是 O(1+a)，因此如果负载因子越大，对空间的利用更充分，
+然而后果是查找效率的降低；如果负载因子太小，那么散列表的数据将过于稀疏，对空间造成严重浪费。
+
+核心方法：
+public V put(K key, V value) {
+        //其允许存放null的key和null的value，当其key为null时，调用putForNullKey方法，放入到table[0]的这个位置
+        if (key == null)
+            return putForNullKey(value);
+        //通过调用hash方法对key进行哈希，得到哈希之后的数值。该方法实现可以通过看源码，其目的是为了尽可能的让键值对可以分不到不同的桶中
+        int hash = hash(key);
+        //根据上一步骤中求出的hash得到在数组中是索引i
+        int i = indexFor(hash, table.length);
+        //如果i处的Entry不为null，则通过其next指针不断遍历e元素的下一个元素。
+        for (Entry<K,V> e = table[i]; e != null; e = e.next) {
+            Object k;
+            if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
+                V oldValue = e.value;
+                e.value = value;
+                e.recordAccess(this);
+                return oldValue;
+            }
+        }
+        modCount++;
+        addEntry(hash, key, value, i);
+        return null;
+}
+
+addEntry
+  如果大小超出(当 HashMap 中的元素个数超过数组大小 *loadFactor)： 则进行两倍扩容，重新计算Entry数组的下标
+    resize(2 * table.length);
+  如果数组该位置上已经存放有其他元素了，那么在这个位置上的元素将以链表的形式存放，新加入的放在链头，最先加入的放在链尾。
+  如果数组该位置上没有元素，就直接将该元素放到此数组中的该位置上。
+
+
+首先计算 key 的 hashCode，找到数组中对应位置的某一元素，然后通过 key 的 equals 方法在对应位置的链表中找到需要的元素
+public V get(Object key) {
+        if (key == null)
+            return getForNullKey();
+        Entry<K,V> entry = getEntry(key);
+
+        return null == entry ? null : entry.getValue();
+    }
+    final Entry<K,V> getEntry(Object key) {
+        int hash = (key == null) ? 0 : hash(key);
+        for (Entry<K,V> e = table[indexFor(hash, table.length)];
+             e != null;
+             e = e.next) {
+            Object k;
+            if (e.hash == hash &&
+                ((k = e.key) == key || (key != null && key.equals(k))))
+                return e;
+        }
+        return null;
+}
+java.util.HashMap 不是线程安全的，因此如果在使用迭代器的过程中有其他线程修改了 map，那么将抛出 ConcurrentModificationException，这就是所谓 fail-fast 策略。
+
+
+二、HashSet : 对于 HashSet 而言，它是基于 HashMap 来实现的，底层采用 HashMap 来保存元素
+
+三、HashTable :
+    Hashtable是通过"拉链法"实现的哈希表。
+    它包括几个重要的成员变量：table, count, threshold, loadFactor, modCount。
+    table是一个 Entry[] 数组类型，而 Entry（在 HashMap 中有讲解过）实际上就是一个单向链表。哈希表的"key-value键值对"都是存储在Entry数组中的。
+    count 是 Hashtable 的大小，它是 Hashtable 保存的键值对的数量。
+    threshold 是 Hashtable 的阈值，用于判断是否需要调整 Hashtable 的容量。threshold 的值="容量*加载因子"。
+    loadFactor 就是加载因子。
+    modCount 是用来实现 fail-fast 机制的。
+
+    put方法 和 get方法 : 实现同步
+    HashTable 基于 Dictionary 类，而 HashMap 是基于 AbstractMap。Dictionary 是任何可将键映射到相应值的类的抽象父类，而 AbstractMap 是基于 Map 接口的实现，它以最大限度地减少实现此接口所需的工作。
+    HashMap 的 key 和 value 都允许为 null，而 Hashtable 的 key 和 value 都不允许为 null。HashMap 遇到 key 为 null 的时候，调用 putForNullKey 方法进行处理，而对 value 没有处理；Hashtable遇到 null，直接返回 NullPointerException。
+    Hashtable 方法是同步，而HashMap则不是。我们可以看一下源码，Hashtable 中的几乎所有的 public 的方法都是 synchronized 的，而有些方法也是在内部通过 synchronized 代码块来实现。所以有人一般都建议如果是涉及到多线程同步时采用 HashTable，没有涉及就采用 HashMap，但是在 Collections 类中存在一个静态方法：synchronizedMap()，该方法创建了一个线程安全的 Map 对象，并把它作为一个封装的对象来返回。
+
+
+四、LinkedHashMap:
+   LinkedHashMap 是Map接口的哈希表和链接列表实现
+   LinkedHashMap 实现与 HashMap 的不同之处在于，LinkedHashMap 维护着一个运行于所有条目的双重链接列表。此链接列表定义了迭代顺序，该迭代顺序可以是插入顺序或者是访问顺序。
+
+   成员变量
+        它重新定义了数组中保存的元素 Entry，该 Entry 除了保存当前对象的引用外，还保存了其上一个元素 before 和下一个元素 after 的引用，从而在哈希表的基础上又构成了双向链接列表
+        Entry<K,V> before, after;
+
+   构造方法：LinkedHashMap(int initialCapacity, float loadFactor,boolean accessOrder) accessOrder =  true，代表以访问顺序进行迭代
+
+   put方法： LinkedHashMap 重写了recordAccess 、 addEntry、createEntry、addBefore
+        void recordAccess(HashMap<K,V> m) {
+            LinkedHashMap<K,V> lm = (LinkedHashMap<K,V>)m;
+            if (lm.accessOrder) {
+                lm.modCount++;
+                remove();
+                addBefore(lm.header);
+                }
+        }
+
+        void addEntry(int hash, K key, V value, int bucketIndex) {
+            // 调用create方法，将新元素以双向链表的的形式加入到映射中。
+            createEntry(hash, key, value, bucketIndex);
+
+            // 删除最近最少使用元素的策略定义
+            Entry<K,V> eldest = header.after;
+            if (removeEldestEntry(eldest)) {
+                removeEntryForKey(eldest.key);
+            } else {
+                if (size >= threshold)
+                    resize(2 * table.length);
+            }
+        }
+
+        void createEntry(int hash, K key, V value, int bucketIndex) {
+            HashMap.Entry<K,V> old = table[bucketIndex];
+            Entry<K,V> e = new Entry<K,V>(hash, key, value, old);
+            table[bucketIndex] = e;
+            // 调用元素的addBrefore方法，将元素加入到哈希、双向链接列表。
+            e.addBefore(header);
+            size++;
+        }
+
+        private void addBefore(Entry<K,V> existingEntry) {
+            after  = existingEntry;
+            before = existingEntry.before;
+            before.after = this;
+            after.before = this;
+        }
+
+   get方法
+       public V get(Object key) {
+           // 调用父类HashMap的getEntry()方法，取得要查找的元素。
+           Entry<K,V> e = (Entry<K,V>)getEntry(key);
+           if (e == null)
+               return null;
+           // 记录访问顺序。
+           e.recordAccess(this);
+           return e.value;
+       }
+
+       void recordAccess(HashMap<K,V> m) {
+           LinkedHashMap<K,V> lm = (LinkedHashMap<K,V>)m;
+           // 如果定义了LinkedHashMap的迭代顺序为访问顺序，
+           // 则删除以前位置上的元素，并将最新访问的元素添加到链表表头。
+           if (lm.accessOrder) {
+               lm.modCount++;
+               remove();
+               addBefore(lm.header);
+           }
+       }
+
+       /**
+       * Removes this entry from the linked list.
+       */
+       private void remove() {
+           before.after = after;
+           after.before = before;
+       }
+
+       /**clear链表，设置header为初始状态*/
+       public void clear() {
+        super.clear();
+        header.before = header.after = header;
+       }
+
+并发HashMap
+我们的解决方案有 Hashtable 或者Collections.synchronizedMap(hashMap)，这两种方式基本都是对整个 hash 表结构做锁定操作的，这样在锁表的期间，别的线程就需要等待了，无疑性能不高
+五、ConcurrentHashMap
+    成员变量：
+        包含了一个 Segment 的数组（final Segment<K,V>[] segments;），而 Segment 是 ConcurrentHashMap 的内部类，
+        然后在 Segment 这个类中，包含了一个 HashEntry 的数组（transient volatile HashEntry<K,V>[] table;）。而 HashEntry 也是 ConcurrentHashMap 的内部类。
+        HashEntry 中，包含了 key 和 value 以及 next 指针（类似于 HashMap 中 Entry），所以 HashEntry 可以构成一个链表。
+        HashEntry value是volatile
+
+    Segment
+        Segment 的类定义为static final class Segment<K,V> extends ReentrantLock implements Serializable。
+        其继承于 ReentrantLock 类，从而使得 Segment 对象可以充当锁的角色。Segment 中包含HashEntry 的数组，其可以守护其包含的若干个桶（HashEntry的数组）。
+        Segment 在某些意义上有点类似于 HashMap了，都是包含了一个数组，而数组中的元素可以是一个链表。
+        table:table 是由 HashEntry 对象组成的数组如果散列时发生碰撞，碰撞的 HashEntry 对象就以链表的形式链接成一个链表table数组的数组成员代表散列映射表的一个桶每个table守护整个 ConcurrentHashMap包含桶总数的一部分如果并发级别为 16，
+        table 则守护 ConcurrentHashMap 包含的桶总数的 1/16。
+        count 变量是计算器，表示每个 Segment 对象管理的 table 数组（若干个 HashEntry 的链表）包含的HashEntry 对象的个数。
+        之所以在每个Segment对象中包含一个 count 计数器，而不在 ConcurrentHashMap 中使用全局的计数器，是为了避免出现“热点域”而影响并发性。
+
+    加锁操作是针对的 hash 值对应的某个 Segment，而不是整个 ConcurrentHashMap。因为 put 操作只是在这个 Segment 中完成，所以并不需要对整个 ConcurrentHashMap 加锁。所以，此时，其他的线程也可以对另外的 Segment 进行 put 操作，因为虽然该 Segment 被锁住了，但其他的 Segment 并没有加锁。同时，读线程并不会因为本线程的加锁而阻塞。
+
+    在理想状态下，ConcurrentHashMap 可以支持 16 个线程执行并发写操作（如果并发级别设置为 16），及任意数量线程的读操作。
+
+
+
+
+
