@@ -188,4 +188,126 @@
 
     2、HashMap
 
+    3、栈内存溢出：http://blog.csdn.net/u013970991/article/details/52035153
+        方法调用层次太深，内存不够新建栈帧
+        线程太多，内存不够新建线程
 
+    4、class.forName()和ClassLoader区别
+       class.forName()前者除了将类的.class文件加载到jvm中之外，还会对类进行解释，执行类中的static块。
+       而classLoader只干一件事情，就是将.class文件加载到jvm中，不会执行static中的内容,只有在newInstance才会去执行static块。
+
+    5、NIO通信模型
+       Java IO的各种流是阻塞的。这意味着，当一个线程调用read() 或 write()时，该线程被阻塞，直到有一些数据被读取，或数据完全写入。
+       该线程在此期间不能再干任何事情了。 Java NIO的非阻塞模式，使一个线程从某通道(channel)发送请求读取数据，但是它仅能得到目前可用的数据，如果目前没有数据可用时，就什么都不会获取。而不是保持线程阻塞，所以直至数据变的可以读取之前，该线程可以继续做其他的事情。 非阻塞写也是如此。一个线程请求写入一些数据到某通道，但不需要等待它完全写入，这个线程同时可以去做别的事情。
+       线程通常将非阻塞IO的空闲时间用于在其它通道上执行IO操作，所以一个单独的线程现在可以管理多个输入和输出通道（channel）。
+       (1)缓冲区Buffer
+          缓冲区的工作与通道紧密联系。通道是 I/O 传输发生时通过的入口,而缓冲区是这些数据传输的来源或目标
+
+       (2)通道Channel
+          Channel 用于在字节缓冲区和位于通道另一侧的实体(通常是一个文件或套接字)之间有效地传输数据。
+
+       (3)选择器Selector
+          selector充当一个监视者，您需要将之前创建的一个或多个可选择的通道注册到选择器对象中。
+
+    6、 BeanFactory和FactoryBean
+        BeanFactory定义了 IOC 容器的最基本形式，并提供了 IOC 容器应遵守的的最基本的接口
+        Spring 为此提供了一个 org.springframework.bean.factory.FactoryBean 的工厂类接口，用户可以通过实现该接口定制实例化 Bean 的逻辑
+
+    7、 Spring加载流程
+           (1)、Resource：
+                使用FileSystemResource 或者 使用ClassPathResource
+           (2)、BeanDefinition载入和解析 :
+                把用户定义好的Bean表示成ioc容器的数据结构
+           (3)、BeanDefinitionRegistry :
+                把载入过程中解析得到的BeanDefinition向Ioc容器进行注册。
+                ioc容器将BeanDefinition注入到1个HashMap中，Ioc容器通过HashMap持有BeanDefinition
+    9、sleep和wait
+        最主要是sleep方法没有释放锁，而wait方法释放了锁，使得其他线程可以使用同步控制块或者方法
+
+    10、Lock与Synchronized
+        (1)自旋锁： “自旋”，就是让线程去执行一个无意义的循环，循环结束后再去重新竞争锁
+        (2)偏向锁： 当一个线程访问同步块并获取锁时，会在对象头和栈帧中的锁记录里存储锁偏向的线程ID，以后该线程在进入和退出同步块时不需要花费CAS操作来加锁和解锁
+        (3)轻量级锁：  竞争的线程不会阻塞，提高了程序的响应速度
+        (4)可重入锁：
+        (5)公平锁和非公平锁： 所谓公平锁指的是哪个线程先运行，那就可以先得到锁。非公平锁是不管线程是否是先运行，都是随机获得锁的
+
+    11、spring controller是单例还是多例，怎么保证并发安全
+        默认是单例
+
+    12 三个线程循环打印abc
+    public static int cnt = 0;
+        public static final int COUNT = 30;
+
+        public static void main(String[] args) {
+
+            final Lock lock = new ReentrantLock();
+            Thread A = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    while (true) {
+                        lock.lock();
+                        if (cnt >= COUNT) {
+                            lock.unlock();
+                            return;
+                        }
+                        if (cnt % 3 == 0) {
+                            System.out.println("A");
+                            cnt++;
+                        }
+                        lock.unlock();
+                    }
+                }
+
+            });
+
+            Thread B = new Thread(new Runnable() {
+                public void run() {
+                    while (true) {
+                        lock.lock();
+                        if (cnt >= COUNT) {
+                            lock.unlock();
+                            return;
+                        }
+                        if (cnt % 3 == 1) {
+                            System.out.println("B");
+                            cnt++;
+                        }
+                        lock.unlock();
+                    }
+                }
+            });
+
+            Thread C = new Thread(new Runnable() {
+                public void run() {
+                    while (true) {
+                        lock.lock();
+                        if (cnt >= COUNT) {
+                            lock.unlock();
+                            return;
+                        }
+                        if (cnt % 3 == 2) {
+                            System.out.println("C");
+                            cnt++;
+                        }
+                        lock.unlock();
+                    }
+                }
+            });
+            A.start();
+            B.start();
+            C.start();
+        }
+
+    13 ThreadLocal
+       ThreadLocal是如何做到为每一个线程维护变量的副本的呢？其实实现的思路很简单：在ThreadLocal类中定义了一个ThreadLocalMap，每一个Thread中都有一个该类型的变量——threadLocals——用于存储每一个线程的变量副本，Map中元素的键为线程对象，而值对应线程的变量副本
+       ThreadLocal会为每一个线程提供一个独立的变量副本，从而隔离了多个线程对数据的访问冲突。因为每一个线程都拥有自己的变量副本，从而也就没有必要对该变量进行同步了。ThreadLocal提供了线程安全的共享对象，在编写多线程代码时，可以把不安全的变量封装进ThreadLocal
+
+    14 并发安全链表
+        (1) 粗粒度锁： 链表维护了一个整体的锁，add, remove, contains都加锁，保证线程安全，简单粗暴，但是效率低下
+        (2) 细粒度锁： 细粒度锁的话，添加和删除操作要同时锁住两个节点才能保证添加和删除的正确性，不然有可能添加进来的节点指向了一个已经被删除的节点。所以需要同时控制两把锁
+        (3) 乐观锁 :
+                1. 只有在寻找到要加锁位置的时候才加锁，之前不加锁
+                2. 需要加锁时，先加锁，再进行验证是否现场已经被修改
+                3. 如果被修改就需要从头开始再次查找，是一个轮询的过程
+        (4)无锁： 使用CAS方式
