@@ -319,8 +319,58 @@
 
     2、避免数据自增id的问题： 可以使用status来表示（假删除）
 
+    3、Spring事务管理是怎么实现：
+        实现方式共有两种：编码方式；声明式事务管理方式。
+        基于AOP技术实现的声明式事务管理，实质就是：在方法执行前后进行拦截，然后在目标方法开始之前创建并加入事务，执行完目标方法后根据执行情况提交或回滚事务。
 
+    4、Thrift:
+        (1) RPC 服务方通过 RpcServer 提供远程接口方法，而客户方通过 RpcClient 去引用远程接口方法
+        (2) 客户方像调用本地方法一样去调用远程接口方法，RPC 框架提供接口的代理实现，实际的调用将委托给代理RpcProxy
+        (3) 代理封装调用信息并将调用转交给RpcInvoker去实际执行。在客户端的RpcInvoker 通过连接器RpcConnector 去维持与服务端的通道RpcChannel，并使用RpcProtocol 执行协议编码（encode）并将编码后的请求消息通过通道发送给服务方
+        (4) RPC 服务端接收器 RpcAcceptor 接收客户端的调用请求，同样使用RpcProtocol 执行协议解码（decode）。解码后的调用信息传递给RpcProcessor 去控制处理调用过程，最后再委托调用给RpcInvoker 去实际执行并返回调用结果
 
+    5、JVM内存分配策略 ：对象优先在Eden分配,大对象直接进入老年代,动态对象年龄判定
+        年龄阀值 : 15 Minor  GC
+        提前晋升 : 动态对象年龄判定(如果在Survivor空间中的相同年龄的所有对象大小的总和大于Survivor空间的一半，年龄大于或等于该年的对象就可以直接进入老年代，无需等到指定的阀值)
+        空间担保机制 :
 
+    6、CMS的步骤：
+        初始标记: 暂停所有的其他线程stop-world，并记录下直接与root相连的对象
+        并发标记: 开启GC和用户线程,并进行GC RootsTracing的过程
+        重新标记: 暂停所有的其他线程,修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录
+        并发清除: 开启GC和用户线程,清除重新标记后的对象。
 
+七、
+    1、Servlet的单线程模式：
+
+    2、static方法是否可以覆盖： 不能，因为方法覆盖是基于运行时动态绑定，而static方法是编译时静态绑定的
+
+    3、hibernate的sessionFactory是线程安全的吗，Session是线程安全的吗
+      sessionFactory重量级的，一个线程中只能有一个，并且是线程安全的.
+      session每个线程一份，线程非安全.
+
+    4、hibernate中session的load和get方法：
+       get是立即查询，load默认使用懒加载，当用到数据的时候才向数据库查询
+
+    5、hibernate中save，update，merge，lock，saveorupdate，persist区别
+       Hibernate的对象有三种状态，分别是：瞬时态（transient）、持久态（persistent）、游离态（detached）
+       save()和update()方法的区别在于前者是将瞬时态对象变成持久态，后者是将游离态对象变成持久态
+    6、hibernate加载对象
+
+    7、Query的list和iterate方法：
+       list()方法返回的每个对象都是完整的（对象中的每个属性都被表中的字段填充上了），而iterator()方法所返回的对象中仅包含了主键值（标识符），只有当你对iterator中的对象进行操作时，hibernate才会向数据库再次发送SQL语句来获取该对象的属性值
+
+    8、hibernate分页查询 :
+        mysql 方言：
+        public boolean supportsLimit(); {
+          return true;
+        }
+        public String getLimitString(String sql); {
+          StringBuffer pagingSelect = new StringBuffer(100);;
+          pagingSelect.append(sql);;
+          pagingSelect.append(" limit ?, ?");;
+          return pagingSelect.toString();;
+        }
+
+    9、映射关系
 
