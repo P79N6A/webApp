@@ -196,7 +196,7 @@ vim 命令:
 wget 下载
     wget -q -O $WEBROOT/$WARFILE $URL_PREFIX/$WARFILE
 curl
-
+curl -i "iqiyi_result_check=PASS&iqiyi_page_publish_status=PAGE_ONLINE&available_status=ONLINE&qipuId=8357808609&deleted=false" "http://lego.video.iqiyi.com/mamsdataservice/video/dealVideos"
 head -n 1 /etc/issue 查看主机配置
 
 六、磁盘管理
