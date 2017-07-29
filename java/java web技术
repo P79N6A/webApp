@@ -29,6 +29,8 @@
             404 请求的资源不存在
             500 服务器内容错误
 
+       HTTPS 签名
+
        http缓存
             Pragma : no-cache
             Cache-Control : no-cache

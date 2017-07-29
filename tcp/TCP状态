@@ -1,0 +1,19 @@
+一、TCP的状态
+    1、LISTEN: 首先服务端需要打开一个socket监听，状态为LISTEN,侦听来自远方TCP端口的连接请求
+    2、SYN_SENT: 客户端tcp发送一个SYN以请求建立一个连接
+    3、SYN_RECV: 服务端应发出ACK确认客户端的SYN,同时自己向客户端发送一个SYN
+    4、ESTABLISHED: 代表一个打开的连接，双方可以进行或已经在数据交互了
+    5、FIN_WAIT1: 主动关闭(active close)端应用程序调用close，于是其TCP发出FIN请求主动关闭连接，之后进入FIN_WAIT1状态
+    6、CLOSE_WAIT: 被动关闭(passive close)端TCP接到FIN后，就发出ACK以回应FIN请求,并进入CLOSE_WAIT
+    7、FIN_WAIT2: 主动关闭端接到ACK后，就进入了FIN-WAIT-2
+    8、TIME_WAIT: 在主动关闭端接收到FIN后，TCP就发送ACK包，并进入TIME-WAIT状态
+    9、CLOSED: 被动关闭端在接受到ACK包后，就进入了closed的状态
+
+Close_Wait和Time_Wait的状态: 可靠的关闭TCP连接
+1 Time_Wait(主动端 缺省为240秒)
+  在主动关闭方发送的最后一个 ack(fin) ，有可能丢失，这时被动方会重新发fin, 如果这时主动方处于 CLOSED 状态 ，就会响应 rst 而不是 ack。所以
+  主动方要处于 TIME_WAIT 状态，而不能是 CLOSED 。
+  如果 TIME_WAIT 状态保持时间不足够长(比如小于2MSL)，第一个连接就正常终止了。第二个拥有相同相关五元组的连接出现(因为连接终止前发起的一方可能需要重发 ACK，所以停留在该状态的时间必须为MSL的2倍。)，而第一个连接的重复报文到达，干扰了第二个连接。TCP实现必须防止某个连接的重复报文在连接终 止后出现，所以让TIME_WAIT态保持时间足够长(2MSL)，连接相应方向上的TCP报文要么完全响应完毕，要么被丢弃。建立第二个连接的时候，不会混淆
+
+2 Close_Wait
+   只有被动关闭的一端才有CLOSE_WAIT状态，当收到Fin并发送了Ack后服务器状态就变成了CLOSE_WAIT状态，如果我们的服务器一直处于CLOSE_WAIT状态的话，说明套接字是被动关闭的
