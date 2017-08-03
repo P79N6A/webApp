@@ -25,14 +25,14 @@ for(i = 0 ; i < n ; i++){
     }
 }
 
-5 N对数阶 : Nlogn
+5 N对数阶 : nlogn
 for(i = 0 ; i < n ; i++){
     while(count<n){
         count = count * 2;
     }
 }
 时间复杂度
-Ο(1)＜Ο(log2n)＜Ο(n)＜Ο(nlog2n)＜Ο(n2)
+Ο(1)＜Ο(log2n)＜Ο(n)＜Ο(nlog2n)＜Ο(n*n)
 
 
 

@@ -65,3 +65,6 @@ mysql按关键字截取字符串
     SELECT if(locate('iqiyi.com', source_url),'iqiyi.com',if(locate('qq.com', source_url),'qq.com','')) as url , source_url
     FROM video_url_info
     WHERE source_url LIKE '%qq.com%'
+
+查字段的长度
+    LENGTH(image_information) = 2
