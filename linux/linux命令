@@ -109,6 +109,13 @@ awk 按分隔符输出
     sort -u 排序并删除
     diff 比较两个文件的不同
 
+    comm - 12    就只显示在两个文件中都存在的行；
+    comm - 23    只显示在第一个文件中出现而未在第二个文件中出现的行；
+    comm - 123   则什么也不显示。
+    cat a.txt | sort | uniq | sort > a_u.txt
+    cat b.txt | sort | uniq | sort > b_u.txt
+    comm -12  a_u.txt  b_u.txt > c.txt
+
 杀掉进程
     ps aux | grep mams-data | grep -v grep | awk '{print $2}'|xargs kill
 后台启动，并将日志输出data-service.out
