@@ -42,7 +42,9 @@ grep 过滤文件内容，并显示
     7、grep 'text' －c 查看匹配字符的计数。
     8、grep dddadfa -r /data 查看data目录下，包含dddadfa文件
     9、grep -r 递归
-    less web-2017-05-16.log | grep -C10 'localhost:1099' //输出匹配文字10行
+    less web-2017-05-16.log | grep -C10 'localhost:1099' //输出匹配文字前后10行
+    less web-2017-05-16.log | grep -A10 'localhost:1099' //输出匹配文字后10行
+    less web-2017-05-16.log | grep -B10 'localhost:1099' //输出匹配文字前10行
 
 sed  替换或删除文件内容
     1、sed -i 's/name/name1/g' test.txt 替换name为name1\
