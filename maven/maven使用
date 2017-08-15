@@ -1,9 +1,9 @@
 一: 坐标元素
-1:groupId
-2:artifactId
-3:version
-4:packaging: maven项目的打包方式
-5:classifier:构建附属构建
+    1:groupId
+    2:artifactId
+    3:version
+    4:packaging: maven项目的打包方式
+    5:classifier:构建附属构建
 
 二: 依赖配置
 <dependencies>
@@ -21,38 +21,44 @@
     </dependency>
 </dependencies>
 
+scope的分类 :
+    1、compile  : 表示被依赖项目需要参与当前项目的编译
+    2、test     : 表示依赖项目仅仅参与测试相关的工作,包括测试代码的编译,执行: 比较典型的如junit
+    3、runntime : 被依赖项目无需参与项目的编译,不过后期的测试和运行周期需要其参与
+    4、provided : 意味着打包的时候可以不用包进去, 相当于compile，但是在打包阶段做了exclude的动作
+
 三:依赖范围
-compile:  编译、测试、运行3种classPath都有效，例子spring-core
-test:     测试依赖范围,例子JUnit
-provided: 编译和测试有效,运行无效,例子servlet-api
-runtime:  运行时有效，jdbc
-system : maven仓库之外的类库文件
-import : 导入依赖范围。编译、测试、运行3种classPath都没有影响
+    compile:  编译、测试、运行3种classPath都有效，例子spring-core
+    test:     测试依赖范围,例子JUnit
+    provided: 编译和测试有效,运行无效,例子servlet-api
+    runtime:  运行时有效，jdbc
+    system : maven仓库之外的类库文件
+    import : 导入依赖范围。编译、测试、运行3种classPath都没有影响
 
 四:传递性依赖
-1、A依赖B项目，B依赖C项目，A依赖C项目
-2、依赖调解
-当存在这两种依赖传递时，路径不一样时，路径短的为先
-A->B->C-X(1.0)
-A->D->X(2.0)
-当存在这两种依赖传递时，路径一样时，根据pom依赖顺序
-A->B->Y(1.0)
-A->C->Y(2.0)
+    1、A依赖B项目，B依赖C项目，A依赖C项目
+    2、依赖调解
+    当存在这两种依赖传递时，路径不一样时，路径短的为先
+    A->B->C-X(1.0)
+    A->D->X(2.0)
+    当存在这两种依赖传递时，路径一样时，根据pom依赖顺序
+    A->B->Y(1.0)
+    A->C->Y(2.0)
 
 3、可选依赖<optional>
-A->B,B->X(可选),B->Y(可选)
-因为X,Y是可选依赖，依赖将不会得以传递
+    A->B,B->X(可选),B->Y(可选)
+    因为X,Y是可选依赖，依赖将不会得以传递
 
 4、Maven依赖常见的技巧
-1、排除传递性依赖:
-当传递依赖中的版本与根项目依赖的项目版本冲突时，排除传递依赖的版本
+    1、排除传递性依赖:
+    当传递依赖中的版本与根项目依赖的项目版本冲突时，排除传递依赖的版本
 
-2、归类依赖:同一项目的不同模块，版本都是相同的
-可以使用相同的版本号统一管理
+    2、归类依赖:同一项目的不同模块，版本都是相同的
+    可以使用相同的版本号统一管理
 
-3、优化依赖:去除多余的依赖，显示地声明某些必须的依赖
-mvn dependency:list 列出所有依赖
-mvn dependency:tree 列出所有依赖（以tree的形式）
+    3、优化依赖:去除多余的依赖，显示地声明某些必须的依赖
+    mvn dependency:list 列出所有依赖
+    mvn dependency:tree 列出所有依赖（以tree的形式）
 
 
 五:Maven仓库
@@ -125,6 +131,7 @@ src/test/java目录下java文件输出至测试classPath目录中
 1、命令行插件配置
 mvn install -Dmaven.test.skip = true 跳过单元测试
 2、POM中插件全局配置
+
 compiler时使用的插件
 <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -135,12 +142,13 @@ compiler时使用的插件
         <encoding>UTF8</encoding>
     </configuration>
 </plugin>
+
 处理资源文件时，使用的插件
 <plugin>
       <artifactId>maven-resources-plugin</artifactId>
-                <version>2.4.2</version>
+      <version>2.4.2</version>
       <configuration>
-                    <encoding>UTF-8</encoding>
+      <encoding>UTF-8</encoding>
       </configuration>
 </plugin>
 
