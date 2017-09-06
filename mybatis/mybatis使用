@@ -1,0 +1,35 @@
+一、mybatis拦截器
+public interface Interceptor {
+    Object intercept(Invocation invocation) throws Throwable;
+    Object plugin(Object target);
+    void setProperties(Properties properties);
+}
+
+plugin方法主要是用于封装目标对象，通过该方法我们可以决定是否要进行拦截，进而决定返回什么样的目标对象。在mybatis中有一个plugin类，该类包括静态方法wrap,通过该方法可以决定需要返回的对象是目标对象还是代理。
+intercept方法就是要进行拦截的时候执行的方法。
+setProperties主要用于在配置文件中指定属性,这个方法在Configuration初始化当前的Interceptor时就会执。
+注册拦截器是通过在Mybatis配置文件中plugins元素下的plugin元素来进行的，Mybatis在注册定义的拦截器时会先把对应拦截器下面的所有property通过Interceptor的setProperties方法注入。
+如：
+    <plugins>
+        <plugin interceptor="com.mybatis.interceptor.TestInterceptor">
+            <property name="property" value="拦截器配置"/>
+        </plugin>
+    </plugins>
+
+
+二、mybatis组成
+1、Mapper
+2、mapper.xml
+3、pojo实体类
+4、mybatis-config.xml
+
+三、配置 mybatis-config.xml 顺序规则
+1、properties ： 优先使用properties配置文件
+2、settings
+3、typeAliases
+4、typeHandlers
+5、objectFactory
+6、plugins
+7、environments
+8、databaseIdProvider
+9、mappers

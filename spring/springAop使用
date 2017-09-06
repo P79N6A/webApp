@@ -1,0 +1,32 @@
+相关文档
+http://www.cnblogs.com/davidwang456/p/4013631.html
+
+可以通过注解来定义一个切点
+1、定义注解
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TimerLogger {
+
+}
+
+2、定义类（切面）
+@Aspect
+@Component
+public class PerfomanceLoggerInterceptor {
+    //定义切点
+    @Pointcut(value = "@annotation(TimerLogger)")
+    public void timerLogger() {
+    }
+    //定义增强
+    @Around(value = "timerLogger()")
+    public Object executAround(ProceedingJoinPoint joinPoint) throws Throwable {
+        long beginTime = System.currentTimeMillis();
+        Object returnObj = joinPoint.proceed();
+        long endTime = System.currentTimeMillis();
+        return returnObj;
+    }
+}
+
+
+
+
