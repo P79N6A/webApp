@@ -13,3 +13,7 @@
 二、StrinUtils工具类：
     repeat方法：重复一个字符串
     countMatches方法：计算一个字符串某个字符出现次数
+
+
+三、 String.format 字符串格式化
+    String.format("%s|%s", "wang", "le")
