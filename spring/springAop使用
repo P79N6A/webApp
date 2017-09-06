@@ -1,5 +1,10 @@
 相关文档
 http://www.cnblogs.com/davidwang456/p/4013631.html
+首先定义
+spring:
+  aop:
+    auto: true
+    proxy-target-class: true
 
 可以通过注解来定义一个切点
 1、定义注解
