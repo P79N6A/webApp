@@ -1,0 +1,6 @@
+问题1：
+Caused by: org.apache.ibatis.builder.BuilderException: Error parsing Mapper XML.
+Cause: java.lang.IllegalArgumentException:
+Result Maps collection already contains value for
+
+需要排查xml文件有没有重复

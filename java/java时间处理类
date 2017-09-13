@@ -1,8 +1,8 @@
-1: Ê¹ÓÃSimpleDateFormat
-2: Ê¹ÓÃCalendar (¼ÆËãÊ±¼ä¹¤¾ßÀà)
-3: Ê±¼äDate
+1: Ê¹ï¿½ï¿½SimpleDateFormat
+2: Ê¹ï¿½ï¿½Calendar (ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä¹¤ï¿½ï¿½ï¿½ï¿½)
+3: Ê±ï¿½ï¿½Date
 
-Ò»¡¢Ê±¼ä×ª»»ÎªÊ±¼ä´Á: ²¢¼ÆËãÁ½¸öÊ±¼äÏà²î¶àÉÙ
+Ò»ï¿½ï¿½Ê±ï¿½ï¿½×ªï¿½ï¿½ÎªÊ±ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 private static long changeToStamp() throws ParseException {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date date = simpleDateFormat.parse("2017-04-01 17:33:00");
@@ -16,7 +16,7 @@ private static long changeToStamp() throws ParseException {
     return time;
 }
 
-¶þ¡¢½«Ê±¼ä´Á×ª»»ÎªÊ±¼ä
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½×ªï¿½ï¿½ÎªÊ±ï¿½ï¿½
 public static String stampToDate(String s){
     String res;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -24,9 +24,10 @@ public static String stampToDate(String s){
     Date date = new Date(lt);
     res = simpleDateFormat.format(date);
     return res;
-}
+} @Resource(name = "timerStrategy")
+    ICommonStrategy timerStrategy;
 
-Èý¡¢Ê±¼ä¼õÒ»Ìì
+ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 public static void modifyTime(){
     SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
     Date beginDate = new Date();
