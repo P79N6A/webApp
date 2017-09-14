@@ -12,5 +12,69 @@
 
 
 
+四、spring mvc的返回值
+
+1.使用String 作为请求处理方法的返回值类型是比较通用的方法，这样返回的逻辑视图名不会和请求 URL 绑定，具有很大的灵活性，而模型数据又可以通过 ModelMap 控制。
+2.使用void,map,Model 时，返回对应的逻辑视图名称真实url为：prefix前缀+视图名称 +suffix后缀组成。
+3.使用String,ModelAndView返回视图名称可以不受请求的url绑定，ModelAndView可以设置返回的视图名称。
+
+1、modelAndView
+    通过ModelAndView构造方法可以指定返回的页面名称，也可以通过setViewName()方法跳转到指定的页面（比如jsp）
+    @RequestMapping("/hello")
+    public ModelAndView helloWorld() {
+        String message = "Hello World, Spring 3.x!";
+        return new ModelAndView("hello", "message", message);
+    }
+
+2、Map
+    在jsp页面中可直通过${key1}获得到值, map.put()相当于request.setAttribute方法。
+    @RequestMapping("/demo2/show")
+    public Map<String, String> getMap() {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("key1", "value-1");
+        map.put("key2", "value-2");
+        return map;
+    }
+
+3、View
+    可以返回pdf excel等，暂时没详细了解
+
+
+4、String
+    指定返回的视图页面名称，结合设置的返回地址路径加上页面名称后缀即可访问到。
+    注意：如果方法声明了注解@ResponseBody ，则会直接将返回值输出到页面。
+
+    @RequestMapping(value="/showdog")
+    public String hello1(){
+       return "hello";
+    }
+
+    @RequestMapping(value="/print")
+    @ResponseBody
+    public String print(){
+        String message = "Hello World, Spring MVC!";
+        return message;
+    }
+
+    @RequestMapping("/load1")
+    @ResponseBody
+    public String load1(@RequestParam String name,@RequestParam String password) throws IOException{
+        System.out.println(name+" : "+password);
+        MyDog dog=new MyDog();
+        dog.setName("小哈");dog.setAge("1岁");dog.setColor("深灰");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString=objectMapper.writeValueAsString(dog);
+        System.out.println(jsonString);
+        return jsonString;
+    }
+
+5、void
+    如果返回值为空，则响应的视图页面对应为访问地址
+    @RequestMapping("/index")
+    public void index() {
+        return;
+    }
+
+
 
 
