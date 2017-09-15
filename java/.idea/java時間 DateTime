@@ -1,0 +1,14 @@
+DateTime 使用：
+可以比较两个时间Date的大小
+
+boolean checkCampaginActivity(Date transactionDate, Date campaignStartTime, Date campaignEndTime) {
+    DateTime transactionDateTime = new DateTime(transactionDate);
+    DateTime startTime = new DateTime(campaignStartTime);
+    DateTime endTime = new DateTime(campaignEndTime);
+
+    if (transactionDateTime.isBefore(endTime) && transactionDateTime.isAfter(startTime)) {
+        return true;
+    }
+
+    return false;
+}
