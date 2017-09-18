@@ -23,6 +23,8 @@ public class SemapDemo implements Runnable{
    对于：读读操作，不需要加锁,是非阻塞的。
 
 3、CountDownLatch: 只有当计数器降为0，才会继续执行。
+http://www.jianshu.com/p/7c7a5df5bda6?ref=myread
+CountDownLatch : AQS共享功能
  MerchantStrategyExample strategyExample = new MerchantStrategyExample();
         List<MerchantStrategy> merchantStrategyList = subMerchantStrategyMapper.selectByExample(strategyExample);
         final List<JSONObject> merchantInfoList = Lists.newArrayList(); //商户策略id和商户id
