@@ -23,8 +23,20 @@ public class SemapDemo implements Runnable{
    对于：读读操作，不需要加锁,是非阻塞的。
 
 3、CountDownLatch: 只有当计数器降为0，才会继续执行。
-http://www.jianshu.com/p/7c7a5df5bda6?ref=myread
-CountDownLatch : AQS共享功能
+
+构造器
+    CountDownLatch和ReentrantLock一样，内部使用Sync继承AQS。构造函数很简单地传递计数值给Sync，并且设置了state。
+
+阻塞线程
+    接着来看await方法，直接调用了AQS的acquireSharedInterruptibly。
+    1、创建的Node是定义成共享的（Node.SHARED）；
+    2、被唤醒后重新尝试获取锁，不只设置自己为head，还需要通知其他等待的线程。（重点看后文释放操作里的setHeadAndPropagate）
+
+释放操作
+    countDown操作实际就是释放锁的操作，每调用一次，计数值减少1
+
+
+使用列子：
  MerchantStrategyExample strategyExample = new MerchantStrategyExample();
         List<MerchantStrategy> merchantStrategyList = subMerchantStrategyMapper.selectByExample(strategyExample);
         final List<JSONObject> merchantInfoList = Lists.newArrayList(); //商户策略id和商户id
