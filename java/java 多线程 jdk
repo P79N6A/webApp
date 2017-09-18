@@ -23,7 +23,38 @@ public class SemapDemo implements Runnable{
    对于：读读操作，不需要加锁,是非阻塞的。
 
 3、CountDownLatch: 只有当计数器降为0，才会继续执行。
-
+ MerchantStrategyExample strategyExample = new MerchantStrategyExample();
+        List<MerchantStrategy> merchantStrategyList = subMerchantStrategyMapper.selectByExample(strategyExample);
+        final List<JSONObject> merchantInfoList = Lists.newArrayList(); //商户策略id和商户id
+        int threadNum = merchantStrategyList.size();
+        final CountDownLatch countDownLatch = new CountDownLatch(threadNum);
+        for (int i = 0; i < threadNum; i++) {
+            final int finalI = i;
+            new Thread(() -> {
+                try {
+                    for (TradePromotVO tradePromotVO : tradePromotVOList) {
+                        PromotCampaign promotCampaign = new PromotCampaign();
+                        promotCampaign.setMerchantStrategyId(merchantStrategyList.get(finalI).getId());
+                        ValidResultVO<ValidCampaignResp> merchantValidResult = merchantStrategy.execStrategy(tradePromotVO, promotCampaign);
+                        if (!merchantValidResult.getSuccess()) {
+                            JSONObject merchantInfo = new JSONObject();
+                            merchantInfo.put("merchantStrategyId", merchantStrategyList.get(finalI).getId());
+                            merchantInfo.put("merchantId", tradePromotVO);
+                            merchantInfoList.add(merchantInfo);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("POI商户详情页展示，queryValidateMerchant异常,错误信息为：{}", e.getMessage());
+                } finally {
+                    countDownLatch.countDown();
+                }
+            }).start();
+        }
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            logger.error("POI商户详情页展示，queryValidateMerchant InterruptedException 异常,错误信息为：{}", e.getMessage());
+        }
 4、CyclicBarrier 循环栅栏
 
 5、LockSupport 用于在线程内任意位置让线程阻塞。
