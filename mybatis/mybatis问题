@@ -7,3 +7,4 @@ Result Maps collection already contains value for
 
 问题2：
 org.apache.ibatis.binding.BindingException: Invalid bound statement (not found):
+mapper 文件的配置的类有问题
