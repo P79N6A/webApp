@@ -4,3 +4,6 @@ Cause: java.lang.IllegalArgumentException:
 Result Maps collection already contains value for
 
 需要排查xml文件有没有重复
+
+问题2：
+org.apache.ibatis.binding.BindingException: Invalid bound statement (not found):

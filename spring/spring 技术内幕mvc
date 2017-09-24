@@ -75,6 +75,49 @@
         return;
     }
 
+6、restful
+对url进行规范，写restful格式的url
+非rest得url ： http://.../query.action?id=001
+
+rest的url ： http://.../items/001
+    url简洁 ： 将参数通过url传到服务端
+
+@RequsetMapping("/viewItems/{id}")
+public @ResponseBody viewItems(@PathVariable("id") String id,Model model)
+{
+       ItemsCustom itemsCustom = itemsService.findItemsById(id);
+       return itemsCustom;
+}
+
+7、mvc拦截器
+一、实现HandlerIntercepter接口
+实现方法：
+PreHandle 在进入Handle方法之前 ： 使用场景用于身份认证，如果认证不通过，不执行handler
+
+PostHandle 在进入Handle方法后，返回modelAndView之前执行 ： 使用场景从modelAndView，统一处理数据
+
+afterCompletion 执行handler完成执行后执行 ：使用场景 ： 统一异常处理
+
+二、拦截器配置
+   （1）单独
+        spring mvc拦截器，针对handlerMappering进行拦截设置。
+        如果在某个HandlerMapping中配置拦截，经过HandlerMapping映射成功的handler最终使用该拦截器
+
+    (2) 全局 推荐使用
+        springmvc框架将配置的类似全局的拦截器注入到每个handlerMapping中。
+        <mvc:interceptors>
+            <mvc:intercepter>
+                <mvc:mapping path="/**" />
+                <bean class= "cn.itcast.ssm.filter.handlerInterceptor1"></bean>
+            </mvc:intercepter>
+        </mvc:intercepters>
+
+
+
+
+
+
+
 
 
 
