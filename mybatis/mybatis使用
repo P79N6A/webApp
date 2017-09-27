@@ -33,3 +33,14 @@ setProperties主要用于在配置文件中指定属性,这个方法在Configura
 7、environments
 8、databaseIdProvider
 9、mappers
+
+
+四、基础知识
+   SqlMapConfig.xml :
+   配置了数据源，事务等mybatis运行环境
+   配置映射文件 ： mapper.xml
+   注意：输入映射 输入参数parameterType 和 输出参数resultType （java类型，Map类型，pojo）
+   注意 #{id}
+        %${value}$% 只能使用value ： 可能会引起sql注入
+
+
