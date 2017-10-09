@@ -59,3 +59,142 @@ public class AnnTest {
         t.parseMethod(SayHello.class);
     }
 }
+
+
+注解使用在属性
+
+public class AuditLog {
+
+    @FieldMapping(value = "id", convert = LongConverter.class)
+    private Long id;
+
+    @FieldMapping(value = "modul", convert = IntegerConverter.class)
+    private Integer modul;
+
+    @FieldMapping(value = "action", convert = IntegerConverter.class)
+    private Integer action;
+
+    @FieldMapping(value = "reason")
+    private String reason;
+
+    @FieldMapping(value = "search_keys", convert = MapConverter.class)
+    private Map<String, Object> searchKeys;
+
+    @FieldMapping(value = "affects")
+    private String affects;
+
+    @FieldMapping(value = "oper")
+    private String oper;
+
+    @FieldMapping(value = "ip")
+    private String ip;
+
+    @FieldMapping(value = "add_time", convert = LongConverter.class)
+    private Long addTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getModul() {
+        return modul;
+    }
+
+    public void setModul(Integer modul) {
+        this.modul = modul;
+    }
+
+    public Integer getAction() {
+        return action;
+    }
+
+    public void setAction(Integer action) {
+        this.action = action;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public Map<String, Object> getSearchKeys() {
+        return searchKeys;
+    }
+
+    public void setSearchKeys(Map<String, Object> searchKeys) {
+        this.searchKeys = searchKeys;
+    }
+
+    public String getAffects() {
+        return affects;
+    }
+
+    public void setAffects(String affects) {
+        this.affects = affects;
+    }
+
+    public String getOper() {
+        return oper;
+    }
+
+    public void setOper(String oper) {
+        this.oper = oper;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public Long getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Long addTime) {
+        this.addTime = addTime;
+    }
+}
+
+//将data里面的数据转为AuditLog属性
+public class ReflectUtil {
+
+    private static Logger logger = LoggerFactory.getLogger(ReflectUtil.class);
+
+    public static <T> T newInstance(Class<T> clazz, Map<String,Object> data) {
+        T result = null;
+        try {
+            result = clazz.newInstance();
+
+            if(data == null || data.size() == 0) {
+                return result;
+            }
+
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                if(field.isAnnotationPresent(FieldMapping.class)) {
+                    field.setAccessible(true);
+                    FieldMapping annotation = field.getAnnotation(FieldMapping.class);
+
+                    FieldConverter fieldConverter = annotation.convert().newInstance();
+                    Object o = data.get(annotation.value());
+                    Object convert = fieldConverter.convert(o);
+                    field.set(result,convert);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("",e);
+        }
+
+        return result;
+    }
+}
