@@ -68,6 +68,8 @@
     javax.annotation.*
     java.lang.ref
     java.math
+        Math.pow(a,b) a的b次方
+
     java.rmi.*
     javax.rmi.*
     java.security.*
