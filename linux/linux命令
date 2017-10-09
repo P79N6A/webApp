@@ -13,6 +13,8 @@ find . -name 'file' 查找文件
 find .|xargs grep -ri "IBM"  linux查找目录下的所有文件中是否含有某个字符串
 find . -name 文件名 | xargs grep aaa 查看文件名下,所有包含aaa字符的文件
 
+grep struct -rl . 查看当前目标下，包含struct的所有文件
+
 ln (s) 没有参数(s)硬连接，否则是软连接
     硬连接: 不能对目录建硬连接，必须管理员才能建硬连接
     软连接: 不空占用空间，删除原文件时，软连接找不到 ln -s 源文件 连接地址
