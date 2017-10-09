@@ -141,6 +141,62 @@ System.out.println("Average of all prime numbers : " + stats.getAverage());
 lambda 表达式可以都得到作用域中的变量值，但是不可以在lambda表达式中，修改被引用的变量值。
 
 二： Stream API
+
+(1) 从集合、数组、生成器中创建Stream
+    通过数组转化为Stream ：
+    String contents  = "Hello,world";
+    Stream<String> word = Stream.of(contents.split(","));
+    或者
+    String[] players = {"Rafael Nadal", "Novak Djokovic",
+    "Stanislas Wawrinka", "David Ferrer",
+    "Roger Federer", "Andy Murray",
+    "Tomas Berdych", "Juan Martin Del Potro",
+    "Richard Gasquet", "John Isner"};
+
+    Stream<String> stream = Arrays.stream(players);
+
+(2) 使用过滤器filter来选择元素，使用map来改变元素
+    map : 会对每个元素应用一个函数，并将返回值收集到一个新的流中，假设你有个函数，它返回的不是一个值，而是包含多个值的流
+    public static Stream<Character> characterStream(String s){
+        List<Character> result = new ArrayList<Character>();
+        for(char c : s.toCharArray()) result.add(c);
+        return result.stream();
+    }
+
+    Stream<Stream<Character>> result = words.map(w -> characterStream(w)) 会获得一个多个流的流
+    使用flatMap 只包含字符串的流
+
+    //forEach的使用
+    assignCouponRecordList.forEach(assignCouponRecord -> {
+        int i = subAssignCouponRecordMapper.insertSelective(assignCouponRecord);
+        if (i == 1) {
+            SyncAssignCouponReqVO assignCouponReqVO = SyncAssignCouponReqVO.SyncAssignCouponReqVOBuilder
+                    .aSyncAssignCouponReqVO()
+                    .andBatchId(assignCouponRecord.getBatchId())
+                    .andUserId(assignCouponRecord.getUserId())
+                    .andSerialNo(assignCouponRecord.getId())
+                    .build();
+            try {
+                CouponItemVO couponItemVO = couponServiceClient.syncAssignCoupon(assignCouponReqVO);
+
+                assignCouponRecord.setCode(String.valueOf(couponItemVO.getCode()));
+                assignCouponRecord.setValue(couponItemVO.getValue());
+                assignCouponRecord.setCouponType((short) couponItemVO.getCouponType());
+                assignCouponRecord.setAssignStatus(CouponStatus.ASSIGN_SUCCESSFUL);
+                assignCouponRecord.setNeedRetry((short) 0);
+
+                subAssignCouponRecordMapper.updateByPrimaryKeySelective(assignCouponRecord);
+            } catch (TException | AssignCouponException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+    });
+
+
+(3) 其他改变Stream的操作包括 limit、distinct 、sorted
+(4）Stream操作，使用reduction，例如 count、 max、min
+
+
 1 从迭代器到Stream操作
 不支持并行计算
 for(String w : words){
