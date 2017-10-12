@@ -112,7 +112,19 @@ afterCompletion 执行handler完成执行后执行 ：使用场景 ： 统一异
             </mvc:intercepter>
         </mvc:intercepters>
 
-
+   （3）解決mvc的json返回数据乱码问题
+    <mvc:annotation-driven>
+        <!--处理请求返回json字符串的中文乱码问题-->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
 
 
