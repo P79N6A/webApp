@@ -3,5 +3,7 @@ hibernate的操作，必须在事务里面提交
 
 2、问题 No identifier specified for entity: com.iqiyi.mams.cartoon.core.model.cartoon.Cp
 表示：entity类没有定义对
+3、问题 org.hibernate.MappingException: Unknown entity:
+是hibernate的扫描包，没有找到entity
 
 
