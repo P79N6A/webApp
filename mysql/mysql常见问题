@@ -127,7 +127,8 @@ Repeatable Read(RR)—当前读：对读取到的记录和范围加锁 (记录锁+间隙锁) ，不存在幻
 Serializable—从MVCC并发控制退化为LBCC，无快照读。读写冲突，效率低。
 
 死锁问题
-
+Lock wait timeout exceeded; try restarting transaction
+http://blog.csdn.net/mchdba/article/details/38313881
 
 
 

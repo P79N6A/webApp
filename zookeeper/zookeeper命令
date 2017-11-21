@@ -12,6 +12,7 @@
 6. 删除文件： delete /zk 将刚才创建的 znode 删除
 7. 退出客户端： quit
 8. 帮助命令： help
+9. 强制删除:  rmr /dubbo/
 
 连接zookeeper集群
 在bin目录下执行

@@ -9,6 +9,12 @@ MySql的简单语法，常用，却不容易记住。当然，这些Sql语法在各数据库中基本通用。下面
     3.修改一个字段
         alter table user MODIFY new1 VARCHAR(10);//修改一个字段的类型
         alter table user CHANGE new1 new4 int;　//修改一个字段的名称，此时一定要重新
+        数据库中address表 city字段是varchar(30)
+        修改类型可以用（谨慎修改类型，可能会导致原有数据出错）
+        mysql> alter table address modify column city char(30);
+        修改长度可以用（修改长度，要保证不短于已有数据，以保证原有数据不出错）
+        mysql> alter table address modify column city varchar(50);
+
     4.重命名表
        alter table t1 rename t2;
     5.加索引

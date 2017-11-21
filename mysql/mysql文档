@@ -45,3 +45,7 @@ commit
 innodb 支持事务， myisam 不支持
 
 myisam 包括 全文索引、压缩、空间函数。
+
+问题六
+Lock wait timeout exceeded; try restarting transaction
+http://blog.csdn.net/mchdba/article/details/38313881
