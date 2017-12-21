@@ -48,4 +48,8 @@ maven2会依据模块的版本号号(pom文件里的version)中是否带有-SNAP
 
 八: 没有引用到maven仓库的最新代码，可以先在maven仓库的代码先删除掉，然后在重新获得
 
+九： 当发现本地打出来的jar，和服务器打出来的jar不一致的时候
+可以使用mvn dependency:tree 比较一下依赖结构是否一致
+
+
 

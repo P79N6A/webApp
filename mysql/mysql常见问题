@@ -130,10 +130,11 @@ Serializable—从MVCC并发控制退化为LBCC，无快照读。读写冲突，效率低。
 Lock wait timeout exceeded; try restarting transaction
 http://blog.csdn.net/mchdba/article/details/38313881
 
+连接数
+already has more than 'max_user_connections' active connections
+https://www.cnblogs.com/arcer/p/5559252.html
 
-
-
-
+http://blog.csdn.net/wsf568582678/article/details/53636747
 
 
 
