@@ -82,8 +82,7 @@
         tcpdump -i any port 65111 -X
         tcpdump host 210.27.48.1 -X 监听主机的包信息
         tcpdump -i any 'port 8088 or port 9002'  -nn 查看8088端口和9002端口的数据信息.
-        tcpdump -i any 'host angewomon.iqing.com' -w /tmp/123.cap
-        tcpdump -i any 'host angewomon.iqing.com' -X
+
 
         http://blog.chinaunix.net/uid-11242066-id-4084382.html
     arp:

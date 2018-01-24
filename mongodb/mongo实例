@@ -32,3 +32,21 @@ db.mamsdataaccess.getIndexes()
 db.mamsdataaccess.totalIndexSize();
 db.mamsdataaccess.reIndex();
 db.mamsdataaccess.find({"createTime" : "1"}).explain()\
+
+https://www.cnblogs.com/yxw699/p/7681441.html
+
+db.集合.find({"列":{$type:2}}).forEach(function(x){
+
+x.列=parseFloat(x.列);db.order.save(x)
+
+})
+
+db.order.find({"saleprice":{$type:2}}).forEach(function(x){x.saleprice=parseFloat(x.saleprice);db.order.save(x)})
+
+long更新为string
+db.novelblock.find({"_id":{$type:18}}).forEach(function(x){
+    x._id =x._id+"";
+    db.novelblock.save(x);
+});
+
+
