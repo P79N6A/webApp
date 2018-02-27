@@ -1,0 +1,16 @@
+@Component
+public class MyBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
+
+	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+
+	}
+
+	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+		for(int i=1;i<=10;i++){
+			BeanDefinitionBuilder bdb = BeanDefinitionBuilder.rootBeanDefinition(Person.class);//获得bean的地址
+			bdb.addPropertyValue("name", "admin" + i);
+			registry.registerBeanDefinition("person" + i, bdb.getBeanDefinition());
+		}
+	}
+
+}
