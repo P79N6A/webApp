@@ -1,0 +1,17 @@
+List<String> collected = Stream.of("a","b","c").collect(Collectors.toList());
+System.out.println("collected : " + collected);
+//Map操作
+List<String> collect = Stream.of("a", "b", "c").map(value -> value.toUpperCase()).collect(Collectors.toList());
+System.out.println("collect : " + collect);
+String[] s = {"31","6","51"};
+//filter操作
+List<String> stream = Stream.of(s).filter(st -> st.length() > 1).collect(Collectors.toList());
+System.out.println("stream : " + stream);
+//flatMap操作
+List<String> a = Stream.of("a","b","c").collect(Collectors.toList());
+List<String> b = Stream.of("e","f","g").collect(Collectors.toList());
+List<String> collect1 = Stream.of(a, b).flatMap(num -> num.stream()).collect(Collectors.toList());
+System.out.println("collect1 : " + collect1);
+//Min操作
+String s1 = Stream.of("g", "b", "a", "e", "f", "g").min(String::compareTo).get();
+System.out.println("s1 : " + s1);
