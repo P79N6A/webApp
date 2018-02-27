@@ -6,6 +6,7 @@ MongoDB中写操作的原子性限制在文档级别，对文档的保存，修�
 MongoDB不支持事务
 
 2、集合
+db.createCollection() 创建集合
 集合就是一组文档
 一个集合里面的文档可以是各式各样的
 {"name":"joe"}
