@@ -1,0 +1,58 @@
+1、Cause:org.springframework.beans.factory.NoSuchBeanDefinitionException 注入一个上下文中不存在的bean
+@Component
+public class BeanA {
+
+    @Autowired
+    private BeanB dependency;
+    ...
+}
+解决这种类型的问题——首先, 确保bean已经声明了
+  在XML配置文件使用< bean / >元素
+  或通过@bean注释Java @ configuration类
+  或注释:@Component,@Repository,@Service,@Controller和类路径是否扫描包中。
+  同时检查配置文件或类文件是否真的已经被spring装载到上下文中。
+
+2、Cause:org.springframework.beans.factory.NoUniqueBeanDefinitionException 当你尝试让spring使用接口名来时创建一个bean时，但是发现它有两个或多个实现
+BeanB1 和BeanB2都实现了同一个接口
+@Component
+public class BeanB1 implements IBeanB { ... }
+@Component
+public class BeanB2 implements IBeanB { ... }
+@Component
+public class BeanA {
+    @Autowired
+    private IBeanB dependency;
+    ...
+}
+
+3. Cause:org.springframework.beans.BeanInstantiationException 抛出在其创建过程异常
+@Component
+public class BeanA {
+    public BeanA() {
+        super();
+        throw new NullPointerException();
+    }
+}
+另外一种
+java.lang.InstantiationException
+@Component
+public abstract class BeanA implements IBeanA { ... }
+<bean id="beanA" class="org.baeldung.web.BeanA" />
+
+4、java.lang.NoSuchMethodException 当有其他的构造方式，而如果一个bean类没有默认的构造方法时候，会报错
+@Component
+public class BeanA implements IBeanA {
+    public BeanA(final String name) {
+        super();
+        System.out.println(name);
+    }
+}
+
+5、Cause:org.springframework.beans.NotWritablePropertyException
+然而，另一种可能性是你定义了一个bean:BeanA同时引用了另一个bean:BeanB但是BeanA中却没有相应的setter方法
+这种情况只可能发生在xml配置文件，因为当你使用@Configuration时,spring容器会避免这种情况的发生。
+
+6. Cause:org.springframework.beans.factory.CannotLoadBeanClassException
+
+7. The org.springframework.beans.factory.BeanCurrentlyInCreationException
+The org.springframework.beans.factory.BeanIsAbstractException
