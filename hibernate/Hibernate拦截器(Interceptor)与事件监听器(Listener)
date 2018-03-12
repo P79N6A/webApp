@@ -39,5 +39,12 @@
 Hibernate 拦截器给予了我们一个对象如何应用到应用程序和数据库的总控制。
 https://www.cnblogs.com/dayday/articles/3630480.html
 https://www.w3cschool.cn/hibernate/npyd1iek.html
+https://www.cnblogs.com/otomedaybreak/archive/2012/01/23/2328980.html
+
 拦截器（Intercept）：与Struts2的拦截器机制基本一样，都是一个操作穿过一层层拦截器，每穿过一个拦截器就会触发相应拦截器的事件做预处理或善后处理。
+注意拦截器的返回：
+使用拦截器的时候需要注意拦截器的返回值，我以前一直以为拦截器的返回值会控制一个操作是否可以继续，通过实验发现，即使返回false操作也会继续执行的，只是返回false的话，拦截器的所有设置都是无效的，不会反应到数据库中。
+最后，Hibernate的拦截器有两种设置方式，一种是使用sessionFactory.openSession(Interceptor interceptor)，这样的拦截器只会针对该session有效，又叫做局部拦截器。另一种是使用Configuration的setInterceptor(Interceptor interceptor)方法设置，这样的拦截器对每一个session都有效，又称之为全局拦截器。
+
+
 监听器（Listener）：其实功能与拦截器是相似的，但它实现原理不同，它是为每一个事件注册一个或多个监听器，一旦事件发生，则事件源通知所有监听该事件的监听器，然后监听器处理通知（观察者模式）。
