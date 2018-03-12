@@ -1,0 +1,43 @@
+<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="namingStrategy">
+        <bean class="org.hibernate.cfg.ImprovedNamingStrategy"/>
+    </property>
+    <property name="hibernateProperties">
+        <props>
+            <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+            <prop key="hibernate.show_sql">false</prop><!--是否打印sql-->
+            <prop key="hibernate.format_sql">false</prop>
+            <prop key="cache.use_query_cache">false</prop>
+            <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
+        </props>
+    </property>
+    <property name="packagesToScan">
+        <list>
+            <value>com.iqiyi.novel.entity</value>
+        </list>
+    </property>
+    <!--事件监听器-- 不会控制入库流程>
+    <property name="eventListeners">
+        <map>
+            <entry key="save-update">
+                <list>
+                    <bean class="com.iqiyi.novel.core.model.AuditableEntityListener" />
+                </list>
+            </entry>
+        </map>
+    </property>
+    <!--事件拦截器-- 会控制入库流程>
+    <property name="entityInterceptor">
+        <ref bean="hibernateInterceptor"/>
+    </property>
+</bean>
+
+使用详细
+拦截器：在Hibernate 中，一个对象将被创建和保持。一旦对象已经被修改，它必须被保存到数据库里。这个过程持续直到下一次对象被需要，它将被从持久的存储中加载。
+因此一个对象通过它生命周期中的不同阶段，并且 Interceptor 接口提供了在不同阶段能被调用来进行一些所需要的任务的方法
+Hibernate 拦截器给予了我们一个对象如何应用到应用程序和数据库的总控制。
+https://www.cnblogs.com/dayday/articles/3630480.html
+https://www.w3cschool.cn/hibernate/npyd1iek.html
+拦截器（Intercept）：与Struts2的拦截器机制基本一样，都是一个操作穿过一层层拦截器，每穿过一个拦截器就会触发相应拦截器的事件做预处理或善后处理。
+监听器（Listener）：其实功能与拦截器是相似的，但它实现原理不同，它是为每一个事件注册一个或多个监听器，一旦事件发生，则事件源通知所有监听该事件的监听器，然后监听器处理通知（观察者模式）。
