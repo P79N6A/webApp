@@ -242,6 +242,8 @@ join file1 file2 把两个文件关联在一起,按照行里面相同的字段
 
 wc -l(统计行数)，wc -c(统计字节数)，wc -w(统计字数)
 cat text.txt | wc -l
+less task.log | grep '2018-03-19 10:33:32*' | grep '发章审核消息' | wc -l
+
 tr -d 删除某个字符
 cat touch2.sh | grep adfa | tr -d 'a'
 ";" 如果现在命令行执行多个命令，使用; 将命令分隔开
