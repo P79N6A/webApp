@@ -12,6 +12,7 @@ Setting->Inspections->Serialization issues->Serializable class without ’serial
 
 5、idea 右键没有svn功能
 这是因为我们在idea的svn插件中把svn这个选项禁用了，具体操作如下图所示，选中对应的svn，并重启idea工具即可。
+https://www.cnblogs.com/xiohao/p/5044213.html
 
 6、java.lang.OutOfMemoryError: PermGen space
 配置jvm参数 :-Xms256m -Xmx1024m -XX:MaxNewSize=256m -XX:PermSize=64M -XX:MaxPermSize=128M
