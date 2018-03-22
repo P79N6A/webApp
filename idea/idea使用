@@ -36,3 +36,6 @@ http://www.cnblogs.com/heitan/p/5750456.html
 
 12 Module 下的 SDK 和 language level
 https://www.cnblogs.com/signheart/p/4d2058ae687f9a29680c070de85f7fbe.html
+
+13 idea 启动不了springboot（出现m2\repository\org\springframework\boot\spring-boot-starter等信息）
+在项目目录下执行一下 mvn clean install -Dmaven.test.skip=true -U
