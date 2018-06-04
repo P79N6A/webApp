@@ -186,7 +186,8 @@ bzip -d 解压
 ps -aux/-ef 显示所有进程状态 、和grep、egrep 一起来使用
 kill 杀死进程 :
 top  查看当前消耗资源最多的进程
-top -Hp
+top -H
+top -Hp 线程号
 
 ifconfig 查看网络配置
 hostname 显示主机名

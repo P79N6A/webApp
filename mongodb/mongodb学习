@@ -53,6 +53,7 @@ MongoDB中存储的文档必须有一个"_id"键,一个集合中，文档的唯�
 
 http://www.cnblogs.com/stephen-liu74/archive/2012/08/01/2561557.html
 四、索引 : 使用规则和传统数据库类似
+组合索引字段顺序：匹配条件在前，范围条件在后
 1、创建索引
 db.people.ensureIndex({"username":1},{"backgroud":ture})
 2、索引的使用时，顺序要和mysql一样
@@ -112,7 +113,7 @@ db.student.creatIndex({scores:1})
 95 -> [obj1,obj2]
 98 -> [obj1]
 99 -> [obj2]
-
+s
 当数组元素是文档类型时,可以为文档的某个字段建立多键索引
 {
     "_id" : ObjectId(),
