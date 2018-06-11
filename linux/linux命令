@@ -234,6 +234,7 @@ grep MemTotal /proc/meminfo 查看内存
 mount /dev/hda2 /挂载一个文件系统 在根目录下挂载文件系统
 umount /dev/hda2
 uname -a 查看linux系统，32位或64位
+ulimit -a 查看linux系统，一些限制
 
 七、查看CPU使用
 cat /proc/cpuinfo
