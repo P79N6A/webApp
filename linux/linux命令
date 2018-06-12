@@ -218,7 +218,7 @@ curl -i "iqiyi_result_check=PASS&iqiyi_page_publish_status=PAGE_ONLINE&available
 head -n 1 /etc/issue 查看主机配置
 curl -v -H'refer:audit.qiyi.domain' 'http://www.yuedunovel.com/cover/17/17824.jpg'
 
-curl -H "Authorization: Token d5aee282e1cc6e93ceed0c726b86e0c053644146" -F "file=@novel-1.0.8.war" -F "tag=1.0.8" http://qae.qiyi.virtual/api/v3/apps/wangle.novel.bjdxt-online03/add_binary;
+curl -H "Authorization: Token d5aee282e1cc6e93ceed0c726b86e0c053644146" -F "file=@novel-1.0.8.war" -F "tag=1.0.8" url;
 
 六、磁盘管理
 df -h 查看磁盘使用情况
