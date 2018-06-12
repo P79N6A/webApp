@@ -17,7 +17,7 @@
         3、config：mongoDB用于分片
 
     四、mongoDB命令行连接操作
-        1、mongo yl-mongodb-test-dev001-bjdxt.qiyi.virtual:27017/lego -u lego -p HmKcGe
+        1、mongo yl-mongodb-test-dev001-bjdxt.abc.virtual:27017/lego -u avc -p HmKcGe
         2、插入保存文档 ： db.foo.insert({"bar" :　"baz"})
                         db.foo.batchInsert({"_id" :0},{"_id":1},{"_id" : 2})
                         do.foo.find()

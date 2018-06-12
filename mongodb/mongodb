@@ -59,7 +59,7 @@ db.dropDatabase()//删除库
 3 使用python开发
 print("hello python");
 from pymongo import MongoClient
-mc =MongoClient("yl-mongodb-mams-online001-bjdxt.qiyi.virtual",27017);
+mc =MongoClient(url,27017);
 db = mc.search
 
 #查一个collection(author)
