@@ -11,6 +11,7 @@ Spring事务管理器：
 		支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，就新建一个事务。
 	Propagation.NOT_SUPPORTED 。
 		当前方法不应在Transaction中运行，如果存在已经定义的Transaction，则该Transaction暂停(挂起)直至该方法运行完毕。
+		当 defaultAutoCommit= true的时候，不支持，数据库也会自动提供的
 	Propagation.REQUIRED 。
 		支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。
 	Propagation.REQUIRES_NEW 。
@@ -84,7 +85,9 @@ public class BookShopServiceImpl implements BookShopService {
 	TransactionAspectSupport  类
 		invokeWithinTransaction 方法
 
+七、Hibernate异常: 在事务内是捕获不了的，要再事务的调用方法，才可以捕获
 
+八、注意static不能开启事务
 
 
 

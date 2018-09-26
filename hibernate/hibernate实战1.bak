@@ -65,7 +65,8 @@
         protected Long id;
 
         @NotNull
-        protected String cardNumbe
+        protected String cardNumber;
+
         @NotNull
         protected String expMonth;
    }

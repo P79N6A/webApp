@@ -4,6 +4,8 @@
        jstat -gcutil -t 2972
     3、jmap -dump:format=b,file= 2972 导出dump文件快照
        -Xmx10m -Xms10m -XX:+PrintGCDetail -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="f.dump" 发生内存溢出是导出dump文件。
+
+       jmap -dump:live,format=b,file=/tmp/123.hprof pid
     4、jstack
        jstack -l 2348 > a.txt 可以打印线程堆栈信息。
        printf "%x\n" 1111 十进制转为十六进制

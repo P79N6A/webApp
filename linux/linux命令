@@ -186,8 +186,8 @@ bzip -d 解压
 ps -aux/-ef 显示所有进程状态 、和grep、egrep 一起来使用
 kill 杀死进程 :
 top  查看当前消耗资源最多的进程
-top -H
-top -Hp 线程号
+top -H 查看进程
+top -Hp 进程号 查看进程
 
 ifconfig 查看网络配置
 hostname 显示主机名
@@ -219,11 +219,12 @@ head -n 1 /etc/issue 查看主机配置
 curl -v -H'refer:audit.qiyi.domain' 'http://www.yuedunovel.com/cover/17/17824.jpg'
 
 curl -H "Authorization: Token d5aee282e1cc6e93ceed0c726b86e0c053644146" -F "file=@novel-1.0.8.war" -F "tag=1.0.8" url;
-
+http://man.linuxde.net/curl
 六、磁盘管理
 df -h 查看磁盘使用情况
 du 用来查看目录所占空间大小
 du -h ./* == ll h 查看文件占用的空间的大小
+du | sort -nr
 free -m 查看内存使用
 history 查看历史执行的命令
 !num 可以执行历史执行的命令
