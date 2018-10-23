@@ -65,6 +65,8 @@ mongoDB使用find来进行查询
             "banana3"
         ]
     }
+    使用内嵌文档查的时候：
+    db.blog.find({"comments":{"$elemMatch":{"author":"joe","score":{"$gte":5}}}})
 (6) 游标
     1 limit : 限制返回结果
     2 sort: 排序
