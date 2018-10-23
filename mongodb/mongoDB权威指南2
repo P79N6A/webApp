@@ -71,7 +71,8 @@ mongoDB使用find来进行查询
     1 limit : 限制返回结果
     2 sort: 排序
     db.food.find().limit(5).sort({"comment.score":1}) 1是升序，2是降序
-
+    3 分页查询
+    db.food.find().limit(50).skip(50)..sort({"comment.score":1}
 
 第5章 索引(B树)
     1 普通索引
