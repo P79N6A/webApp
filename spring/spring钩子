@@ -1,0 +1,66 @@
+BeanFactoryPostProcessor和BeanPostProcessor这两个接口都是初始化bean时对外暴露的入口之一，和Aware类似
+https://www.jianshu.com/p/a90a3e617ba6
+一、BeanFactoryPostProcessor
+bean工厂的bean属性处理容器，说通俗一些就是可以管理我们的bean工厂内所有的beandefinition（未实例化）数据，可以随心所欲的修改属性
+
+使用例子
+public class CustomBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
+
+    /**
+     * 主要是用来自定义修改持有的bean
+     * ConfigurableListableBeanFactory 其实就是DefaultListableBeanDefinition对象
+     * @param beanFactory
+     * @throws BeansException
+     */
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        System.out.println("调用了自定义的BeanFactoryPostProcessor " + beanFactory);
+        Iterator it = beanFactory.getBeanNamesIterator();
+
+        String[] names = beanFactory.getBeanDefinitionNames();
+        // 获取了所有的bean名称列表
+        for(int i=0; i<names.length; i++){
+            String name = names[i];
+
+            BeanDefinition bd = beanFactory.getBeanDefinition(name);
+            System.out.println(name + " bean properties: " + bd.getPropertyValues().toString());
+            // 本内容只是个demo，打印持有的bean的属性情况
+        }
+    }
+}
+BeanPostProcessor
+从范围上来说，从上面的所有的bean成为了特定的bean，其次BeanFactoryPostProcessor可以在初始化前修改bean的属性等情况，但是BeanPostProcessor只能在初始化后（注意初始化不包括init方法）执行一些操作。
+当其实例化之后，完全可以拿到实例化后的对象，对对象进行一些改值操作也完全可以的
+public class Student {
+
+    @Value("${name}")
+    private String className;
+
+    public Student() {
+        System.out.println("constructor loading");
+    }
+
+    public void init(){
+        System.out.println("init loading");
+    }
+}
+
+public class CustomBeanPostProcessor implements BeanPostProcessor {
+
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        if(bean instanceof Student){
+            System.out.println("postProcessBeforeInitialization bean : " + beanName);
+        }
+        return bean;
+    }
+
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if(bean instanceof Student){
+            System.out.println("postProcessAfterInitialization bean : " + beanName);
+        }
+        return bean;
+    }
+}
+
+先打印出了构造器内部执行的话，意味着这个时候实例化了Student类，
+在init方法前执行了postProcessBeforeInitialization 返回bean
+在init方法后执行了postProcessAfterInitialization 返回bean： 可以再初始化之后再修改bean
