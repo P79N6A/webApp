@@ -42,8 +42,8 @@
       <file leaf-file-name="mongodb学习" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mongodb/mongodb学习">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="141" column="50" lean-forward="false" selection-start-line="141" selection-start-column="50" selection-end-line="141" selection-end-column="50" />
+            <state relative-caret-position="482">
+              <caret line="153" column="0" lean-forward="false" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -868,12 +868,12 @@
       <workItem from="1540184927698" duration="4461000" />
       <workItem from="1540260537840" duration="10630000" />
       <workItem from="1540368871556" duration="4510000" />
-      <workItem from="1540612072921" duration="1827000" />
+      <workItem from="1540612072921" duration="2600000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="322266000" />
+    <option name="totallyTimeSpent" value="323039000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1327,8 +1327,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mongodb/mongodb学习">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="141" column="50" lean-forward="false" selection-start-line="141" selection-start-column="50" selection-end-line="141" selection-end-column="50" />
+        <state relative-caret-position="482">
+          <caret line="153" column="0" lean-forward="false" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
           <folding />
         </state>
       </provider>
