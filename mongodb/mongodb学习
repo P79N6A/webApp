@@ -138,6 +138,8 @@ db.student.createIndex({name:"hashed"}) 在name字段上创建hash索引
 每个备份节点都维护着自己的oplog，记录着每一次从主节点复制数据的操作，这样每个成员都可以作为同步源提供给其他成员使用。
 注意mongo里的数据备份是顺序备份的：比如master->slave1->slave2 , 不会master->slave1 ,master->slave2同时
 
+副本集最大的成员：12个成员
+当复制单个数据库的时候，使用主从默认，而不使用副本模式. 但建议使用副本模式，因为主从默认以后会删除
 
 
 
