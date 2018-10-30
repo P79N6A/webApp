@@ -50,3 +50,16 @@ IDM公司全部软件之 UltraEdit 注册机 离线激活使用方法：
 3、运行UltraEdit 注册机“IDM All Products KeyGen v3.6 ”，Program项选择“UltraEdit 21.30”，然后将“用户码1、用户码2”分别复制到“User Code 1、User Code 2”；
 
 4、点击“Generate”后将生成的两组验证码（Authorization Code 1、Code 2）分别复制到脱机激活窗口中，并将第3步中的ID、密码一并填写到脱机激活窗口，点击“激活”即可成功激活。
+
+
+14、IntelliJ IDEA的shelve的功能
+shelve的意思是“将…搁在一边”，即把还没写完的代码先搁在一边。
+
+步骤：
+
+1 IDEA的底部->version control->local changes
+
+2 选中你要搁置的代码，右键，选择“Shelve Changes”，在提交的输入框中输入你的注释，以便回来的时候识别你需要的版本，点击“Shelve Changes”键即可。这时选项卡上会多一个“Shelf”的选项卡，里面就有你搁置的代码。
+
+3 这时候你可以去old分支修改代码，改完了之后回到new分支，到“Shelf”选项卡下选择你要恢复的代码或者版本，点击右键选择“Unshelve Changes”，你的搁置的代码就回来了
+
