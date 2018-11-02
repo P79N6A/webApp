@@ -86,13 +86,15 @@ db.author.update({"name":"搜狗"},{"secretKey":"Yfhv4V4WhvOzpJqY"})
 # 部分修改(原来有这个字段)
 db.author.update({"name":"zhj"},{"$set":{"age":6}})
 
+先切换到admin数据
+然后user 数据库名
 创建数据库用户并授权
 db.createUser(
  {
    user: "audioMongo",
    pwd: "audioMongo",
    roles: [
-      { role: "readWrite", db: "audio" }
+      { role: "readWrite", db: "数据库名" }
    ]
  }
 )
