@@ -85,3 +85,14 @@ db.author.update({"name":"test"},{"Email":"libing@126.com","Password":"123"})
 db.author.update({"name":"搜狗"},{"secretKey":"Yfhv4V4WhvOzpJqY"})
 # 部分修改(原来有这个字段)
 db.author.update({"name":"zhj"},{"$set":{"age":6}})
+
+创建数据库用户并授权
+db.createUser(
+ {
+   user: "audioMongo",
+   pwd: "audioMongo",
+   roles: [
+      { role: "readWrite", db: "audio" }
+   ]
+ }
+)
