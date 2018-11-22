@@ -56,10 +56,12 @@ IDM公司全部软件之 UltraEdit 注册机 离线激活使用方法：
 shelve的意思是“将…搁在一边”，即把还没写完的代码先搁在一边。
 
 步骤：
-
 1 IDEA的底部->version control->local changes
-
 2 选中你要搁置的代码，右键，选择“Shelve Changes”，在提交的输入框中输入你的注释，以便回来的时候识别你需要的版本，点击“Shelve Changes”键即可。这时选项卡上会多一个“Shelf”的选项卡，里面就有你搁置的代码。
-
 3 这时候你可以去old分支修改代码，改完了之后回到new分支，到“Shelf”选项卡下选择你要恢复的代码或者版本，点击右键选择“Unshelve Changes”，你的搁置的代码就回来了
 
+15、IntelliJ IDEA非法关闭后，类都报错误
+1 使用Invalidate Caches / Restart
+
+16、idea 2018
+https://www.liangzl.com/get-article-detail-4397.html
