@@ -1,0 +1,70 @@
+hadoop fs -mkdir /tmp/input  在HDFS上新建文件夹
+hadoop fs -put input1.txt /tmp/input  把本地文件input1.txt传到HDFS的/tmp/input目录下
+hadoop fs -get  input1.txt /tmp/input/input1.txt  把HDFS文件拉到本地
+hadoop fs -ls /tmp/output                  列出HDFS的某目录
+hadoop fs -cat /tmp/ouput/output1.txt  查看HDFS上的文件
+hadoop fs -rmr /home/less/hadoop/tmp/output  删除HDFS上的目录
+hadoop dfsadmin -report 查看HDFS状态，比如有哪些datanode，每个datanode的情况
+hadoop dfsadmin -safemode leave  离开安全模式
+hadoop dfsadmin -safemode enter  进入安全模式
+
+
+104机器：引入了venus的日志，存储到hadoop下
+su mams_reading
+cd /home/mams_reading/ 只能看到自己用户的文件，所以要进入当前目录下
+切换到媒资reading下
+hdfs dfs -ls /hive/warehouse/mams_reading_db.db/audiolog
+
+
+============================hadoop mapreduce ================================================
+1： 键值对成为hadoop任务的基础
+
+hadoop中的数据包含与相关值关联的值,这些数据的存储方式允许数据集的不同值根据建进行分类和重排。
+键是唯一的，但是值不一定唯一，每个值必须与键想关联，但键可能没有值，对建的明确定义很关键。
+
+MapReduce只能处理以键值对形式描述的数据
+
+2： MapReduce作业的多个阶段：{k1,v1} -> {k2,List<v2>}->{k3,v3}
+
+map方法的输入时一系列键值对，称为k1,v1
+
+map方式的输出是一系列键以及关联的值列表，称为k2,v2 ，每个mapper仅仅输出一系列单个键值对，他们是通过shuffle方法组合成建与值得列表
+
+mapReduce作业的最终输出是另一个键值对，称为k3,v3
+
+3: MapReduce Jave API
+
+mapper类提供mapper方法，该类以键/值数据作为输入和输出类型，map方法以输入的键值对作为参数
+
+void map(k1 key,v1 value mapper.Context context) throws IOException,InterruptedException
+
+reducer类提供reduce方法
+
+void reduce(k2 key,Iterable<v2> values,Reducer.Context context) throws IOException,InterruptException
+
+4：综述mapreduce的工作原理
+
+（1）启动时，jobTracker与NameNode通信，并对存储在HDFS上的数据相关的所有交互进行管理
+
+（2）将大的数据块进行分块，并确定将每小数据块分配给一个map任务
+
+（3）任务分配，jobTracker确定map任务数
+
+（4）任务启动，每个TaskTracker开启一个独立的java虚拟机来执行任务
+
+（5）mapper的输入： 
+
+ 有两行文字 This is a test 
+
+         Yes this is
+
+（6） mapper的执行：拆分，mapper输出由单词本身组成的键和值1 如(This ,1) , (is ,1),(a,1),(test,1),(Yes,1),(it,1),(is,1)
+
+   这些从mapper输出的键值对并不会直接传给reducer，还需要一个shuffle过程，与给定键相关的所有值都会被提交到同一reducer。所以需要将键值以key Iterable的方式。
+
+ （7）reducer类的输出，最后合并一个文件。
+
+
+注意：文件被切分为split，split中的数据被送往mapper，数据在文件中如何存储，以及单个键值如何传给mapper
+
+使用InputFormat和OutputFormat的概念将文件作为整体进行处理，并使用RecordReader将数据格式转化为键值对，然后使用RecordWriter将数据格式从建值对转换为所需格式

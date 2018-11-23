@@ -1,0 +1,108 @@
+hive出现的原因：解决从一个现有的数据基础架构转移到Hadoop上，Hive适合数据仓库应用程序的，可以维护海量数据，而且可以对数据进行挖掘，形成报告。（查询Hadoop集群中的数据）
+
+
+
+1:Hive的查询语言,用来查询Hadoop中的数据,Hive是将大多数的查询转换为MapReduce任务
+
+
+
+2:HiveQL:
+
+(1) 创建数据库: create database financials
+
+(2)  找出所有的数据库: show databases like 'v.*'
+
+(3)  删除数据库: Hive是不允许删除一个包含有表的数据库的，可以使用Drop database if Exist financials cascade
+
+(4)  查看hive数据库目录信息：hadoop fs -ls hdfs://ns1/user/cmo_ipc/app/dashboard/app_dashboard_subject_fx_d
+
+
+
+3: Hive的UDF函数
+
+方式一：编写一个UDF，需要继承UDF类并实现evaluate()函数，在查询执行过程中，查询中对应的每个应用到这个函数的地方都会对这个类进行实例化。
+
+对于每行输入都会调用到evaluate()函数，然后evaluate()处理后的值会返回给Hive
+
+如果想在Hive中使用UDF，那么需要将对应的jar文件加入到类路径下，然后再创建一个Function
+
+CREATE TEMPORARY FUNCTION ‘函数名' As ‘类名’ （是临时的，查询执行完，就不可以再使用了）
+
+
+
+ 方式二：不变的UDF函数
+
+通过注册的方式：将函数增加到hive内置函数中
+
+registerUDF("方法名","Calss"); // 注册函数方法
+
+
+
+4: Hive结合zookeeper（实现了高度可靠的分布式协调功能），支持锁功能
+
+
+
+5： Hive和Oozie整合 （Oozie是一个工作流引擎服务器，将工作流的状态和发起任务的客户端分离开）
+
+Oozie通过workflow.xml文件配置Action任务，可以将多个Action串起来
+
+
+6：使用JOIN：最好小表连大表，支持left outer join 和 right outer join
+
+
+7：hive的显示类型转换，CAST( x as BIGINT)转为BIGINT 
+CAST (y as FLOAT)转为FLOAT
+
+8: hive的性能优化：基本思想（尽早过滤数据，减少job，解决数据倾斜）
+具体列子：
+1：Select * from order_table limit 10; （使用*，减少job） limit 10 不走mapreduce
+2：使用分区键卡，过滤作用，不走mapreduce
+3： SELECT a.val, b.val, c.valFROM a JOIN b ON (a.key= b.key1) JOIN c ON (c.key= b.key1 ) -> 1个JOB 使用相同的key来连接
+
+4：优化输入输出
+
+1、insert overwrite table tmp1
+select ... from a where 条件1;
+insert overwrite table tmp2
+select ... from a where 条件2;
+
+下面一次性加载数据 
+2、from a
+insert overwrite table tmp1
+select ... where 条件1
+insert overwrite table tmp2
+select ... where 条件2
+
+
+
+5：表连接时，一定要有关联字段，并且在JOIN前过滤掉不需要的数据，表关联时小表在前（提到的原因都是说因为小表可以先放到内存中，然后大表的每条记录再去内存中检测）把重复关联键少的表放在join前面做关联可以提高join的效率
+6：union all （后者性能高于前者）
+
+select * from
+(select ci,c2,c3 from t1 Group by c1,c2,c3
+Union all
+Select c1,c2,c3 from t2 Group by c1,c2,c3
+) t3;
+2、select * from
+(
+select * from t1
+Union all
+Select * from t2
+) t3
+Group by c1,c2,c3; 
+
+7：尽量避免使用DISTINCT 进行排重，特别是大表操作，用GROUP BY 代替
+
+8 ：排序优化
+
+9：修改表结构后，需要传最新的脚本，记得修改insert表的内容。
+      select语句的内容要测试。
+      location目录下文件
+
+10：数据倾斜的原因：
+
+Join操作：
+其中一个表较小，但是key集中，分发到某一个或几个Reduce上的数据远高于平均值
+大表与大表，但是分桶的判断字段0值或空值过多，这些空值都由一个reduce处理，灰常慢
+group by，group by维度过小，某值的数量过多
+Count Distinct 某特殊值过多
