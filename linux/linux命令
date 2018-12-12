@@ -113,6 +113,7 @@ awk 按分隔符输出
     head -n 5 /etc/passwd | tail -n 3 (从第5行开始，到倒数3行)
     sort 排序
     sort -u 排序并删除
+    du -s * | sort -nr | head 选出排在前面的10个
     diff 比较两个文件的不同
 
     comm - 12    就只显示在两个文件中都存在的行；

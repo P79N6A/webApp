@@ -1,0 +1,5 @@
+@Autowired
+会在容器销毁bean的时候，jvm还没停止的时候，bean还是可以使用的
+
+getBean
+会在容器销毁bean的时候，getBean就拿不到值
