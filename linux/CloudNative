@@ -1,0 +1,21 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+第3章 敏捷基础设施及公共基础服务
+1: 如何生成分布式ID
+(1) UUID: UUID.randomUUID()
+(2) snowflake是优秀的ID生成方案,ddd https://github.com/twitter/snowflake

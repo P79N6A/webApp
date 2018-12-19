@@ -95,3 +95,10 @@ sql注入: 请求中给服务器提交恶意sql查询字符串
 5 context.xml : 默认安装tomcat的所有主机的所有部署内容.
 
 
+七 Tomcat的系统架构与设计模式
+最外层 server服务器
+内层 service服务
+service服务内包含两个重要组件： Connector 接受外部请求 和 Container 处理内部 （多对一关系）
+
+
+

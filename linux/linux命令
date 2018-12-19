@@ -189,10 +189,12 @@ kill 杀死进程 :
 top  查看当前消耗资源最多的进程
 top -H 查看进程
 top -Hp 进程号 查看进程
+top -c 完整路径和程序名
 
 ifconfig 查看网络配置
 hostname 显示主机名
 ping 网络联通测试
+telnet : 联通测试,可以加端口号来测试
 netstat -ap 查看网络状态
 scp 远程拷贝
 ssh-keygen
