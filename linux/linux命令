@@ -209,6 +209,7 @@ crontab -e : 配置定时任务
 /etc/crontab文件和crontab -e命令区别
 crontab -e   是针对用户的cron来设计的，如果是系统的例行性任务，该怎么办？是否还是需要以crontab -e来管理例行性命令？当然不需要，您只需要编辑/etc/crontab文件就可以了
 
+root目录下有个.ssh/authorized_keys文件：
 vi ~/.ssh/authorized_keys
 vim 命令:
     可以通过set number来设置显示行号
